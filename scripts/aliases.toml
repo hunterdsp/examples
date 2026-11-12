@@ -4,3 +4,4 @@
 # to a commit (gh:hunterdsp/examples/scripts@SHA) stays at that commit.
 [aliases]
 hello = "hello-world.sh"
+greet = "greet.sh"
