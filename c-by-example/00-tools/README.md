@@ -6,7 +6,8 @@ installs all of them, with whatever package manager your system uses:
 ```bash
 git clone https://github.com/hunterdsp/examples.git
 cd examples                                               # the repo root
-. <(curl -sSL https://just-buildit.github.io/get-jb.sh)   # jbx, once
+# install jbx once - the remote script-runner and more
+. <(curl -sSL https://just-buildit.github.io/get-jb.sh)
 (cd c-by-example && jbx install-deps -g dev)              # C toolchain
 ```
 
