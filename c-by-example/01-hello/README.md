@@ -97,7 +97,8 @@ program that fails must return something other than 0.
   error: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
   ```
 
-  Every library function belongs to a header. `man 3 printf` names it.
+  Every library function belongs to a header, `printf` in `stdio.h`.
+  `man 3 printf` prints the usage guide.
 
 ## Exercises
 
