@@ -67,9 +67,9 @@ from those needs its bytes swapped.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run from
-the repo root, like the lesson's, and its code is in
-[`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer's commands run in
+this lesson's folder, where the commands above left you, and end back
+there. Its code is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Run `./files sine`, then `./files a-much-longer-name`. Which lines
    change, and why?
@@ -79,7 +79,6 @@ the repo root, like the lesson's, and its code is in
    This one needs no new code, only the lesson's program:
 
    ```bash
-   cd c-by-example/06-strings-files
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined files.c -o files
    ./files sine
    ./files a-much-longer-name
@@ -114,9 +113,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/06-strings-files/exercises/ex2-tone
+   cd exercises/ex2-tone
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined tone.c -o tone -lm
    ./tone
+   cd ../..
    ```
 
    ```
@@ -137,9 +137,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/06-strings-files/exercises/ex3-swap32
+   cd exercises/ex3-swap32
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined swap32.c -o swap32
    ./swap32
+   cd ../..
    ```
 
    ```

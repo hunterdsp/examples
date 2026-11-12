@@ -118,9 +118,9 @@ program that fails must return something other than 0.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run from
-the repo root, like the lesson's, and its code is in
-[`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer's commands run in
+this lesson's folder, where the commands above left you, and end back
+there. Its code is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Make the program return 3 and check `echo $?`. Then try
    `./hello && echo worked`.
@@ -128,10 +128,11 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/01-hello/exercises/ex1-exit-status
+   cd exercises/ex1-exit-status
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello; echo $?
    ./hello && echo worked
+   cd ../..
    ```
 
    ```
@@ -155,10 +156,11 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/01-hello/exercises/ex2-argv0
+   cd exercises/ex2-argv0
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello
    ../ex2-argv0/hello
+   cd ../..
    ```
 
    ```
@@ -178,9 +180,10 @@ the repo root, like the lesson's, and its code is in
 
    <!-- no-run -->
    ```bash
-   cd c-by-example/01-hello/exercises/ex3-format
+   cd exercises/ex3-format
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined broken-format.c -o broken-format
    ./broken-format
+   cd ../..
    ```
 
    GCC prints this, then builds the program anyway (clang words it

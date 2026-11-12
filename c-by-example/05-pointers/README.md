@@ -73,9 +73,9 @@ library API in Part V is built on it.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run from
-the repo root, like the lesson's, and its code is in
-[`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer's commands run in
+this lesson's folder, where the commands above left you, and end back
+there. Its code is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Write `void min_max(const float *buf, size_t n, float *lo, float *hi)`
    that hands back two results through pointers.
@@ -83,9 +83,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/05-pointers/exercises/ex1-min-max
+   cd exercises/ex1-min-max
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined min_max.c -o min_max
    ./min_max
+   cd ../..
    ```
 
    ```
@@ -106,9 +107,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/05-pointers/exercises/ex2-pointer-walk
+   cd exercises/ex2-pointer-walk
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined walk.c -o walk
    ./walk
+   cd ../..
    ```
 
    ```
@@ -129,9 +131,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/05-pointers/exercises/ex3-pointer-size
+   cd exercises/ex3-pointer-size
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sizes.c -o sizes
    ./sizes
+   cd ../..
    ```
 
    ```

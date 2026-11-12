@@ -103,9 +103,9 @@ double the power.**
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run from
-the repo root, like the lesson's, and its code is in
-[`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer's commands run in
+this lesson's folder, where the commands above left you, and end back
+there. Its code is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Print `INT32_MAX` and `INT64_MAX`. How many days of 48 kHz audio fit in
    each?
@@ -113,9 +113,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/02-numbers/exercises/ex1-limits
+   cd exercises/ex1-limits
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined limits.c -o limits
    ./limits
+   cd ../..
    ```
 
    ```
@@ -139,9 +140,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/02-numbers/exercises/ex2-decibels
+   cd exercises/ex2-decibels
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined decibels.c -o decibels -lm
    ./decibels
+   cd ../..
    ```
 
    ```
@@ -163,9 +165,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/02-numbers/exercises/ex3-float-sum
+   cd exercises/ex3-float-sum
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sum.c -o sum
    ./sum
+   cd ../..
    ```
 
    ```

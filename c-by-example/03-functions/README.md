@@ -72,9 +72,9 @@ result is −2.4×10⁻¹⁶, and `%.4f` keeps its sign. Floating-point results 
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run from
-the repo root, like the lesson's, and its code is in
-[`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer's commands run in
+this lesson's folder, where the commands above left you, and end back
+there. Its code is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Add `void sine_scale(float *table, size_t n, float gain)` to `sine.h` and
    `sine.c`, and use it to halve a table.
@@ -86,9 +86,10 @@ the repo root, like the lesson's, and its code is in
    [`halve.c`](exercises/ex1-sine-scale/halve.c) calls it:
 
    ```bash
-   cd c-by-example/03-functions/exercises/ex1-sine-scale
+   cd exercises/ex1-sine-scale
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined halve.c sine.c -o halve -lm
    ./halve
+   cd ../..
    ```
 
    ```
@@ -107,9 +108,10 @@ the repo root, like the lesson's, and its code is in
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd c-by-example/03-functions/exercises/ex2-extern
+   cd exercises/ex2-extern
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o table -lm
    ./table
+   cd ../..
    ```
 
    ```
@@ -136,9 +138,10 @@ the repo root, like the lesson's, and its code is in
    (`looped`), under the same sine carried on for 16 samples (`wave`):
 
    ```bash
-   cd c-by-example/03-functions/exercises/ex3-half-cycle
+   cd exercises/ex3-half-cycle
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../.. cycles.c ../../sine.c -o cycles -lm
    ./cycles
+   cd ../..
    ```
 
    ```

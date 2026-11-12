@@ -98,10 +98,12 @@ for lesson in "$@"; do
 
 	# The README is itself a test. Every ```bash block from the first
 	# `cd c-by-example/...` on runs, in order, in one shell, inside a
-	# scratch copy of the repo; a block whose first line is such a `cd`
-	# starts again from the repo root. A bash block immediately followed
-	# (blank lines only) by another fenced block is a command and its
-	# output, and the output must match byte for byte. A bash block with
+	# scratch copy of the repo. That `cd` is the only one from the repo
+	# root: a reader is in the lesson's folder from then on, so every
+	# later block must work from there and leave the reader there (an
+	# exercise that `cd`s into its folder `cd`s back). A bash block
+	# immediately followed (blank lines only) by another fenced block is
+	# a command and its output, and the output must match byte for byte. A bash block with
 	# no output block must exit 0. `<!-- no-run -->` skips the next bash
 	# block: kept for commands that fail on purpose, whose message differs
 	# by compiler (a broken-*.c checks those).
@@ -124,10 +126,13 @@ for lesson in "$@"; do
 			if (kind == "bash") {
 				skip = norun; norun = 0
 				if (!started && first !~ /^cd c-by-example\//) skip = 1
+				if (started && body ~ /(^|\n)cd c-by-example\//)
+					print NR >> (dir "/rootcd")
 				if (!skip) {
+					first_k = !started
 					started = 1; k++
 					printf "%s", body > (dir "/" k ".sh"); close(dir "/" k ".sh")
-					print k, (first ~ /^cd c-by-example\// ? "root" : "here"), NR >> (dir "/list")
+					print k, (first_k ? "root" : "here"), NR >> (dir "/list")
 					pending = 1; gap = 0
 				} else { pending = 0 }
 			} else if (kind == "out") {
@@ -146,6 +151,11 @@ for lesson in "$@"; do
 		}
 		/[^ \t]/ { gap = 1 }
 	' "$lesson/README.md"
+	if [ -s "$work/rg/rootcd" ]; then
+		: >"$work/out"
+		bad "README" "block at line $(head -1 "$work/rg/rootcd") cds from the repo root; the reader is already in $lesson"
+	fi
+	lessondir=$work/root/c-by-example/$lesson
 	if [ ! -s "$work/rg/list" ]; then
 		: >"$work/out"
 		bad "README" "no runnable block (absent output is not a pass)"
@@ -172,6 +182,11 @@ for lesson in "$@"; do
 			elif [ "$status" -ne 0 ]; then
 				cp "$work/rg/$k.got" "$work/out"
 				bad "README" "block at line $line exited $status"
+			fi
+			if [ "$(pwd -P)" != "$(cd "$lessondir" && pwd -P)" ]; then
+				: >"$work/out"
+				bad "README" "block at line $line leaves the reader in $(pwd), not $lesson"
+				cd "$lessondir" || exit 2
 			fi
 		done <"$work/rg/list"
 		cd "$here" || exit 2
