@@ -84,18 +84,18 @@ for lesson in "$@"; do
 
 	# The README is itself a test. Its ```bash blocks run, in order, in
 	# one shell, inside a scratch copy of the repo. A reader works in the
-	# lesson's folder, so each block runs there, except one that a line
-	# `In \`exercises/exN-name/\`:` introduces, which runs in that folder
-	# (one that does not exist fails), and one whose first line is
-	# `cd c-by-example/<lesson>`, which runs from the repo root (lesson 00
-	# teaches that `cd`). No other `cd` is allowed: the README says where
-	# a command runs, and the reader goes there. A bash block immediately
-	# followed (blank lines only) by another fenced block is a command and
-	# its output, and the output must match byte for byte. A bash block
-	# with no output block must exit 0. `<!-- no-run -->` skips the next
-	# bash block: kept for setup run once (00), and commands that fail on
-	# purpose, whose message differs by compiler (a broken-*.c checks
-	# those).
+	# lesson's folder, so each block runs there, except in an answer that
+	# opens `In \`exercises/exN-name/\`:`, whose blocks run in that folder
+	# up to its `</details>` (one that does not exist fails), and one whose
+	# first line is `cd c-by-example/<lesson>`, which runs from the repo
+	# root (lesson 00 teaches that `cd`). No other `cd` is allowed: the
+	# README says where a command runs, and the reader goes there. A bash
+	# block immediately followed (blank lines only) by another fenced
+	# block is a command and its output, and the output must match byte
+	# for byte. A bash block with no output block must exit 0.
+	# `<!-- no-run -->` skips the next bash block: kept for setup run once
+	# (00), and commands that fail on purpose, whose message differs by
+	# compiler (a broken-*.c checks those).
 	rm -rf "$work/rg" && mkdir "$work/rg"
 	awk -v dir="$work/rg" -v home="cd c-by-example/$lesson" '
 		/^[ ]*<!-- no-run -->[ ]*$/ { norun = 1; next }
@@ -103,7 +103,7 @@ for lesson in "$@"; do
 			ind = match($0, /[^ ]/) - 1
 			tag = substr($0, ind + 4)
 			inblk = 1; n_lines = 0; ncd = 0
-			if (tag == "bash") { kind = "bash"; where = indir; indir = "" }
+			if (tag == "bash") { kind = "bash"; where = indir }
 			else if (pending && !gap) { kind = "out" }
 			else { kind = "other" }
 			if (kind != "out") pending = 0
@@ -143,7 +143,8 @@ for lesson in "$@"; do
 			indir = $0; sub(/^[ ]*In `/, "", indir); sub(/`:[ ]*$/, "", indir)
 			gap = 1; next
 		}
-		/[^ \t]/ { gap = 1; indir = "" }
+		/^[ ]*<\/details>/ { indir = "" }
+		/[^ \t]/ { gap = 1 }
 	' "$lesson/README.md"
 	lessondir=$work/root/c-by-example/$lesson
 	if [ -s "$work/rg/badcd" ]; then

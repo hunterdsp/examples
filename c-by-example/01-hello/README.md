@@ -133,21 +133,41 @@ which folder to run it in.
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello; echo $?
-   ./hello && echo worked
    ```
 
    ```
    Hello, World!
    called with 0 argument(s)
    3
+   ```
+
+   `echo $?` prints the status the program returned: 3. Now `&&`:
+
+   ```bash
+   ./hello && echo worked
+   ```
+
+   ```
    Hello, World!
    called with 0 argument(s)
    ```
 
-   `echo $?` prints the status the program returned: 3. The program
-   printed its greeting both times, but `worked` never appears: `&&` runs
-   its right-hand side only when the left one returns 0. That one number
-   is how every script and Makefile decides whether to carry on.
+   The program ran and printed its greeting, but `worked` is missing:
+   `&&` runs its right-hand side only when the left one returns 0. The
+   lesson's own program, two folders up, returns 0:
+
+   ```bash
+   ../../hello && echo worked
+   ```
+
+   ```
+   Hello, World!
+   called with 0 argument(s)
+   worked
+   ```
+
+   That one number is how every script and Makefile decides whether to
+   carry on.
 
    </details>
 
