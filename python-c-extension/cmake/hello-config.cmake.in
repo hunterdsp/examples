@@ -1,0 +1,25 @@
+# jm:generated hello-config.cmake.in
+# just-makeit regenerates the project's cmake/ template of this file on
+# apply while the line above is there; deleting that line there makes
+# the template the project's own.
+@PACKAGE_INIT@
+
+# Find the packages this library depends on ([project] find_packages and
+# pkg_modules), so their targets exist before ours are loaded.
+@JM_FIND_DEPENDENCIES@
+
+# The library targets this package provides.
+include("${CMAKE_CURRENT_LIST_DIR}/hello-targets.cmake")
+
+# Each additional library is a component of the package:
+# find_package(hello REQUIRED COMPONENTS <name>). A component
+# is found if its library was built for this platform.
+foreach(_jm_comp IN LISTS hello_FIND_COMPONENTS)
+  if(TARGET hello::${_jm_comp})
+    set(hello_${_jm_comp}_FOUND TRUE)
+  else()
+    set(hello_${_jm_comp}_FOUND FALSE)
+  endif()
+endforeach()
+
+check_required_components(hello)

@@ -1,0 +1,12 @@
+include = ["objects/*.toml", "modules/*.toml"]
+
+[project]
+name = "hello"
+version = "0.1.0"
+build = "cmake"
+perf = "false"
+pytest = "false"
+pytest_benchmark = "false"
+schema = "9"
+jm_version = "0.128.0"
+c_prefix = "hello"

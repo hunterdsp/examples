@@ -1,0 +1,14 @@
+# jm:generated hello.pc.in
+# just-makeit regenerates the project's cmake/ template of this file on
+# apply while the line above is there; deleting that line there makes
+# the template the project's own.
+prefix=@JM_PC_PREFIX@
+exec_prefix=${prefix}
+libdir=@JM_PC_LIBDIR@
+includedir=@JM_PC_INCLUDEDIR@
+
+Name: @JM_PC_NAME@
+Description: @JM_PC_DESCRIPTION@
+@JM_PC_ROW_FIELDS@Version: @PROJECT_VERSION@
+Libs: -L${libdir} -l@JM_PC_NAME@@JM_PC_ROW_LIBS@
+Cflags: -I${includedir}@JM_PC_ROW_CFLAGS@

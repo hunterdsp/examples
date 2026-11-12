@@ -1,0 +1,226 @@
+# hello project Makefile
+#
+# Targets:
+#   make                   Configure + build (Release)
+#   make test              CTest + unittest
+#   make bench             C + Python benchmarks; dated snapshot in benchmarks/history/
+#   make compile-commands  Refresh compile_commands.json for clangd / clang-tidy
+#   make tidy              Run clang-tidy over the project's C sources
+#   make just-build        PEP 517 hook for just-buildit
+#   make clean             Remove build artifacts
+#   make help              Show this message
+
+# One project, one interpreter (gh-814, gh-2610). The project's own `.venv`
+# is the interpreter CMakePresets.json names, and the one `jm build` uses, so
+# `make` uses it too whenever it exists; a `make` that built against the
+# first `python` on PATH while Visual Studio built against `.venv` compiled
+# one project for two interpreters. Precedence: PYTHON= on the command line,
+# then JUST_BUILDIT_PYTHON (a PEP 517 build's isolated interpreter), then
+# `.venv`, then PATH. `$(or ...)` stops at the first non-empty argument, so
+# PATH is only asked when there is no `.venv`.
+ifeq ($(OS), Windows_NT)
+SHELL      = cmd.exe
+NPROC      ?= 4
+VENV_PYTHON = $(if $(wildcard .venv/Scripts/python.exe),$(CURDIR)/.venv/Scripts/python.exe)
+PYTHON     ?= $(or $(JUST_BUILDIT_PYTHON),$(VENV_PYTHON),$(shell python -c "import sys,pathlib;print(pathlib.Path(sys.executable).as_posix())"))
+else
+SHELL      = /bin/sh
+NPROC      ?= $(shell nproc 2>/dev/null || echo 4)
+VENV_PYTHON = $(if $(wildcard .venv/bin/python),$(CURDIR)/.venv/bin/python)
+PYTHON     ?= $(or $(JUST_BUILDIT_PYTHON),$(VENV_PYTHON),$(shell python3 -c "import sys,pathlib;print(pathlib.Path(sys.executable).as_posix())" 2>/dev/null),$(shell python -c "import sys,pathlib;print(pathlib.Path(sys.executable).as_posix())" 2>/dev/null))
+endif
+BUILD_DIR  ?= build
+
+# An empty interpreter is never a valid answer here (gh-814). Every cmake
+# invocation below passes -DPython3_EXECUTABLE=$(PYTHON), and CMake treats an
+# empty value as "discover one yourself" rather than as an error — so if the
+# fallbacks above found nothing, fail HERE, where the cause is visible, rather
+# than at import time with an ABI mismatch.
+ifeq ($(strip $(PYTHON)),)
+$(error no Python interpreter found — set PYTHON=/path/to/python (gh-814))
+endif
+BUILD_TYPE ?= Release
+
+# cmake needs numpy's HEADERS, not an importable numpy (gh-824).
+# `find_package(Python3 ... NumPy)` resolves Python3_NumPy_INCLUDE_DIRS from
+# `numpy.get_include()`, so a numpy whose package imports while that directory
+# is absent satisfies an `import numpy` guard and then fails inside cmake —
+# as `Could NOT find Python3_NumPy_INCLUDE_DIRS`, or, when the path is only
+# read at generate time, as `Imported target "Python3::NumPy" includes
+# non-existent path`. Both come from this one condition.
+#
+# The install is a REinstall for the same reason: in that state numpy is
+# already present, so a plain `pip install numpy` is a no-op and cannot repair
+# it. And the verify runs unconditionally afterwards, because an environment
+# where the reinstall did not help should say so here — naming the directory —
+# rather than at the cmake error two steps later. Same trade gh-814 made for
+# an unresolvable interpreter.
+NUMPY_HEADERS_OK     = import numpy, os, sys; sys.exit(0 if os.path.isdir(numpy.get_include()) else 1)
+NUMPY_HEADERS_VERIFY = import numpy, os, sys; p = numpy.get_include(); sys.exit(0 if os.path.isdir(p) else 'error: numpy is installed but its C headers are missing from ' + p + ' -- cmake cannot build the extension without them. Reinstall numpy for this interpreter (gh-824).')
+
+PY_INSTALL = import importlib.util, shutil, subprocess, sys; a = sys.argv[1:]; py = sys.executable; uv = shutil.which('uv'); ua = ['--reinstall' if x == '--force-reinstall' else x for x in a]; cmd = [py, '-m', 'pip', 'install'] + a if importlib.util.find_spec('pip') else [uv, 'pip', 'install', '--python', py] + ua if uv else None; sys.exit(subprocess.call(cmd) if cmd else 'error: ' + py + ' has no pip and uv is not on PATH, so make cannot install ' + ' '.join(a) + '. Run either: ' + py + ' -m ensurepip, then ' + py + ' -m pip install ' + ' '.join(a) + ' -- or, with uv: uv pip install --python ' + py + ' ' + ' '.join(ua) + ' (gh-2610).')
+
+# On Windows (OS=Windows_NT is always set by the OS itself, regardless of
+# shell), build with clang-cl and Ninja (gh-1368): clang-cl is the MSVC-ABI
+# compiler that has C99 `_Complex` -- MSVC's own cl.exe has none. It needs
+# the MSVC environment, so run from a Developer PowerShell (or after
+# vcvars64). A CC you set yourself wins; only make's built-in default is
+# replaced.
+ifeq ($(OS), Windows_NT)
+CMAKE_GENERATOR ?= Ninja
+CMAKE_GEN_FLAG  := -G "$(CMAKE_GENERATOR)"
+ifeq ($(origin CC),default)
+export CC := clang-cl
+endif
+else
+CMAKE_GEN_FLAG  :=
+endif
+
+# The one configure invocation, named once. It was written out three times
+# (the cache rule, just-build, and the compile-commands rule that replaced
+# gh-940's broken one), which is how `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`
+# comes to be present in two of three copies and forgotten in the third.
+#
+# A variable rather than a `define` on purpose: make condenses backslash-newline
+# to a single space when ASSIGNING a variable, but preserves it inside a recipe
+# and hands it to the shell — and on Windows that shell is cmd.exe, which does
+# not understand line continuations. Expanding this yields one line everywhere.
+CMAKE_CONFIGURE = cmake -B $(BUILD_DIR) -S . \
+	$(CMAKE_GEN_FLAG) \
+	-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
+	-DPython3_EXECUTABLE=$(PYTHON) \
+	-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+.PHONY: all build test bench coverage compile-commands tidy just-build docs \
+        clean help
+
+all: build
+
+$(BUILD_DIR)/CMakeCache.txt:
+ifeq ($(OS), Windows_NT)
+	$(PYTHON) -c "$(NUMPY_HEADERS_OK)" 2>nul || $(PYTHON) -c "$(PY_INSTALL)" --force-reinstall numpy
+	$(PYTHON) -c "$(NUMPY_HEADERS_VERIFY)"
+
+else
+	@$(PYTHON) -c "$(NUMPY_HEADERS_OK)" 2>/dev/null || $(PYTHON) -c "$(PY_INSTALL)" --force-reinstall numpy
+	@$(PYTHON) -c "$(NUMPY_HEADERS_VERIFY)"
+
+endif
+	$(CMAKE_CONFIGURE)
+
+# clangd and clang-tidy read compile_commands.json from the PROJECT ROOT, while
+# cmake writes it into $(BUILD_DIR) — hence the copy.
+#
+# Phony, and re-configuring every time, on purpose. This was a file target
+# prerequisite on $(BUILD_DIR)/CMakeCache.txt (gh-940): the cache does not move
+# when the source list does, so the copy ran once and never again, and anything
+# that touched the root copy afterwards pinned it as up to date forever. There
+# is no timestamp here to get wrong. Configure is idempotent and costs a second.
+compile-commands: $(BUILD_DIR)/CMakeCache.txt
+	$(CMAKE_CONFIGURE)
+	cp $(BUILD_DIR)/compile_commands.json compile_commands.json
+
+# The file list comes from the compile database rather than a `find native`,
+# so tidy sees exactly the translation units cmake compiles — no more (a
+# generated .c no target references) and no less. find/xargs is Unix-only, as
+# in `clean` below; clang-tidy on Windows is not a path this project claims.
+tidy: compile-commands
+	@command -v clang-tidy >/dev/null 2>&1 || \
+	  { echo "clang-tidy not found — install it first"; exit 1; }
+	@$(PYTHON) -c "import json; print('\n'.join(e['file'] for e in json.load(open('compile_commands.json'))))" \
+	  | xargs clang-tidy -p .
+
+# gh-1898: the cache remembers the interpreter it was configured with. A build
+# through another one -- `just-build`, which the PEP 517 frontend runs in an
+# isolated environment that is then deleted -- leaves that interpreter's paths
+# in the cache, so the next `build` fails on a numpy include dir that no longer
+# exists. `build` therefore drops the cache when it names a different
+# interpreter from $(PYTHON), and lets the cache rule above rebuild it, so the
+# NumPy check and install in that rule run again too. A configure is a second;
+# a stale cache is a failed build. (The check is Python, not grep, so it runs
+# on Windows too.)
+CACHE_NAMES_PYTHON = import sys; lines = open('$(BUILD_DIR)/CMakeCache.txt').read().splitlines(); names = [l.split('=', 1)[1].strip() for l in lines if l.startswith('Python3_EXECUTABLE:')]; sys.exit(0 if names == [sys.argv[1]] else 1)
+
+build: $(BUILD_DIR)/CMakeCache.txt
+	@$(PYTHON) -c "$(CACHE_NAMES_PYTHON)" "$(PYTHON)" || { rm -f $(BUILD_DIR)/CMakeCache.txt && $(MAKE) --no-print-directory $(BUILD_DIR)/CMakeCache.txt; }
+	cmake --build $(BUILD_DIR) --parallel $(NPROC)
+
+test: build
+	ctest --test-dir $(BUILD_DIR) --output-on-failure
+ifeq ($(OS), Windows_NT)
+	$(PYTHON) -m unittest discover -s src -p "test_*.py" -v
+else
+	$(PYTHON) -m unittest discover -s src -p "test_*.py" -v
+endif
+
+bench:
+	just-makeit bench
+
+coverage:
+	cmake -B $(BUILD_DIR)/cov -S . $(CMAKE_GEN_FLAG) \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_C_FLAGS="--coverage -O0" \
+		-DPython3_EXECUTABLE=$(PYTHON)
+	cmake --build $(BUILD_DIR)/cov --parallel $(NPROC)
+	ctest --test-dir $(BUILD_DIR)/cov --output-on-failure
+	lcov --capture --directory $(BUILD_DIR)/cov \
+		--output-file $(BUILD_DIR)/cov/coverage.info \
+		--ignore-errors inconsistent 2>/dev/null || \
+	  lcov --capture --directory $(BUILD_DIR)/cov \
+		--output-file $(BUILD_DIR)/cov/coverage.info
+	lcov --remove $(BUILD_DIR)/cov/coverage.info '/usr/*' '*/tests/*' \
+		--output-file $(BUILD_DIR)/cov/coverage_filtered.info \
+		--ignore-errors unused
+	mkdir -p docs/coverage/c
+	genhtml $(BUILD_DIR)/cov/coverage_filtered.info \
+		--output-directory docs/coverage/c
+	@echo "C coverage: docs/coverage/c/index.html"
+	$(PYTHON) -m pytest src/ \
+		--cov=hello \
+		--cov-report=html:docs/coverage/python \
+		--cov-report=term-missing
+	@echo "Python coverage: docs/coverage/python/index.html"
+
+# $(PYTHON), NOT $(JUST_BUILDIT_PYTHON) — gh-814. Do not "simplify" this back
+# to the raw variable: it is set by just-buildit and EMPTY otherwise, and an
+# empty `-DPython3_EXECUTABLE=` does not mean "use the default", it means
+# CMake picks the interpreter itself. On any box with more than one numpy (a
+# system python3-numpy plus a venv one — which bootstrap.toml actively creates) the
+# extension can then compile against one numpy and be imported under the
+# other. That surfaces as `compiled using NumPy 1.x cannot be run in NumPy
+# 2.x` at IMPORT time, arbitrarily far from the build that caused it.
+# $(PYTHON) already prefers $(JUST_BUILDIT_PYTHON) and falls back to a real
+# interpreter, so it is correct in both cases and empty in neither.
+just-build:
+	$(CMAKE_CONFIGURE)
+	cmake --build $(BUILD_DIR) --parallel $(NPROC)
+	mkdir -p $(JUST_BUILDIT_OUTPUT_DIR)
+	cp -r src/hello $(JUST_BUILDIT_OUTPUT_DIR)/hello
+
+docs: build
+	@command -v doxygen >/dev/null 2>&1 || \
+	  { echo "doxygen not found — install it first"; exit 1; }
+	doxygen Doxyfile
+	@echo "C API docs: docs/doxygen/html/index.html"
+	@command -v zensical >/dev/null 2>&1 || \
+	  { echo "zensical not found — uv add --dev zensical mkdocstrings-python"; exit 1; }
+	zensical build
+	@echo "Python API docs: site/index.html"
+
+clean:
+	rm -rf $(BUILD_DIR) site docs/coverage docs/doxygen
+	find src -name "*.so" -o -name "*.pyd" | xargs rm -f 2>/dev/null; true
+
+help:
+	@echo ""
+	@echo "hello build targets"
+	@echo ""
+	@echo "  make                    Configure + build"
+	@echo "  make test               Run CTest + unittest"
+	@echo "  make bench              Run C + Python benchmarks"
+	@echo "  make coverage           C (lcov) + Python (pytest-cov) coverage reports"
+	@echo "  make compile-commands   Refresh compile_commands.json (clangd, clang-tidy)"
+	@echo "  make tidy               Run clang-tidy over the project's C sources"
+	@echo "  make docs               Doxygen (C) + Zensical (Python) API docs"
+	@echo "  make clean              Remove build artifacts"
+	@echo ""

@@ -1,0 +1,11 @@
+[gain]
+arg_type = "float _Complex"
+return_type = "float _Complex"
+mutable = "false"
+no_state = "false"
+no_step = "false"
+
+[[gain.state]]
+name = "k"
+type = "double"
+default = "2.0"

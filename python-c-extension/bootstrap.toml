@@ -1,0 +1,79 @@
+[project]
+name    = "hello"
+version = "0.1.0"
+
+[tools.install-deps]
+source = "just-bashit:install-deps"
+groups = ["dev"]
+
+[tools.just-makeit]
+source = "https://just-buildit.github.io/just-makeit/install.sh"
+config = "just-makeit.toml"
+
+# Build dependencies — populated by just-makeit new.
+# Add [runtime.*] sections for your project's own system libraries.
+# patchelf (Linux): auditwheel needs it to repair a wheel.
+
+[dev.apt]
+packages = [
+    "build-essential",
+    "cmake",
+    "patchelf",
+    "pkg-config",
+    "python3-dev",
+    "python3-numpy",
+]
+
+[dev.pacman]
+packages = [
+    "base-devel",
+    "cmake",
+    "patchelf",
+    "pkgconf",
+    "python",
+    "python-numpy",
+]
+
+[dev.brew]
+packages = [
+    "cmake",
+    "pkg-config",
+]
+
+[dev.dnf]
+packages = [
+    "gcc",
+    "gcc-c++",
+    "make",
+    "cmake",
+    "patchelf",
+    "pkgconf-pkg-config",
+    "python3-devel",
+    "python3-numpy",
+]
+
+[dev.zypper]
+packages = [
+    "gcc",
+    "gcc-c++",
+    "make",
+    "cmake",
+    "patchelf",
+    "pkg-config",
+    "python3-devel",
+    "python3-numpy",
+]
+
+# Windows: clang-cl against the MSVC ABI. vs_requires is what install-deps
+# probes for and adds: the MSVC libraries, Windows SDK, CMake and Ninja
+# (VCTools) and clang-cl (VC.Llvm.Clang). See docs/windows.md.
+[dev.winget]
+packages = [
+    "Microsoft.VisualStudio.BuildTools",
+]
+
+[dev.winget."Microsoft.VisualStudio.BuildTools"]
+vs_requires = [
+    "Microsoft.VisualStudio.Workload.VCTools",
+    "Microsoft.VisualStudio.Component.VC.Llvm.Clang",
+]
