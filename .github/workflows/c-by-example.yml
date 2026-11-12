@@ -1,0 +1,30 @@
+name: c-by-example
+
+# Every lesson's examples must print what their README says, and every
+# broken-*.c must still fail for the reason it gives -- on Linux with gcc
+# and clang, and on macOS with Apple's clang.
+
+on:
+  push:
+    branches: [main]
+    paths: ["c-by-example/**", ".github/workflows/c-by-example.yml"]
+  pull_request:
+    paths: ["c-by-example/**", ".github/workflows/c-by-example.yml"]
+  workflow_dispatch:
+
+jobs:
+  lessons:
+    name: ${{ matrix.os }} / ${{ matrix.cc }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, cc: gcc }
+          - { os: ubuntu-latest, cc: clang }
+          - { os: macos-latest, cc: cc }
+    steps:
+      - uses: actions/checkout@v7
+      - run: ${{ matrix.cc }} --version
+      - run: make -C c-by-example test CC=${{ matrix.cc }}

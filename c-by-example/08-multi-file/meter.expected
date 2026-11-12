@@ -1,0 +1,3 @@
+loud : rms 1.000, peak 1.000 =   0.00 dBFS
+quiet: rms 0.500, peak 0.500 =  -6.02 dBFS
+BAD_SQUARE(1 + 2) = 5, DSP_SQUARE(1 + 2) = 9

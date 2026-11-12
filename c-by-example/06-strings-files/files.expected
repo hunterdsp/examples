@@ -1,0 +1,6 @@
+"tone": strlen 4, sizeof 5 (the extra byte is the '\0')
+path "tone-440.f32" (12 chars, fits: yes)
+tiny "tone-440.f3" (needed 12, truncated: yes)
+read 4 samples: 0.00 0.50 1.00 -1.00
+round trip exact: yes
+1.0f in memory: 00 00 80 3f  (little-endian)

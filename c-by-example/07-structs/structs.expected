@@ -1,0 +1,5 @@
+DC gain 1.000, state starts at z1=0.0 z2=0.0
+step response: 0.200 0.680 1.032 1.077 1.024 0.994 0.993 0.998
+copy is independent: lp.z1 = 0.801, copy.z1 = 0.0
+sizeof(struct padded) = 24, sizeof(struct packed) = 16
+offsetof(struct padded, value) = 8

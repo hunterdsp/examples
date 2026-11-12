@@ -1,0 +1,24 @@
+# What the course needs, installed by `jbx install-deps -g dev` with your
+# system's package manager. Part I needs only a compiler and make; the
+# debugger and Valgrind arrive for Part II, CMake and Doxygen for Part V.
+#
+# macOS: the compiler, make and lldb come with the Xcode Command Line Tools
+# (`xcode-select --install`); Valgrind does not run on current macOS, which
+# is why the course leans on the sanitizers built into clang instead.
+
+[project]
+name    = "c-by-example"
+version = "0.1.0"
+
+[dev.apt]
+packages = ["build-essential", "clang", "gdb", "valgrind", "cmake", "doxygen"]
+
+[dev.dnf]
+packages = ["gcc", "clang", "make", "gdb", "valgrind", "cmake", "doxygen",
+            "libasan", "libubsan"]
+
+[dev.pacman]
+packages = ["gcc", "clang", "make", "gdb", "valgrind", "cmake", "doxygen"]
+
+[dev.brew]
+packages = ["cmake", "doxygen"]
