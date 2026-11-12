@@ -97,10 +97,6 @@ which folder to run it in.
    ```bash
    make clean
    make
-   make
-   sleep 1       # some makes (macOS's) only see whole seconds
-   touch dsp.c
-   make
    ```
 
    ```
@@ -108,18 +104,36 @@ which folder to run it in.
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c meter.c
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c dsp.c
    cc -fsanitize=address,undefined -o meter meter.o dsp.o -lm
+   ```
+
+   It compiles both files and links. Again:
+
+   ```bash
+   make
+   ```
+
+   ```
    make: 'meter' is up to date.
+   ```
+
+   Nothing to do: every target is newer than what it is built from. Now
+   `touch dsp.c`, which only updates the file's timestamp:
+
+   ```bash
+   sleep 1       # some makes (macOS's) only see whole seconds
+   touch dsp.c
+   make
+   ```
+
+   ```
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c dsp.c
    cc -fsanitize=address,undefined -o meter meter.o dsp.o -lm
    ```
 
-   The first `make` compiles both files and links. The second does
-   nothing: every target is newer than what it is built from. After
-   `touch dsp.c`, which only updates the file's timestamp, `make`
-   recompiles `dsp.c` alone and relinks; `meter.o` is still up to date.
-   That is the whole of `make`: compare timestamps, rebuild what is out
-   of date, in the right order. (The `sleep 1` is for older versions of
-   `make`, such as the one macOS ships, which compare timestamps to the
+   `make` recompiles `dsp.c` alone and relinks; `meter.o` is still up to
+   date. That is the whole of `make`: compare timestamps, rebuild what is
+   out of date, in the right order. (The `sleep 1` is for older versions
+   of `make`, such as the one macOS ships, which compare timestamps to the
    whole second: touched in the same second it was built, `dsp.c` would
    look no newer than `dsp.o`. Typing by hand, you will never be that
    quick.)

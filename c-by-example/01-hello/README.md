@@ -181,11 +181,17 @@ which folder to run it in.
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello
-   ../ex2-argv0/hello
    ```
 
    ```
    argv[0] = ./hello
+   ```
+
+   ```bash
+   ../ex2-argv0/hello
+   ```
+
+   ```
    argv[0] = ../ex2-argv0/hello
    ```
 

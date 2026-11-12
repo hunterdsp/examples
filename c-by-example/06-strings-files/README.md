@@ -82,7 +82,6 @@ which folder to run it in.
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined files.c -o files
    ./files sine
-   ./files a-much-longer-name
    ```
 
    ```
@@ -92,6 +91,13 @@ which folder to run it in.
    read 4 samples: 0.00 0.50 1.00 -1.00
    round trip exact: yes
    1.0f in memory: 00 00 80 3f  (little-endian)
+   ```
+
+   ```bash
+   ./files a-much-longer-name
+   ```
+
+   ```
    "tone": strlen 4, sizeof 5 (the extra byte is the '\0')
    path "a-much-longer-name-440.f32" (26 chars, fits: yes)
    tiny "a-much-long" (needed 26, truncated: yes)
