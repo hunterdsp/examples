@@ -192,7 +192,74 @@ file in between.
 
 ## Exercises
 
-1. Run `cc -E stages.c | wc -l`. Where did all those lines come from?
+Try each one before opening its answer. The output shown is GCC on Linux;
+clang words its messages differently but stops at the same stage.
+
+1. Find `puts` in `stages.i`. Where does the preprocessor say it came from?
+
+   ```bash
+   grep -n -w puts stages.i
+   ```
+
+   <details><summary>Output and answer</summary>
+
+   ```
+   716:extern int puts (const char *__s);
+   851:  puts ("compiled, linked, ran");
+   ```
+
+   Line 716 is the *declaration*: it tells the compiler `puts` takes a
+   string and returns an `int`, without saying how it does it. Lines
+   starting `# 1 "/usr/include/stdio.h"` near the top of `stages.i` mark
+   where the pasted-in file begins. Your line numbers may differ.
+
+   </details>
+
 2. Delete `#include <stdio.h>` and build. Which stage complains?
+
+   ```bash
+   cc stages.c -o stages && ./stages
+   ```
+
+   <details><summary>Output and answer</summary>
+
+   ```
+   stages.c: In function ‘main’:
+   stages.c:12:3: error: implicit declaration of function ‘puts’ [-Wimplicit-function-declaration]
+      12 |   puts (GREETING);
+         |   ^~~~
+   stages.c:1:1: note: include ‘<stdio.h>’ or provide a declaration of ‘puts’
+     +++ |+#include <stdio.h>
+       1 | /* stages.c -- the smallest program worth taking apart.
+   ```
+
+   The *compiler* (stage 2). The preprocessor is happy: there is simply
+   nothing to paste. But without the declaration from exercise 1, the
+   compiler meets `puts` with no idea what it is, and refuses to guess.
+   Put the line back before going on.
+
+   </details>
+
 3. Rename `main` to `start` and build. Which stage complains now, and why
    that one?
+
+   ```bash
+   cc stages.c -o stages && ./stages
+   ```
+
+   <details><summary>Output and answer</summary>
+
+   ```
+   /usr/bin/x86_64-linux-gnu-ld.bfd: /usr/lib/gcc/x86_64-linux-gnu/15/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+   (.text+0x1b): undefined reference to `main'
+   collect2: error: ld returned 1 exit status
+   ```
+
+   The *linker* (stage 4): `ld` is the linker. `start` is a perfectly good
+   function name, so stages 1 to 3 succeed, and `nm` on the object file
+   shows `T start`. But every program is linked with a little startup
+   code from the C library (`Scrt1.o` above), and its `_start` calls
+   `main`. Nothing defines `main`, so that hole cannot be filled. Rename
+   it back.
+
+   </details>
