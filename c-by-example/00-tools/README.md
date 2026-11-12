@@ -1,22 +1,34 @@
 # 00 · Tools
 
-You need three things: a C compiler, `make`, and a debugger. One line
-installs all of them, with whatever package manager your system uses:
+## One time set up
+
+Install [`jbx`](https://just-buildit.github.io/just-bashit/) which gets
+you a working dev machine in one command.
+
+```bash
+. <(curl -sSL https://just-buildit.github.io/get-jb.sh)
+```
+
+Clone this repository and move into the project root
 
 ```bash
 git clone https://github.com/hunterdsp/examples.git
-cd examples                                               # the repo root
-# install jbx once - the remote script-runner and more
-. <(curl -sSL https://just-buildit.github.io/get-jb.sh)
-(cd c-by-example && jbx install-deps -g dev)              # C toolchain
+cd examples
+```
+
+On macOS, run `xcode-select --install` first: it brings `cc` (clang),
+`make` and `lldb`.
+
+You need three things: a C compiler, `make`, and a debugger.
+One line installs them all, using your system package manager:
+
+```bash
+jbx install-deps -g dev c-by-example/bootstrap.toml
 ```
 
 Every lesson starts from the repo root, the `examples/` you just cloned
 into: its first block `cd`s into the lesson, and the blocks after it run
 there.
-
-On macOS, run `xcode-select --install` first: it brings `cc` (clang),
-`make` and `lldb`.
 
 Check it worked:
 
