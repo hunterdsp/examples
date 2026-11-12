@@ -67,9 +67,89 @@ from those needs its bytes swapped.
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Run `./files sine`, then `./files a-much-longer-name`. Which lines
    change, and why?
+
+   <details><summary>Output and answer</summary>
+
+   This one needs no new code, only the lesson's program:
+
+   ```bash
+   cd c-by-example/06-strings-files
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined files.c -o files
+   ./files sine
+   ./files a-much-longer-name
+   ```
+
+   ```
+   "tone": strlen 4, sizeof 5 (the extra byte is the '\0')
+   path "sine-440.f32" (12 chars, fits: yes)
+   tiny "sine-440.f3" (needed 12, truncated: yes)
+   read 4 samples: 0.00 0.50 1.00 -1.00
+   round trip exact: yes
+   1.0f in memory: 00 00 80 3f  (little-endian)
+   "tone": strlen 4, sizeof 5 (the extra byte is the '\0')
+   path "a-much-longer-name-440.f32" (26 chars, fits: yes)
+   tiny "a-much-long" (needed 26, truncated: yes)
+   read 4 samples: 0.00 0.50 1.00 -1.00
+   round trip exact: yes
+   1.0f in memory: 00 00 80 3f  (little-endian)
+   ```
+
+   Only `path` and `tiny` change, since only they are built from the
+   name. `path` has room for 31 characters and the `'\0'`, so both names
+   fit. `tiny` has room for 11: `snprintf` stops there, still
+   terminates the string, and its return value (12, then 26) says how
+   much more it needed. The rest of the output never touches the name.
+
+   </details>
+
 2. Write 48000 samples of a 440 Hz sine (lesson 03) to `tone.f32`. If you
    have `sox`: `play -t f32 -r 48000 -c 1 tone.f32`.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/06-strings-files/exercises/ex2-tone
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined tone.c -o tone -lm
+   ./tone
+   ```
+
+   ```
+   wrote 48000 samples, 192000 bytes, to tone.f32
+   ```
+
+   One second of audio: 48000 samples of 4 bytes each. Sample `i` is
+   `sin(2π · 440 · i / 48000)`, the same formula as lesson 03's table with
+   time in place of the table index. The file is just the floats' bytes,
+   with no header, which is why `play` has to be told the format, rate
+   and channel count. Audacity opens it with *File → Import → Raw Data*.
+
+   </details>
+
 3. Write `uint32_t swap32(uint32_t x)` that reverses the byte order, and
    check it turns `0x3f800000` into `0x0000803f`.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/06-strings-files/exercises/ex3-swap32
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined swap32.c -o swap32
+   ./swap32
+   ```
+
+   ```
+   swap32(0x3f800000) = 0x0000803f
+   swap32(swap32(0x3f800000)) = 0x3f800000
+   ```
+
+   [`swap32`](exercises/ex3-swap32/swap32.c) shifts each byte to its
+   mirror position and masks off the rest. Swapping twice gives back the
+   original, which makes a quick test of any byte swap. Use `uint32_t`,
+   not `int`: shifting a negative signed value is a trap of its own.
+
+   </details>

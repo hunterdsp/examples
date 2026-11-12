@@ -6,6 +6,20 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined numbers.c -o numbers -
 ./numbers
 ```
 
+```
+int 4, long 8, float 4, double 8 bytes
+int16_t holds -32768 .. 32767
+7 / 2 = 3, 7 % 2 = 1, -7 / 2 = -3, 7 / 2.0 = 3.5
+200 + 100 = 300 as int, 44 as uint8_t
+uint8_t 255 + 1 = 0
+samples in a day at 48 kHz: 4147200000
+0.1 + 0.2 = 0.30000000000000004, == 0.3? no
+16777216.0f + 1 = 16777216.0
+half amplitude = -6.0206 dB
+-6 dB = 0.5012 x amplitude
+double the power = 3.0103 dB
+```
+
 Signal processing is arithmetic on a lot of numbers, fast. So before
 anything else: what C's number types actually hold, and the four ways they
 quietly give you the wrong answer. `-lm` links the maths library, which on
@@ -89,9 +103,83 @@ double the power.**
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Print `INT32_MAX` and `INT64_MAX`. How many days of 48 kHz audio fit in
    each?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/02-numbers/exercises/ex1-limits
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined limits.c -o limits
+   ./limits
+   ```
+
+   ```
+   INT32_MAX = 2147483647
+   INT64_MAX = 9223372036854775807
+   int32_t lasts 12.4 hours
+   int64_t lasts 6.1 million years
+   ```
+
+   Half a day for `int32_t`: a sample counter in one overflows after 12.4
+   hours, so a program that passes every test can still fail on the first
+   long run. `int64_t` lasts about 6 million years. Use 64 bits for any
+   count that grows with time. (The answer prints hours and years because
+   0.5 days and 2 billion days are hard to picture.)
+
+   </details>
+
 2. Convert −20 dB, −40 dB and −60 dB to amplitude ratios. What is the
    pattern?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/02-numbers/exercises/ex2-decibels
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined decibels.c -o decibels -lm
+   ./decibels
+   ```
+
+   ```
+   -20 dB = 0.1000 x amplitude
+   -40 dB = 0.0100 x amplitude
+   -60 dB = 0.0010 x amplitude
+   ```
+
+   Every −20 dB divides the amplitude by 10, because 20·log₁₀(0.1) = −20.
+   Decibels turn multiplying into adding: a 1000-fold range becomes 60 dB,
+   which is why audio levels, filter responses and radio signal strengths
+   are all quoted in dB.
+
+   </details>
+
 3. Sum `0.1f` ten thousand times in a `float`, then in a `double`, and print
    both with `%.6f`. Which one is 1000?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/02-numbers/exercises/ex3-float-sum
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sum.c -o sum
+   ./sum
+   ```
+
+   ```
+   float  sum of 0.1f: 999.902893
+   double sum of 0.1f: 1000.000015
+   double sum of 0.1 : 1000.000000
+   ```
+
+   Neither, at first. The `float` sum is off by a tenth: each addition
+   rounds to about 7 digits, and ten thousand roundings pile up. The
+   `double` sum of the same `0.1f` is off too, but by much less, and only
+   because `0.1f` itself is not 0.1: it is the nearest `float`, slightly
+   above it, and the `double` adds that up faithfully. Sum the `double`
+   `0.1` and the error drops below the sixth decimal place. Accumulate
+   in `double`, from `double` inputs, whenever a sum runs long.
+
+   </details>

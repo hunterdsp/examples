@@ -6,6 +6,9 @@ make && ./meter
 ```
 
 ```
+cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c meter.c
+cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c dsp.c
+cc -fsanitize=address,undefined -o meter meter.o dsp.o -lm
 loud : rms 1.000, peak 1.000 =   0.00 dBFS
 quiet: rms 0.500, peak 0.500 =  -6.02 dBFS
 BAD_SQUARE(1 + 2) = 5, DSP_SQUARE(1 + 2) = 9
@@ -78,10 +81,95 @@ objects do. Recipe lines must start with a **tab**, not spaces.
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Run `make`, then `make` again. Then `touch dsp.c` and `make`. Which
    commands ran each time?
+
+   <details><summary>Output and answer</summary>
+
+   This one uses the lesson's own Makefile. `make clean` first, so the
+   first `make` starts from nothing:
+
+   ```bash
+   cd c-by-example/08-multi-file
+   make clean
+   make
+   make
+   touch dsp.c
+   make
+   ```
+
+   ```
+   rm -f meter meter.o dsp.o
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c meter.c
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c dsp.c
+   cc -fsanitize=address,undefined -o meter meter.o dsp.o -lm
+   make: 'meter' is up to date.
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -c dsp.c
+   cc -fsanitize=address,undefined -o meter meter.o dsp.o -lm
+   ```
+
+   The first `make` compiles both files and links. The second does
+   nothing: every target is newer than what it is built from. After
+   `touch dsp.c`, which only updates the file's timestamp, `make`
+   recompiles `dsp.c` alone and relinks; `meter.o` is still up to date.
+   That is the whole of `make`: compare timestamps, rebuild what is out
+   of date, in the right order.
+
+   </details>
+
 2. Add `float dsp_crest_db(const float *buf, size_t n)` (peak over rms, in
    dB) to `dsp.h` and `dsp.c`. A sine wave's crest factor is 3.01 dB; what
    is a square wave's?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/08-multi-file/exercises/ex2-crest
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined crest.c dsp.c -o crest -lm
+   ./crest
+   ```
+
+   ```
+   sine  : crest 3.01 dB
+   square: crest 0.00 dB
+   ```
+
+   0 dB: a square wave sits at its peak all the time, so its peak and rms
+   are the same. A sine spends most of its time below its peak, so its
+   rms is lower by √2, which is 3.01 dB. [`dsp_crest_db`](exercises/ex2-crest/dsp.c)
+   is one line, built from the three functions already there. Crest
+   factor says how much headroom a signal needs above its average level.
+
+   </details>
+
 3. Rewrite `DSP_SQUARE` as a `static inline float dsp_square(float x)` in
    `dsp.h`, and check the output is unchanged.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/08-multi-file/exercises/ex3-inline
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined meter.c dsp.c -o meter -lm
+   ./meter
+   ```
+
+   ```
+   loud : rms 1.000, peak 1.000 =   0.00 dBFS
+   quiet: rms 0.500, peak 0.500 =  -6.02 dBFS
+   BAD_SQUARE(1 + 2) = 5, dsp_square(1 + 2) = 9
+   ```
+
+   The same numbers, and `dsp_square(1 + 2)` is 9 with no parentheses
+   needed: a function's argument is a value, evaluated once, not text
+   pasted in. It is `static inline` *in the header*, so each `.c` that
+   includes it gets its own copy, which the compiler folds into the
+   caller, as fast as the macro, and the linker sees no duplicates. One
+   thing did change: the macro squared a `double` in `dsp_rms`, and
+   `dsp_square` takes a `float`. The output is the same here, but a type
+   is a decision a macro never made for you.
+
+   </details>

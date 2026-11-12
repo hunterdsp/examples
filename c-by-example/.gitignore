@@ -1,8 +1,10 @@
 # What following a lesson leaves behind: the programs it builds (named
-# after their .c, so no extension), and the -E / -S / -c intermediates.
-[0-9][0-9]-*/*
-![0-9][0-9]-*/*.*
-![0-9][0-9]-*/Makefile
+# after their .c, so no extension), at any depth, and the -E / -S / -c
+# intermediates. Directories, files with an extension and Makefiles stay.
+[0-9][0-9]-*/**
+![0-9][0-9]-*/**/
+![0-9][0-9]-*/**/*.*
+![0-9][0-9]-*/**/Makefile
 *.o
 *.s
 *.i

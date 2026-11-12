@@ -58,10 +58,85 @@ FIR filter is this same loop with a weight on each tap.
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Change `WINDOW` to 8. How long does the ramp take now? What is the
    trade-off as the window grows?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/04-arrays/exercises/ex1-window-8
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
+   ./average
+   ```
+
+   ```
+   14 samples, window 8
+    in :     0     0     0     1     1     1     1     1     1     0     0     0     0     0
+    out: 0.000 0.000 0.000 0.250 0.400 0.500 0.571 0.625 0.750 0.750 0.750 0.625 0.500 0.375
+   ```
+
+   The ramp would take 8 samples, but the step is only 6 long, so the
+   output never gets there: it peaks at 0.750, 6 ones out of 8. (The
+   uneven start, 0.250 then 0.400, is the edge: the first outputs average
+   fewer than 8 samples.) A wider window smooths more, but answers more
+   slowly, and blunts short events until they barely show. Every filter
+   trades smoothing against delay.
+
+   </details>
+
 2. Feed it alternating `1, -1, 1, -1, …`. What comes out, and why does that
    make the moving average a low-pass filter?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/04-arrays/exercises/ex2-alternating
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
+   ./average
+   ```
+
+   ```
+   14 samples, window 4
+    in :  1.0 -1.0  1.0 -1.0  1.0 -1.0  1.0 -1.0  1.0 -1.0  1.0 -1.0  1.0 -1.0
+    out:  1.0  0.0  0.3  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+   ```
+
+   Silence, once the window is full: any 4 neighbours hold two +1s and two
+   −1s, which cancel. Alternating samples are the highest frequency a
+   signal can have, and the filter removes it completely, while the step
+   above, a low frequency, came through. Low frequencies pass, high ones
+   are cut: a low-pass filter.
+
+   </details>
+
 3. Rewrite `moving_average` to keep a running sum (add the new sample,
    subtract the one leaving the window) instead of re-adding the window
    every time. How many additions per sample does each version need?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/04-arrays/exercises/ex3-running-sum
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
+   ./average
+   ```
+
+   ```
+   running: 0.00 0.00 0.00 0.25 0.50 0.75 1.00 1.00 1.00 0.75 0.50 0.25 0.00 0.00
+   same as re-adding the window: yes
+   additions per sample: 4 re-adding, 2 running
+   ```
+
+   Re-adding costs `WINDOW` additions per sample, the running sum two,
+   whatever the window: at a window of 1000, that is 500 times less work.
+   One caution: with floating-point samples, what the running sum adds
+   and later subtracts can differ in the last bit, so over millions of
+   samples it drifts. Real code keeps the sum in `double`, or re-adds the
+   window now and then. These samples are 0 and 1, which `float` holds
+   exactly, so the two versions agree to the bit.
+
+   </details>

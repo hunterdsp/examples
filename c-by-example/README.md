@@ -27,7 +27,13 @@ make test CC=clang      # and again with clang
 ```
 
 `make test` checks that each example prints exactly what its lesson says,
-and that each broken one still fails, and for the reason given.
+and that each broken one still fails, and for the reason given. It runs
+the commands in every README, exercise answers included, and checks they
+print what the README shows.
+
+Each lesson ends with exercises. Every answer, folded under the exercise,
+shows the commands to run and what they print; the code is in the
+lesson's `exercises/` folder.
 
 You need a C compiler and `make`. To install them, and everything later
 lessons use: `jbx install-deps -g dev` (lesson 00).

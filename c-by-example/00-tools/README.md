@@ -193,10 +193,13 @@ file in between.
 ## Exercises
 
 Try each one before opening its answer. The output shown is GCC on Linux;
-clang words its messages differently but stops at the same stage.
+clang words its messages differently but stops at the same stage. (For
+exercises 2 and 3, [`exercises/`](exercises/) holds the broken program,
+and `make test` checks that each still stops where the answer says.)
 
 1. Find `puts` in `stages.i`. Where does the preprocessor say it came from?
 
+   <!-- no-run -->
    ```bash
    grep -n -w puts stages.i
    ```
@@ -217,6 +220,7 @@ clang words its messages differently but stops at the same stage.
 
 2. Delete `#include <stdio.h>` and build. Which stage complains?
 
+   <!-- no-run -->
    ```bash
    cc stages.c -o stages && ./stages
    ```
@@ -243,6 +247,7 @@ clang words its messages differently but stops at the same stage.
 3. Rename `main` to `start` and build. Which stage complains now, and why
    that one?
 
+   <!-- no-run -->
    ```bash
    cc stages.c -o stages && ./stages
    ```

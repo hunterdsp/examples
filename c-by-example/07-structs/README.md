@@ -68,9 +68,89 @@ million of them (lesson 25), that's a third of your memory and cache.
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Add a `biquad_reset(biquad_t *f)` that clears the state and leaves the
    coefficients alone. Run the step response twice with a reset between.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/07-structs/exercises/ex1-reset
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined reset.c -o reset
+   ./reset
+   ```
+
+   ```
+   first : 0.200 0.680 1.032 1.077 1.024 0.994 0.993 0.998
+   second: 0.200 0.680 1.032 1.077 1.024 0.994 0.993 0.998
+   identical: yes
+   ```
+
+   [`biquad_reset`](exercises/ex1-reset/reset.c) sets `f->z1` and `f->z2`
+   to 0 and nothing else. Because the coefficients and the state live in
+   separate parts of the struct, "forget the past, keep the filter" is
+   two lines. Every stateful object in Part III gets a reset like this.
+
+   </details>
+
 2. Set `.a1 = -1.8f, .a2 = 0.9f` and print 40 steps. Then try `.a2 = 1.1f`.
    What happened?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/07-structs/exercises/ex2-feedback
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined feedback.c -o feedback
+   ./feedback
+   ```
+
+   ```
+   a1 = -1.8, a2 = 0.9:
+        0.20     0.96     2.35     4.16     6.18     8.18     9.96    11.36
+       12.29    12.70    12.60    12.04    11.14    10.02     8.80     7.63
+        6.61     5.83     5.35     5.18     5.31     5.69     6.27     6.96
+        7.69     8.38     8.96     9.38     9.63     9.68     9.57     9.31
+        8.94     8.52     8.08     7.69     7.36     7.13     7.01     7.00
+   a1 = -1.8, a2 = 1.1:
+        0.20     0.96     2.31     3.90     5.28     6.01     5.82     4.66
+        2.78     0.69    -1.02    -1.80    -1.31     0.42     2.99     5.73
+        7.82     8.58     7.63     5.10     1.59    -1.95    -4.46    -5.08
+       -3.44     0.19     4.93     9.47    12.42    12.74    10.06     4.91
+       -1.44    -7.19   -10.55   -10.29    -6.12     1.11     9.53    16.73
+   ```
+
+   With `a2 = 0.9` the filter rings: it overshoots to 12.7, swings back
+   down to about 5, and slowly settles toward 8 (its DC gain, 0.8 / 0.1).
+   With `a2 = 1.1` each swing is bigger than the last: the filter is
+   *unstable*. Its own past outputs, fed back, grow faster than they die
+   away, so the output grows without limit, and in a real system it would
+   soon hit the largest number a `float` holds. Lesson 21 shows how to
+   tell, from the coefficients alone, which filters are safe.
+
+   </details>
+
 3. Print `sizeof` of a struct holding `char, int, char, int`. Reorder it to
    shrink it, and check with `offsetof`.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/07-structs/exercises/ex3-padding
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined padding.c -o padding
+   ./padding
+   ```
+
+   ```
+   interleaved: sizeof 16, offsets a 0 b 4 c 8 d 12
+   sorted:      sizeof 12, offsets b 0 d 4 a 8 c 9
+   ```
+
+   Each `int` must start at a multiple of 4, so after each `char` the
+   compiler pads 3 bytes: 10 bytes of data in 16. With both `int`s first,
+   the two `char`s share one 4-byte slot at the end: 12 bytes, a quarter
+   less. Largest members first is the rule of thumb.
+
+   </details>

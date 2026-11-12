@@ -73,8 +73,77 @@ library API in Part V is built on it.
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Write `void min_max(const float *buf, size_t n, float *lo, float *hi)`
    that hands back two results through pointers.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/05-pointers/exercises/ex1-min-max
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined min_max.c -o min_max
+   ./min_max
+   ```
+
+   ```
+   min -1.00, max 2.00
+   ```
+
+   The caller passes `&lo` and `&hi`, and [`min_max`](exercises/ex1-min-max/min_max.c)
+   writes through them, as `swap` did. The types tell the story:
+   `const float *buf` is read, `float *lo` and `float *hi` are written.
+   It needs `n` to be at least 1, since an empty buffer has no minimum;
+   say so where it is declared, as the code does.
+
+   </details>
+
 2. Rewrite `gain_in_place` to walk a pointer (`for (float *p = buf; …)`)
    instead of an index. Check the output is identical.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/05-pointers/exercises/ex2-pointer-walk
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined walk.c -o walk
+   ./walk
+   ```
+
+   ```
+   doubled: 1.00 -2.00 4.00 0.60
+   identical to the index version: yes
+   ```
+
+   The loop is `for (float *p = buf; p < buf + n; p++) *p *= g;`.
+   `buf + n` points one past the last sample: C lets you form that
+   address and compare against it, but never read through it. An
+   optimising compiler turns both versions into the same machine code, so
+   pick whichever reads better.
+
+   </details>
+
 3. Print `sizeof(float *)` and `sizeof(char *)`. Why are they the same?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/05-pointers/exercises/ex3-pointer-size
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sizes.c -o sizes
+   ./sizes
+   ```
+
+   ```
+   sizeof(float *)  = 8
+   sizeof(char *)   = 8
+   sizeof(double *) = 8
+   but sizeof(float) = 4 and sizeof(char) = 1
+   ```
+
+   A pointer holds an address, and an address is the same size whatever
+   lives there: 8 bytes on a 64-bit machine. The pointed-to type does not
+   change the pointer; it tells the compiler how many bytes to read
+   through it, and how far `p + 1` steps.
+
+   </details>

@@ -72,9 +72,85 @@ result is −2.4×10⁻¹⁶, and `%.4f` keeps its sign. Floating-point results 
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Add `void sine_scale(float *table, size_t n, float gain)` to `sine.h` and
    `sine.c`, and use it to halve a table.
+
+   <details><summary>Output and answer</summary>
+
+   The declaration goes in [`sine.h`](exercises/ex1-sine-scale/sine.h), the
+   code in [`sine.c`](exercises/ex1-sine-scale/sine.c), and
+   [`halve.c`](exercises/ex1-sine-scale/halve.c) calls it:
+
+   ```bash
+   cd c-by-example/03-functions/exercises/ex1-sine-scale
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined halve.c sine.c -o halve -lm
+   ./halve
+   ```
+
+   ```
+   full:  0.0000  0.7071  1.0000  0.7071  0.0000 -0.7071 -1.0000 -0.7071
+   half:  0.0000  0.3536  0.5000  0.3536  0.0000 -0.3536 -0.5000 -0.3536
+   ```
+
+   `sine_scale` changes the caller's samples, not a copy, because an array
+   argument arrives as the address of its first element.
+
+   </details>
+
 2. Remove `static` from `made` and declare `extern int made;` in `table.c`.
    It works. Why is that worse?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/03-functions/exercises/ex2-extern
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o table -lm
+   ./table
+   ```
+
+   ```
+   tables made: 2
+   tables made: -5 (according to sine_tables_made: -5)
+   ```
+
+   It works: `table.c` reads the count directly. But it can also *write*
+   it, and so can every other file in the program, so the count is only
+   as right as the least careful of them. Even `sine_tables_made()` now
+   reports −5. With `static`, only `sine.c` can change `made`, and a
+   wrong count can only be `sine.c`'s fault.
+
+   </details>
+
 3. Generate 3.5 cycles over 8 samples and print it. Where does the
    discontinuity land, and what would it sound like on repeat?
+
+   <details><summary>Output and answer</summary>
+
+   [`cycles.c`](exercises/ex3-half-cycle/cycles.c) builds against the
+   lesson's own `sine.c`, two folders up (`-I ../..` tells the compiler to
+   look there for `sine.h` too). It prints the table played twice
+   (`looped`), under the same sine carried on for 16 samples (`wave`):
+
+   ```bash
+   cd c-by-example/03-functions/exercises/ex3-half-cycle
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../.. cycles.c ../../sine.c -o cycles -lm
+   ./cycles
+   ```
+
+   ```
+   wave  :  0.00  0.38 -0.71  0.92 -1.00  0.92 -0.71  0.38  0.00 -0.38  0.71 -0.92  1.00 -0.92  0.71 -0.38
+   looped:  0.00  0.38 -0.71  0.92 -1.00  0.92 -0.71  0.38  0.00  0.38 -0.71  0.92 -1.00  0.92 -0.71  0.38
+   ```
+
+   They agree up to sample 8, where the second copy starts. There the wave
+   is half-way through a cycle and heading down, but the loop starts the
+   table again, heading up: from then on it is the wave upside down. That
+   seam comes round every 8 samples, so instead of a pure tone, a loop of
+   this table plays a harsh, buzzy one. Loop only tables that hold a whole
+   number of cycles.
+
+   </details>

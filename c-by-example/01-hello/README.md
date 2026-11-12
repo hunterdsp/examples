@@ -4,10 +4,13 @@
 cd c-by-example/01-hello
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
 ./hello one two
-# Hello, World!
-# called with 2 argument(s)
-#   argv[1] = one
-#   argv[2] = two
+```
+
+```
+Hello, World!
+called with 2 argument(s)
+  argv[1] = one
+  argv[2] = two
 ```
 
 That build command is the one used for the rest of Parts I–II. Every flag is
@@ -55,7 +58,89 @@ that says *where* and a wrong answer that says nothing.
 
 ## Exercises
 
+Try each one before opening its answer. Every answer's commands run from
+the repo root, like the lesson's, and its code is in
+[`exercises/`](exercises/), one folder per exercise.
+
 1. Make the program return 3 and check `echo $?`. Then try
    `./hello && echo worked`.
-2. Print `argv[0]`. Run it as `./hello` and as `$PWD/hello`.
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/01-hello/exercises/ex1-exit-status
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
+   ./hello; echo $?
+   ./hello && echo worked
+   ```
+
+   ```
+   Hello, World!
+   called with 0 argument(s)
+   3
+   Hello, World!
+   called with 0 argument(s)
+   ```
+
+   `echo $?` prints the status the program returned: 3. The program
+   printed its greeting both times, but `worked` never appears: `&&` runs
+   its right-hand side only when the left one returns 0. That one number
+   is how every script and Makefile decides whether to carry on.
+
+   </details>
+
+2. Print `argv[0]`. Run the program as `./hello`, and again by a different
+   path to the same file. What does `argv[0]` hold?
+
+   <details><summary>Output and answer</summary>
+
+   ```bash
+   cd c-by-example/01-hello/exercises/ex2-argv0
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
+   ./hello
+   ../ex2-argv0/hello
+   ```
+
+   ```
+   argv[0] = ./hello
+   argv[0] = ../ex2-argv0/hello
+   ```
+
+   Exactly what you typed: the same program, two different `argv[0]`s.
+   It is the *name it was run by*, not where the file lives, so a program
+   cannot rely on it to find files next to itself.
+
+   </details>
+
 3. Pass `%d` a string instead of a number. What does `-Wall` say?
+
+   <details><summary>Output and answer</summary>
+
+   <!-- no-run -->
+   ```bash
+   cd c-by-example/01-hello/exercises/ex3-format
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined broken-format.c -o broken-format
+   ./broken-format
+   ```
+
+   GCC prints this, then builds the program anyway (clang words it
+   differently, and says the same thing):
+
+   ```
+   broken-format.c: In function ‘main’:
+   broken-format.c:12:13: warning: format ‘%d’ expects argument of type ‘int’, but argument 2 has type ‘char *’ [-Wformat=]
+      12 |   printf ("%d\n", "three");
+         |            ~^     ~~~~~~~
+         |             |     |
+         |             int   char *
+         |            %s
+   ```
+
+   It is only a *warning*, so the program builds, and runs, and prints
+   nonsense: a different number every run (`-1068400608` here), because
+   `printf` read part of the string's address as if it were an `int`.
+   `printf` cannot see its arguments' types; the format is all it goes
+   by. That is why the warning is worth stopping for, and why `check.sh`
+   builds with `-Werror`, which turns every warning into an error.
+
+   </details>
