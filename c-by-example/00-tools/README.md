@@ -93,16 +93,24 @@ cc stages.c -o stages && ./stages
 # compiled, linked, ran
 ```
 
-That one command is four programs in a row. Each one can be stopped and
-looked at, and knowing which one is complaining is half of fixing any build
-error.
+That one command is four programs in a row, each reading the file the one
+before it wrote. Run them one at a time and you get every file in between,
+which you can open and read. Knowing which stage is complaining is half of
+fixing any build error.
 
-**1. Preprocess** (`-E`): text in, text out. `#include` pastes in a file,
-`#define` replaces names. Look at the tail of the output: `GREETING` is gone,
-replaced by the string it stood for.
+```
+stages.c  --preprocess-->  stages.i  --compile-->  stages.s
+          --assemble---->  stages.o  --link----->  stages
+```
+
+**1. Preprocess** (`-E`): C in, C out. `#include` pastes in a whole file and
+`#define` replaces names, so `stages.i` is still C, just with every `#` line
+carried out:
 
 ```bash
-cc -E stages.c | tail -6
+cc -E stages.c -o stages.i
+wc -l stages.c stages.i     # a few lines in, hundreds out: stdio.h
+tail -6 stages.i
 ```
 
 ```c
@@ -114,12 +122,16 @@ main (void)
 }
 ```
 
-**2. Compile** (`-S`): C becomes assembly, the CPU's own instructions
-written out as text. Our `puts (...)` line has become one instruction,
-`call`, which jumps to `puts` and comes back when it is done:
+`GREETING` is gone, replaced by the string it stood for, and the hundreds
+of lines above `main` are `stdio.h` pasted in, `puts` among them.
+
+**2. Compile** (`-S`): the preprocessed C becomes assembly, the CPU's own
+instructions written out as text. Our `puts (...)` line has become one
+instruction, `call`, which jumps to `puts` and comes back when it is done:
 
 ```bash
-cc -S stages.c -o - | grep puts
+cc -S stages.i -o stages.s
+grep puts stages.s
 #       call    puts@PLT
 ```
 
@@ -129,22 +141,29 @@ Silicon Mac, say) uses a different instruction altogether. What matters is
 that `puts` is still just a name here. The `@PLT` suffix is how a call
 reaches a function in a shared library; you can ignore it for now.
 
-**3. Assemble** (`-c`): assembly becomes an object file, machine code with
-holes in it. `nm` lists what it defines (`T main`) and what it still needs
-from somewhere else (`U puts`, undefined):
+**3. Assemble** (`-c`): the assembly becomes an *object file*, machine code
+with holes in it. `nm` lists what it defines (`T main`) and what it still
+needs from somewhere else (`U puts`, undefined):
 
 ```bash
-cc -c stages.c && nm stages.o
+cc -c stages.s -o stages.o
+nm stages.o
 # 0000000000000000 T main
 #                  U puts
 ```
 
-**4. Link**: the linker fills every hole. `puts` comes from the C standard
-library, which is linked in by default:
+**4. Link**: the linker fills every hole and writes a program you can run.
+`puts` comes from the C standard library, which is linked in by default:
 
 ```bash
-cc stages.o -o stages && ./stages
+cc stages.o -o stages
+./stages
+# compiled, linked, ran
 ```
+
+Once you know the stages exist, you rarely need to run them by hand:
+`cc -save-temps stages.c -o stages` does all four in one go and keeps every
+file in between.
 
 ## Pitfalls
 
