@@ -19,8 +19,10 @@ cd examples
 On macOS, run `xcode-select --install` first: it brings `cc` (clang),
 `make` and `lldb`.
 
-You need three things: a C compiler, `make`, and a debugger.
-One line installs them all, using your system package manager:
+You need three things: a C compiler, `make`, and a debugger. One line
+installs them, along with a few other tools that help later on (a second
+compiler, a memory checker, CMake, Doxygen), using your system package
+manager:
 
 ```bash
 jbx install-deps -g dev c-by-example/bootstrap.toml
