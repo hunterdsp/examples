@@ -79,11 +79,11 @@ every script in the namespace to that commit.
 
 [`python-c-extension/`](python-c-extension/) is a C library with a Python
 binding, exactly as [just-makeit](https://just-buildit.github.io/just-makeit/)
-generates it — nothing edited by hand:
+generates it — nothing edited by hand (just-makeit 0.128.0):
 
 ```bash
-uv tool run --from just-makeit==0.128.0 \
-    just-makeit new hello python-c-extension --object gain --state k:double:2.0
+. <(curl -fsSL https://just-buildit.github.io/just-makeit/install.sh)   # jm
+jm new hello python-c-extension --object gain --state k:double:2.0
 ```
 
 To build it and run its tests (C through CTest, Python through unittest):
