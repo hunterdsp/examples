@@ -98,6 +98,7 @@ the repo root, like the lesson's, and its code is in
    make clean
    make
    make
+   sleep 1       # some makes (macOS's) only see whole seconds
    touch dsp.c
    make
    ```
@@ -117,7 +118,11 @@ the repo root, like the lesson's, and its code is in
    `touch dsp.c`, which only updates the file's timestamp, `make`
    recompiles `dsp.c` alone and relinks; `meter.o` is still up to date.
    That is the whole of `make`: compare timestamps, rebuild what is out
-   of date, in the right order.
+   of date, in the right order. (The `sleep 1` is for older versions of
+   `make`, such as the one macOS ships, which compare timestamps to the
+   whole second: touched in the same second it was built, `dsp.c` would
+   look no newer than `dsp.o`. Typing by hand, you will never be that
+   quick.)
 
    </details>
 
