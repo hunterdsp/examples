@@ -7,7 +7,7 @@ installs all of them, with whatever package manager your system uses:
 git clone https://github.com/hunterdsp/examples.git
 cd examples                                               # the repo root
 . <(curl -sSL https://just-buildit.github.io/get-jb.sh)   # jbx, once
-(cd c-by-example && jbx install-deps -g dev)              # bootstrap.toml
+(cd c-by-example && jbx install-deps -g dev)              # C toolchain
 ```
 
 Every lesson starts from the repo root, the `examples/` you just cloned
