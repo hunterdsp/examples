@@ -1,8 +1,8 @@
 # 02 · Numbers
 
+Run this lesson's commands in `c-by-example/02-numbers/`.
+
 ```bash
-ROOT=$PWD                   # the repo root, for the exercises
-cd c-by-example/02-numbers
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined numbers.c -o numbers -lm
 ./numbers
 ```
@@ -104,17 +104,18 @@ double the power.**
 
 ## Exercises
 
-Try each one before opening its answer. Every answer starts with a `cd`
-through `$ROOT`, so it works from wherever you are, in any order. Its code
-is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Its code is in
+[`exercises/`](exercises/), one folder per exercise, and the answer says
+which folder to run it in.
 
 1. Print `INT32_MAX` and `INT64_MAX`. How many days of 48 kHz audio fit in
    each?
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex1-limits/`:
+
    ```bash
-   cd "$ROOT/c-by-example/02-numbers/exercises/ex1-limits"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined limits.c -o limits
    ./limits
    ```
@@ -139,8 +140,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex2-decibels/`:
+
    ```bash
-   cd "$ROOT/c-by-example/02-numbers/exercises/ex2-decibels"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined decibels.c -o decibels -lm
    ./decibels
    ```
@@ -163,8 +165,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex3-float-sum/`:
+
    ```bash
-   cd "$ROOT/c-by-example/02-numbers/exercises/ex3-float-sum"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sum.c -o sum
    ./sum
    ```

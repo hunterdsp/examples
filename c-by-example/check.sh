@@ -82,40 +82,28 @@ for lesson in "$@"; do
 	lesson=${lesson%/}
 	echo "$lesson"
 
-	# The README's commands must run as written by a reader at the repo
-	# root: the first one that touches the lesson's files (cc on a .c,
-	# make, ./prog) comes after a `cd c-by-example/<lesson>` line.
-	if awk -v want="cd c-by-example/$lesson" '
-		/^```bash/ { inblk = 1; next }
-		/^```/     { inblk = 0; next }
-		inblk && $0 == want { cd = 1 }
-		inblk && /^(cc .*\.c|make|\.\/)/ { exit cd ? 0 : 1 }
-	' "$lesson/README.md"; then
-		ok "README starts from the repo root"
-	else
-		bad "README" "a command runs before \`cd c-by-example/$lesson\`"
-	fi
-
-	# The README is itself a test. Every ```bash block from the first
-	# `cd c-by-example/...` on runs, in order, in one shell, inside a
-	# scratch copy of the repo. That `cd` is the only one from the repo
-	# root, and the block sets ROOT=$PWD before it. A later block runs in
-	# the lesson's folder, where the reader is, unless it starts with
-	# `cd "$ROOT/...`, as every exercise answer does. A bash block
-	# immediately followed (blank lines only) by another fenced block is
-	# a command and its output, and the output must match byte for byte.
-	# A bash block with no output block must exit 0. `<!-- no-run -->`
-	# skips the next bash block: kept for commands that fail on purpose,
-	# whose message differs by compiler (a broken-*.c checks those).
+	# The README is itself a test. Its ```bash blocks run, in order, in
+	# one shell, inside a scratch copy of the repo. A reader works in the
+	# lesson's folder, so each block runs there, except one that a line
+	# `In \`exercises/exN-name/\`:` introduces, which runs in that folder
+	# (one that does not exist fails), and one whose first line is
+	# `cd c-by-example/<lesson>`, which runs from the repo root (lesson 00
+	# teaches that `cd`). No other `cd` is allowed: the README says where
+	# a command runs, and the reader goes there. A bash block immediately
+	# followed (blank lines only) by another fenced block is a command and
+	# its output, and the output must match byte for byte. A bash block
+	# with no output block must exit 0. `<!-- no-run -->` skips the next
+	# bash block: kept for setup run once (00), and commands that fail on
+	# purpose, whose message differs by compiler (a broken-*.c checks
+	# those).
 	rm -rf "$work/rg" && mkdir "$work/rg"
-	awk -v dir="$work/rg" '
-		function flush_pending() { pending = 0 }
+	awk -v dir="$work/rg" -v home="cd c-by-example/$lesson" '
 		/^[ ]*<!-- no-run -->[ ]*$/ { norun = 1; next }
 		!inblk && /^[ ]*```/ {
 			ind = match($0, /[^ ]/) - 1
 			tag = substr($0, ind + 4)
-			inblk = 1; n_lines = 0
-			if (tag == "bash") { kind = "bash" }
+			inblk = 1; n_lines = 0; ncd = 0
+			if (tag == "bash") { kind = "bash"; where = indir; indir = "" }
 			else if (pending && !gap) { kind = "out" }
 			else { kind = "other" }
 			if (kind != "out") pending = 0
@@ -124,18 +112,16 @@ for lesson in "$@"; do
 		inblk && /^[ ]*```[ ]*$/ {
 			inblk = 0
 			if (kind == "bash") {
-				skip = norun; norun = 0
-				if (!started && body !~ /(^|\n)cd c-by-example\//) skip = 1
-				if (started && body ~ /(^|\n)cd c-by-example\//)
-					print NR >> (dir "/rootcd")
-				if (!skip) {
-					first_k = !started
-					started = 1; k++
+				if (badcd) print NR, badcd >> (dir "/badcd")
+				badcd = ""
+				if (!norun) {
+					k++
 					printf "%s", body > (dir "/" k ".sh"); close(dir "/" k ".sh")
-					from = first ~ /^cd "\$ROOT\// ? "abs" : "here"
-					print k, (first_k ? "root" : from), NR >> (dir "/list")
+					from = first == home ? "/" : where == "" ? "." : where
+					print k, NR, from >> (dir "/list")
 					pending = 1; gap = 0
 				} else { pending = 0 }
+				norun = 0
 			} else if (kind == "out") {
 				printf "%s", body > (dir "/" k ".exp"); close(dir "/" k ".exp")
 				pending = 0
@@ -147,31 +133,39 @@ for lesson in "$@"; do
 			line = $0
 			sub("^ {0," ind "}", "", line)
 			if (n_lines++ == 0) first = line
+			if (line ~ /^cd([ ;]|$)/ && kind == "bash" &&
+			    !(n_lines == 1 && line == home) && line != "cd examples")
+				badcd = line
 			body = body line "\n"
 			next
 		}
-		/[^ \t]/ { gap = 1 }
+		/^[ ]*In `[^`]+`:[ ]*$/ {
+			indir = $0; sub(/^[ ]*In `/, "", indir); sub(/`:[ ]*$/, "", indir)
+			gap = 1; next
+		}
+		/[^ \t]/ { gap = 1; indir = "" }
 	' "$lesson/README.md"
-	if [ -s "$work/rg/rootcd" ]; then
-		: >"$work/out"
-		bad "README" "block at line $(head -1 "$work/rg/rootcd") cds from the repo root; the reader is already in $lesson"
-	fi
 	lessondir=$work/root/c-by-example/$lesson
+	if [ -s "$work/rg/badcd" ]; then
+		while read -r line cmd; do
+			: >"$work/out"
+			bad "README" "block at line $line has \`$cmd\`: say where it runs instead"
+		done <"$work/rg/badcd"
+	fi
 	if [ ! -s "$work/rg/list" ]; then
 		: >"$work/out"
 		bad "README" "no runnable block (absent output is not a pass)"
 	else
 		checked=0
-		# shellcheck disable=SC2034  # line is read for the messages
-		unset ROOT    # each lesson's first block must set it
-		while read -r k from line; do
-			[ "$from" = root ] && { cd "$work/root" || exit 2; }
-			if [ "$from" = here ] &&
-				[ "$(pwd -P)" != "$(cd "$lessondir" && pwd -P)" ]; then
+		while read -r k line from; do
+			case $from in
+			/) cd "$work/root" ;;
+			*) cd "$lessondir/$from" 2>/dev/null ;;
+			esac || {
 				: >"$work/out"
-				bad "README" "block at line $line runs in $(pwd), not $lesson: start it with cd \"\$ROOT/..."
-				cd "$lessondir" || exit 2
-			fi
+				bad "README" "block at line $line runs in $from, which is not there"
+				continue
+			}
 			# shellcheck disable=SC1090  # the block is generated
 			. "$work/rg/$k.sh" >"$work/rg/$k.got" 2>&1
 			status=$?

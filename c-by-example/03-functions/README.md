@@ -1,8 +1,8 @@
 # 03 · Functions
 
+Run this lesson's commands in `c-by-example/03-functions/`.
+
 ```bash
-ROOT=$PWD                   # the repo root, for the exercises
-cd c-by-example/03-functions
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o table -lm
 ./table
 ```
@@ -73,9 +73,9 @@ result is −2.4×10⁻¹⁶, and `%.4f` keeps its sign. Floating-point results 
 
 ## Exercises
 
-Try each one before opening its answer. Every answer starts with a `cd`
-through `$ROOT`, so it works from wherever you are, in any order. Its code
-is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Its code is in
+[`exercises/`](exercises/), one folder per exercise, and the answer says
+which folder to run it in.
 
 1. Add `void sine_scale(float *table, size_t n, float gain)` to `sine.h` and
    `sine.c`, and use it to halve a table.
@@ -86,8 +86,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
    code in [`sine.c`](exercises/ex1-sine-scale/sine.c), and
    [`halve.c`](exercises/ex1-sine-scale/halve.c) calls it:
 
+   In `exercises/ex1-sine-scale/`:
+
    ```bash
-   cd "$ROOT/c-by-example/03-functions/exercises/ex1-sine-scale"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined halve.c sine.c -o halve -lm
    ./halve
    ```
@@ -107,8 +108,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex2-extern/`:
+
    ```bash
-   cd "$ROOT/c-by-example/03-functions/exercises/ex2-extern"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o table -lm
    ./table
    ```
@@ -136,8 +138,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
    look there for `sine.h` too). It prints the table played twice
    (`looped`), under the same sine carried on for 16 samples (`wave`):
 
+   In `exercises/ex3-half-cycle/`:
+
    ```bash
-   cd "$ROOT/c-by-example/03-functions/exercises/ex3-half-cycle"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../.. cycles.c ../../sine.c -o cycles -lm
    ./cycles
    ```

@@ -1,8 +1,8 @@
 # 06 · Strings and files
 
+Run this lesson's commands in `c-by-example/06-strings-files/`.
+
 ```bash
-ROOT=$PWD                   # the repo root, for the exercises
-cd c-by-example/06-strings-files
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined files.c -o files
 ./files
 ```
@@ -68,9 +68,9 @@ from those needs its bytes swapped.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer starts with a `cd`
-through `$ROOT`, so it works from wherever you are, in any order. Its code
-is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Its code is in
+[`exercises/`](exercises/), one folder per exercise, and the answer says
+which folder to run it in.
 
 1. Run `./files sine`, then `./files a-much-longer-name`. Which lines
    change, and why?
@@ -80,7 +80,6 @@ is in [`exercises/`](exercises/), one folder per exercise.
    This one needs no new code, only the lesson's program:
 
    ```bash
-   cd "$ROOT/c-by-example/06-strings-files"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined files.c -o files
    ./files sine
    ./files a-much-longer-name
@@ -114,8 +113,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex2-tone/`:
+
    ```bash
-   cd "$ROOT/c-by-example/06-strings-files/exercises/ex2-tone"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined tone.c -o tone -lm
    ./tone
    ```
@@ -137,8 +137,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex3-swap32/`:
+
    ```bash
-   cd "$ROOT/c-by-example/06-strings-files/exercises/ex3-swap32"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined swap32.c -o swap32
    ./swap32
    ```

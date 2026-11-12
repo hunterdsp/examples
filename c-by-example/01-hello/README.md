@@ -1,11 +1,11 @@
 # 01 · Hello
 
+Run this lesson's commands in `c-by-example/01-hello/`.
+
 A first program, and the build command used for the rest of the course.
 Here it is:
 
 ```bash
-ROOT=$PWD                   # the repo root, for the exercises
-cd c-by-example/01-hello
 cat hello.c
 ```
 
@@ -119,17 +119,18 @@ program that fails must return something other than 0.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer starts with a `cd`
-through `$ROOT`, so it works from wherever you are, in any order. Its code
-is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Its code is in
+[`exercises/`](exercises/), one folder per exercise, and the answer says
+which folder to run it in.
 
 1. Make the program return 3 and check `echo $?`. Then try
    `./hello && echo worked`.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex1-exit-status/`:
+
    ```bash
-   cd "$ROOT/c-by-example/01-hello/exercises/ex1-exit-status"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello; echo $?
    ./hello && echo worked
@@ -155,8 +156,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex2-argv0/`:
+
    ```bash
-   cd "$ROOT/c-by-example/01-hello/exercises/ex2-argv0"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello
    ../ex2-argv0/hello
@@ -177,9 +179,10 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex3-format/`:
+
    <!-- no-run -->
    ```bash
-   cd "$ROOT/c-by-example/01-hello/exercises/ex3-format"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined broken-format.c -o broken-format
    ./broken-format
    ```

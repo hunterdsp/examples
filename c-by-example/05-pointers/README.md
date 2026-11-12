@@ -1,8 +1,8 @@
 # 05 · Pointers
 
+Run this lesson's commands in `c-by-example/05-pointers/`.
+
 ```bash
-ROOT=$PWD                   # the repo root, for the exercises
-cd c-by-example/05-pointers
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined pointers.c -o pointers
 ./pointers
 ```
@@ -74,17 +74,18 @@ library API in Part V is built on it.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer starts with a `cd`
-through `$ROOT`, so it works from wherever you are, in any order. Its code
-is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Its code is in
+[`exercises/`](exercises/), one folder per exercise, and the answer says
+which folder to run it in.
 
 1. Write `void min_max(const float *buf, size_t n, float *lo, float *hi)`
    that hands back two results through pointers.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex1-min-max/`:
+
    ```bash
-   cd "$ROOT/c-by-example/05-pointers/exercises/ex1-min-max"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined min_max.c -o min_max
    ./min_max
    ```
@@ -106,8 +107,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex2-pointer-walk/`:
+
    ```bash
-   cd "$ROOT/c-by-example/05-pointers/exercises/ex2-pointer-walk"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined walk.c -o walk
    ./walk
    ```
@@ -129,8 +131,9 @@ is in [`exercises/`](exercises/), one folder per exercise.
 
    <details><summary>Output and answer</summary>
 
+   In `exercises/ex3-pointer-size/`:
+
    ```bash
-   cd "$ROOT/c-by-example/05-pointers/exercises/ex3-pointer-size"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sizes.c -o sizes
    ./sizes
    ```

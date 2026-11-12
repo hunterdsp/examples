@@ -31,9 +31,10 @@ and that each broken one still fails, and for the reason given. It runs
 the commands in every README, exercise answers included, and checks they
 print what the README shows.
 
-Each lesson ends with exercises. Every answer, folded under the exercise,
-shows the commands to run and what they print; the code is in the
-lesson's `exercises/` folder.
+A lesson's commands run in its folder: `cd c-by-example/01-hello` to
+start lesson 01, and so on. Each lesson ends with exercises. Every answer,
+folded under the exercise, names the folder in `exercises/` it runs in,
+and shows the commands to run and what they print.
 
 You need a C compiler and `make`. To install them, and everything later
 lessons use: `jbx install-deps -g dev` (lesson 00).

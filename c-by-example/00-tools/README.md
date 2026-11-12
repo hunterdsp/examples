@@ -5,12 +5,14 @@
 Install [`jbx`](https://just-buildit.github.io/just-bashit/) which gets
 you a working dev machine in one command.
 
+<!-- no-run -->
 ```bash
 . <(curl -sSL https://just-buildit.github.io/get-jb.sh)
 ```
 
 Clone this repository and move into the project root
 
+<!-- no-run -->
 ```bash
 git clone https://github.com/hunterdsp/examples.git
 cd examples
@@ -24,14 +26,15 @@ installs them, along with a few other tools that help later on (a second
 compiler, a memory checker, CMake, Doxygen), using your system package
 manager:
 
+<!-- no-run -->
 ```bash
 jbx install-deps -g dev c-by-example/bootstrap.toml
 ```
 
-Every lesson starts from the repo root, the `examples/` you just cloned
-into. Its first block remembers that folder as `ROOT` and `cd`s into the
-lesson, and the blocks after it run there. An exercise answer `cd`s to its
-own folder through `$ROOT`, so it works whichever one you try first.
+Each lesson is a folder under `c-by-example/`, and its commands run in
+that folder: `cd` into it before you start, as this lesson does below. An
+exercise answer runs in its own folder, under `exercises/`, and says
+which.
 
 Check it worked:
 
@@ -59,7 +62,6 @@ Here is the program we will take apart. Note the two lines starting with
 `#`: they are not C, but instructions to the first stage below.
 
 ```bash
-ROOT=$PWD                   # the repo root, for the exercises
 cd c-by-example/00-tools
 cat stages.c
 ```
