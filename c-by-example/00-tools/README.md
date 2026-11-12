@@ -44,7 +44,7 @@ cc --version
 `cc` is not a compiler of its own: it is the traditional name for *your
 system's* C compiler, so the same command works everywhere. On Linux it is
 usually GCC (the Free Software Foundation line above gives it away; your
-version will differ), and on macOS it is Apple's clang. This course uses
+version may differ), and on macOS it is Apple's clang. This course uses
 `cc` so you never have to care which, and checks every example with both:
 
 ```bash
