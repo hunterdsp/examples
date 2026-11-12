@@ -80,6 +80,12 @@ main (void)
 }
 ```
 
+Every C program starts running at `main`. This one does a single thing:
+`puts` ("put string") prints a line of text. We did not write `puts`; it
+comes with C, in the *standard library*, and `#include <stdio.h>` is what
+tells the compiler it exists. Keep an eye on it: each stage below changes
+what `puts` looks like, and the last one finally finds its code.
+
 Build and run it in one step:
 
 ```bash
@@ -108,13 +114,20 @@ main (void)
 }
 ```
 
-**2. Compile** (`-S`): C becomes assembly for your CPU. The call to `puts`
-is right there:
+**2. Compile** (`-S`): C becomes assembly, the CPU's own instructions
+written out as text. Our `puts (...)` line has become one instruction,
+`call`, which jumps to `puts` and comes back when it is done:
 
 ```bash
 cc -S stages.c -o - | grep puts
 #       call    puts@PLT
 ```
+
+That is GCC on an x86-64 CPU. The exact text depends on your compiler and
+CPU: clang writes `callq` and adds a line or two, and an Arm CPU (an Apple
+Silicon Mac, say) uses a different instruction altogether. What matters is
+that `puts` is still just a name here. The `@PLT` suffix is how a call
+reaches a function in a shared library; you can ignore it for now.
 
 **3. Assemble** (`-c`): assembly becomes an object file, machine code with
 holes in it. `nm` lists what it defines (`T main`) and what it still needs
