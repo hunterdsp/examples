@@ -103,15 +103,32 @@ stages.c  --preprocess-->  stages.i  --compile-->  stages.s
           --assemble---->  stages.o  --link----->  stages
 ```
 
-**1. Preprocess** (`-E`): C in, C out. `#include` pastes in a whole file and
-`#define` replaces names, so `stages.i` is still C, just with every `#` line
-carried out:
+**1. Preprocess** (`-E`): C in, C out.
+
+`#include` pastes in a whole file and `#define` replaces names,
+so `stages.i` is still C, just with every `#` line carried out:
 
 ```bash
 cc -E stages.c -o stages.i
-wc -l stages.c stages.i     # a few lines in, hundreds out: stdio.h
+```
+
+Use `wc` to count the lines before and after preprocessing (your numbers
+may differ):
+
+```bash
+wc -l stages.c stages.i
+#  15 stages.c
+# 853 stages.i
+# 868 total
+```
+
+Print the last 6 lines of the preprocessor output using `tail`:
+
+```bash
 tail -6 stages.i
 ```
+
+The end of `stages.i` is our `main`, with every `#` line carried out:
 
 ```c
 int
