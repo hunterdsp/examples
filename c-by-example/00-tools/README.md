@@ -36,6 +36,20 @@ Check it worked:
 
 ```bash
 cc --version
+# cc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+# Copyright (C) 2025 Free Software Foundation, Inc.
+# ...
+```
+
+`cc` is not a compiler of its own: it is the traditional name for *your
+system's* C compiler, so the same command works everywhere. On Linux it is
+usually GCC (the Free Software Foundation line above gives it away; your
+version will differ), and on macOS it is Apple's clang. This course uses
+`cc` so you never have to care which, and checks every example with both:
+
+```bash
+gcc --version     # GCC by name
+clang --version   # clang by name (installed above)
 ```
 
 ## What `cc` actually does
