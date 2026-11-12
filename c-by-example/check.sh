@@ -103,10 +103,10 @@ for lesson in "$@"; do
 	# later block must work from there and leave the reader there (an
 	# exercise that `cd`s into its folder `cd`s back). A bash block
 	# immediately followed (blank lines only) by another fenced block is
-	# a command and its output, and the output must match byte for byte. A bash block with
-	# no output block must exit 0. `<!-- no-run -->` skips the next bash
-	# block: kept for commands that fail on purpose, whose message differs
-	# by compiler (a broken-*.c checks those).
+	# a command and its output, and the output must match byte for byte.
+	# A bash block with no output block must exit 0. `<!-- no-run -->`
+	# skips the next bash block: kept for commands that fail on purpose,
+	# whose message differs by compiler (a broken-*.c checks those).
 	rm -rf "$work/rg" && mkdir "$work/rg"
 	awk -v dir="$work/rg" '
 		function flush_pending() { pending = 0 }
