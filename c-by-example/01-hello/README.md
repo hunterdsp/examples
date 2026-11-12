@@ -98,8 +98,23 @@ program that fails must return something other than 0.
   ```
 
   Every library function belongs to a header, `printf` in `stdio.h`.
-  `man 3 printf` prints the usage guide. It follows vi conventions: `:q`
-  returns to the terminal prompt.
+  `man 3 printf` prints the usage guide.
+
+> [!TIP]
+> **Reading a man page.** Every C library function has a manual page, and
+> it is the quickest answer to "what do I include, and how do I call it?"
+>
+> - **The section number matters.** Section 1 is shell commands, 2 system
+>   calls, 3 C library functions. `man printf` finds the shell's `printf`
+>   first; `man 3 printf` finds the C one.
+> - **Read the top.** `SYNOPSIS` gives the `#include` line and the
+>   function's declaration; `LIBRARY` gives the link flag, if one is needed
+>   (`man 3 sqrt` says `-lm`, which lesson 02 uses).
+> - **Move around** with the vi keys: space and `b` page down and up,
+>   `/word` searches, `n` jumps to the next match, and `:q` (or just `q`)
+>   returns to the terminal prompt.
+> - **Don't know the name?** `man -k printf` lists every page whose name or
+>   summary mentions it.
 
 ## Exercises
 
