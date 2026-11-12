@@ -58,6 +58,26 @@ for lesson in "$@"; do
 		bad "README" "a command runs before \`cd c-by-example/$lesson\`"
 	fi
 
+	# A listing must not drift from its file: wherever the README runs
+	# `cat FILE` as the last line of a bash block, the next fenced block
+	# must be FILE, byte for byte.
+	sed -n 's/^cat \([^ ]*\)$/\1/p' "$lesson/README.md" >"$work/listed"
+	while read -r listed; do
+		awk -v want="cat $listed" '
+			/^```bash/ { inblk = 1; last = ""; next }
+			inblk && /^```/ { inblk = 0; armed = (last == want); next }
+			inblk { last = $0; next }
+			armed && /^```/ { if (grab) exit; grab = 1; next }
+			grab { print }
+		' "$lesson/README.md" >"$work/listing"
+		if cmp -s "$work/listing" "$lesson/$listed"; then
+			ok "README listing of $listed"
+		else
+			diff "$lesson/$listed" "$work/listing" >"$work/out"
+			bad "README" "listing of $listed differs from the file"
+		fi
+	done <"$work/listed"
+
 	support=""
 	for c in "$lesson"/*.c; do
 		[ -e "$c" ] || continue

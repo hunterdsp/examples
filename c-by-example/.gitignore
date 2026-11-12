@@ -1,0 +1,7 @@
+# What following a lesson leaves behind: the programs it builds (named
+# after their .c, so no extension), and the -c / -S intermediates.
+[0-9][0-9]-*/*
+![0-9][0-9]-*/*.*
+![0-9][0-9]-*/Makefile
+*.o
+*.s

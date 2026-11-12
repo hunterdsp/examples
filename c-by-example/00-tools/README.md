@@ -54,8 +54,35 @@ clang --version   # clang by name (installed above)
 
 ## What `cc` actually does
 
+Here is the program we will take apart. Note the two lines starting with
+`#`: they are not C, but instructions to the first stage below.
+
 ```bash
 cd c-by-example/00-tools
+cat stages.c
+```
+
+```c
+/* stages.c -- the smallest program worth taking apart.
+ *
+ * Build it in one step:      cc stages.c -o stages && ./stages
+ * Or watch each stage:       see README.md
+ */
+#include <stdio.h>
+
+#define GREETING "compiled, linked, ran"
+
+int
+main (void)
+{
+  puts (GREETING);
+  return 0;
+}
+```
+
+Build and run it in one step:
+
+```bash
 cc stages.c -o stages && ./stages
 # compiled, linked, ran
 ```
