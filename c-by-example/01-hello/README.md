@@ -98,7 +98,8 @@ program that fails must return something other than 0.
   ```
 
   Every library function belongs to a header, `printf` in `stdio.h`.
-  `man 3 printf` prints the usage guide.
+  `man 3 printf` prints the usage guide. It follows vi conventions: `:q`
+  returns to the terminal prompt.
 
 ## Exercises
 
