@@ -1,6 +1,7 @@
 # 04 · Arrays and loops
 
 ```bash
+ROOT=$PWD                   # the repo root, for the exercises
 cd c-by-example/04-arrays
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
 ./average
@@ -58,9 +59,9 @@ FIR filter is this same loop with a weight on each tap.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run in
-this lesson's folder, where the commands above left you, and end back
-there. Its code is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer starts with a `cd`
+through `$ROOT`, so it works from wherever you are, in any order. Its code
+is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Change `WINDOW` to 8. How long does the ramp take now? What is the
    trade-off as the window grows?
@@ -68,10 +69,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex1-window-8
+   cd "$ROOT/c-by-example/04-arrays/exercises/ex1-window-8"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
    ./average
-   cd ../..
    ```
 
    ```
@@ -95,10 +95,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex2-alternating
+   cd "$ROOT/c-by-example/04-arrays/exercises/ex2-alternating"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
    ./average
-   cd ../..
    ```
 
    ```
@@ -122,10 +121,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex3-running-sum
+   cd "$ROOT/c-by-example/04-arrays/exercises/ex3-running-sum"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
    ./average
-   cd ../..
    ```
 
    ```

@@ -1,6 +1,7 @@
 # 08 · The preprocessor and multi-file builds
 
 ```bash
+ROOT=$PWD                   # the repo root, for the exercises
 cd c-by-example/08-multi-file
 make && ./meter
 ```
@@ -81,9 +82,9 @@ objects do. Recipe lines must start with a **tab**, not spaces.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run in
-this lesson's folder, where the commands above left you, and end back
-there. Its code is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer starts with a `cd`
+through `$ROOT`, so it works from wherever you are, in any order. Its code
+is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Run `make`, then `make` again. Then `touch dsp.c` and `make`. Which
    commands ran each time?
@@ -94,6 +95,7 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    first `make` starts from nothing:
 
    ```bash
+   cd "$ROOT/c-by-example/08-multi-file"
    make clean
    make
    make
@@ -132,10 +134,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex2-crest
+   cd "$ROOT/c-by-example/08-multi-file/exercises/ex2-crest"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined crest.c dsp.c -o crest -lm
    ./crest
-   cd ../..
    ```
 
    ```
@@ -157,10 +158,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex3-inline
+   cd "$ROOT/c-by-example/08-multi-file/exercises/ex3-inline"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined meter.c dsp.c -o meter -lm
    ./meter
-   cd ../..
    ```
 
    ```

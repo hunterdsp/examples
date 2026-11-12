@@ -29,8 +29,9 @@ jbx install-deps -g dev c-by-example/bootstrap.toml
 ```
 
 Every lesson starts from the repo root, the `examples/` you just cloned
-into: its first block `cd`s into the lesson, and the blocks after it run
-there.
+into. Its first block remembers that folder as `ROOT` and `cd`s into the
+lesson, and the blocks after it run there. An exercise answer `cd`s to its
+own folder through `$ROOT`, so it works whichever one you try first.
 
 Check it worked:
 
@@ -58,6 +59,7 @@ Here is the program we will take apart. Note the two lines starting with
 `#`: they are not C, but instructions to the first stage below.
 
 ```bash
+ROOT=$PWD                   # the repo root, for the exercises
 cd c-by-example/00-tools
 cat stages.c
 ```

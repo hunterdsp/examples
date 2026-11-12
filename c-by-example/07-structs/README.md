@@ -1,6 +1,7 @@
 # 07 · Structs
 
 ```bash
+ROOT=$PWD                   # the repo root, for the exercises
 cd c-by-example/07-structs
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined structs.c -o structs
 ./structs
@@ -68,9 +69,9 @@ million of them (lesson 25), that's a third of your memory and cache.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run in
-this lesson's folder, where the commands above left you, and end back
-there. Its code is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer starts with a `cd`
+through `$ROOT`, so it works from wherever you are, in any order. Its code
+is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Add a `biquad_reset(biquad_t *f)` that clears the state and leaves the
    coefficients alone. Run the step response twice with a reset between.
@@ -78,10 +79,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex1-reset
+   cd "$ROOT/c-by-example/07-structs/exercises/ex1-reset"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined reset.c -o reset
    ./reset
-   cd ../..
    ```
 
    ```
@@ -103,10 +103,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex2-feedback
+   cd "$ROOT/c-by-example/07-structs/exercises/ex2-feedback"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined feedback.c -o feedback
    ./feedback
-   cd ../..
    ```
 
    ```
@@ -140,10 +139,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex3-padding
+   cd "$ROOT/c-by-example/07-structs/exercises/ex3-padding"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined padding.c -o padding
    ./padding
-   cd ../..
    ```
 
    ```

@@ -99,9 +99,9 @@ for lesson in "$@"; do
 	# The README is itself a test. Every ```bash block from the first
 	# `cd c-by-example/...` on runs, in order, in one shell, inside a
 	# scratch copy of the repo. That `cd` is the only one from the repo
-	# root: a reader is in the lesson's folder from then on, so every
-	# later block must work from there and leave the reader there (an
-	# exercise that `cd`s into its folder `cd`s back). A bash block
+	# root, and the block sets ROOT=$PWD before it. A later block runs in
+	# the lesson's folder, where the reader is, unless it starts with
+	# `cd "$ROOT/...`, as every exercise answer does. A bash block
 	# immediately followed (blank lines only) by another fenced block is
 	# a command and its output, and the output must match byte for byte.
 	# A bash block with no output block must exit 0. `<!-- no-run -->`
@@ -125,14 +125,15 @@ for lesson in "$@"; do
 			inblk = 0
 			if (kind == "bash") {
 				skip = norun; norun = 0
-				if (!started && first !~ /^cd c-by-example\//) skip = 1
+				if (!started && body !~ /(^|\n)cd c-by-example\//) skip = 1
 				if (started && body ~ /(^|\n)cd c-by-example\//)
 					print NR >> (dir "/rootcd")
 				if (!skip) {
 					first_k = !started
 					started = 1; k++
 					printf "%s", body > (dir "/" k ".sh"); close(dir "/" k ".sh")
-					print k, (first_k ? "root" : "here"), NR >> (dir "/list")
+					from = first ~ /^cd "\$ROOT\// ? "abs" : "here"
+					print k, (first_k ? "root" : from), NR >> (dir "/list")
 					pending = 1; gap = 0
 				} else { pending = 0 }
 			} else if (kind == "out") {
@@ -162,8 +163,15 @@ for lesson in "$@"; do
 	else
 		checked=0
 		# shellcheck disable=SC2034  # line is read for the messages
+		unset ROOT    # each lesson's first block must set it
 		while read -r k from line; do
 			[ "$from" = root ] && { cd "$work/root" || exit 2; }
+			if [ "$from" = here ] &&
+				[ "$(pwd -P)" != "$(cd "$lessondir" && pwd -P)" ]; then
+				: >"$work/out"
+				bad "README" "block at line $line runs in $(pwd), not $lesson: start it with cd \"\$ROOT/..."
+				cd "$lessondir" || exit 2
+			fi
 			# shellcheck disable=SC1090  # the block is generated
 			. "$work/rg/$k.sh" >"$work/rg/$k.got" 2>&1
 			status=$?
@@ -182,11 +190,6 @@ for lesson in "$@"; do
 			elif [ "$status" -ne 0 ]; then
 				cp "$work/rg/$k.got" "$work/out"
 				bad "README" "block at line $line exited $status"
-			fi
-			if [ "$(pwd -P)" != "$(cd "$lessondir" && pwd -P)" ]; then
-				: >"$work/out"
-				bad "README" "block at line $line leaves the reader in $(pwd), not $lesson"
-				cd "$lessondir" || exit 2
 			fi
 		done <"$work/rg/list"
 		cd "$here" || exit 2

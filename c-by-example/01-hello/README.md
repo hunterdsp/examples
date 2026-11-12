@@ -4,6 +4,7 @@ A first program, and the build command used for the rest of the course.
 Here it is:
 
 ```bash
+ROOT=$PWD                   # the repo root, for the exercises
 cd c-by-example/01-hello
 cat hello.c
 ```
@@ -118,9 +119,9 @@ program that fails must return something other than 0.
 
 ## Exercises
 
-Try each one before opening its answer. Every answer's commands run in
-this lesson's folder, where the commands above left you, and end back
-there. Its code is in [`exercises/`](exercises/), one folder per exercise.
+Try each one before opening its answer. Every answer starts with a `cd`
+through `$ROOT`, so it works from wherever you are, in any order. Its code
+is in [`exercises/`](exercises/), one folder per exercise.
 
 1. Make the program return 3 and check `echo $?`. Then try
    `./hello && echo worked`.
@@ -128,11 +129,10 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex1-exit-status
+   cd "$ROOT/c-by-example/01-hello/exercises/ex1-exit-status"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello; echo $?
    ./hello && echo worked
-   cd ../..
    ```
 
    ```
@@ -156,11 +156,10 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
    <details><summary>Output and answer</summary>
 
    ```bash
-   cd exercises/ex2-argv0
+   cd "$ROOT/c-by-example/01-hello/exercises/ex2-argv0"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
    ./hello
    ../ex2-argv0/hello
-   cd ../..
    ```
 
    ```
@@ -180,10 +179,9 @@ there. Its code is in [`exercises/`](exercises/), one folder per exercise.
 
    <!-- no-run -->
    ```bash
-   cd exercises/ex3-format
+   cd "$ROOT/c-by-example/01-hello/exercises/ex3-format"
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined broken-format.c -o broken-format
    ./broken-format
-   cd ../..
    ```
 
    GCC prints this, then builds the program anyway (clang words it
