@@ -1,0 +1,6 @@
+# Short names for `jbx examples:NAME`, once registered with
+#   just-runit ns add examples gh:hunterdsp/examples/scripts
+# A value with no ":" is relative to this directory, so a namespace pinned
+# to a commit (gh:hunterdsp/examples/scripts@SHA) stays at that commit.
+[aliases]
+hello = "hello-world.sh"
