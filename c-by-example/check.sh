@@ -159,11 +159,14 @@ for lesson in "$@"; do
 			status=$?
 			if [ -e "$work/rg/$k.exp" ]; then
 				checked=$((checked + 1))
-				if tr '`' "'" <"$work/rg/$k.got" | cmp -s - "$work/rg/$k.exp"; then
+				# Both sides, so a backtick in a listed file still matches
+				# while make 3.81's `meter' matches make 4's 'meter'.
+				tr '`' "'" <"$work/rg/$k.exp" >"$work/rg/$k.want"
+				if tr '`' "'" <"$work/rg/$k.got" | cmp -s - "$work/rg/$k.want"; then
 					ok "README block at line $line"
 				else
 					tr '`' "'" <"$work/rg/$k.got" |
-						diff "$work/rg/$k.exp" - >"$work/out"
+						diff "$work/rg/$k.want" - >"$work/out"
 					bad "README" "block at line $line: output differs"
 				fi
 			elif [ "$status" -ne 0 ]; then

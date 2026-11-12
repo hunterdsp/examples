@@ -1,7 +1,50 @@
 # 01 · Hello
 
+A first program, and the build command used for the rest of the course.
+Here it is:
+
 ```bash
 cd c-by-example/01-hello
+cat hello.c
+```
+
+```c
+/* hello.c -- a first program, and the build command used from here on.
+ *
+ *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
+ *       hello.c -o hello && ./hello
+ */
+#include <stdio.h>
+
+int
+main (int argc, char *argv[])
+{
+  printf ("Hello, World!\n");
+
+  /* argv[0] is how the program was invoked; argc counts every word on the
+     command line, including that one. */
+  printf ("called with %d argument(s)\n", argc - 1);
+  for (int i = 1; i < argc; i++)
+    printf ("  argv[%d] = %s\n", i, argv[i]);
+
+  /* 0 tells the shell "success". Anything else is a failure code, which
+     is how `make`, `&&` and `if` know your program went wrong. */
+  return 0;
+}
+```
+
+Three ideas are in it:
+
+- **`main` is where it starts.** `argc` counts the words on the command line,
+  and `argv` holds them, `argv[0]` being the program's own name.
+- **`printf` formats text.** `%d` is an `int`, `%s` a string. The type after
+  `%` must match the argument; `-Wall`, below, checks that for you.
+- **`return 0` means success.** The shell sees the number, as you will see
+  once it is built.
+
+## Building it
+
+```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
 ./hello one two
 ```
@@ -27,22 +70,22 @@ The sanitizers make the program slower and bigger, so a release build leaves
 them off (Part V). While learning, they are the difference between a crash
 that says *where* and a wrong answer that says nothing.
 
-## The program
+## Exit status
 
-[`hello.c`](hello.c) has three ideas:
+`return 0` hands the shell a number, and `$?` holds the last one:
 
-- **`main` is where it starts.** `argc` counts the words on the command line,
-  and `argv` holds them, `argv[0]` being the program's own name.
-- **`printf` formats text.** `%d` is an `int`, `%s` a string. The type after
-  `%` must match the argument; `-Wall` checks that for you.
-- **`return 0` means success.** The shell sees the number:
+```bash
+./hello; echo $?
+```
 
-  ```bash
-  ./hello; echo $?      # 0
-  ```
+```
+Hello, World!
+called with 0 argument(s)
+0
+```
 
-  `make`, `&&` and `if` all decide what to do next from this one number, so a
-  program that fails must return something other than 0.
+`make`, `&&` and `if` all decide what to do next from this one number, so a
+program that fails must return something other than 0.
 
 ## Pitfalls
 
