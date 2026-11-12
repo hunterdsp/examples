@@ -21,6 +21,7 @@ compiler or a sanitizer says. Every example is built and checked by one
 command, on Linux and macOS:
 
 ```bash
+cd c-by-example         # from the repo root, like every command here
 make test               # every lesson, with cc
 make test CC=clang      # and again with clang
 ```

@@ -1,6 +1,7 @@
 # 08 · The preprocessor and multi-file builds
 
 ```bash
+cd c-by-example/08-multi-file
 make && ./meter
 ```
 

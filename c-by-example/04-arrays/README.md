@@ -1,6 +1,7 @@
 # 04 · Arrays and loops
 
 ```bash
+cd c-by-example/04-arrays
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
 ./average
 ```

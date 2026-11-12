@@ -1,6 +1,7 @@
 # 05 · Pointers
 
 ```bash
+cd c-by-example/05-pointers
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined pointers.c -o pointers
 ./pointers
 ```

@@ -1,6 +1,7 @@
 # 01 · Hello
 
 ```bash
+cd c-by-example/01-hello
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
 ./hello one two
 # Hello, World!

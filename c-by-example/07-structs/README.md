@@ -1,6 +1,7 @@
 # 07 · Structs
 
 ```bash
+cd c-by-example/07-structs
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined structs.c -o structs
 ./structs
 ```

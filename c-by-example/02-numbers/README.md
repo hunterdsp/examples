@@ -1,6 +1,7 @@
 # 02 · Numbers
 
 ```bash
+cd c-by-example/02-numbers
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined numbers.c -o numbers -lm
 ./numbers
 ```

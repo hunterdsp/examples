@@ -4,9 +4,15 @@ You need three things: a C compiler, `make`, and a debugger. One line
 installs all of them, with whatever package manager your system uses:
 
 ```bash
+git clone https://github.com/hunterdsp/examples.git
+cd examples                                               # the repo root
 . <(curl -sSL https://just-buildit.github.io/get-jb.sh)   # jbx, once
-jbx install-deps -g dev                                   # from bootstrap.toml
+(cd c-by-example && jbx install-deps -g dev)              # bootstrap.toml
 ```
+
+Every lesson starts from the repo root, the `examples/` you just cloned
+into: its first block `cd`s into the lesson, and the blocks after it run
+there.
 
 On macOS, run `xcode-select --install` first: it brings `cc` (clang),
 `make` and `lldb`.
@@ -20,6 +26,7 @@ cc --version
 ## What `cc` actually does
 
 ```bash
+cd c-by-example/00-tools
 cc stages.c -o stages && ./stages
 # compiled, linked, ran
 ```

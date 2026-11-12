@@ -1,6 +1,7 @@
 # 06 · Strings and files
 
 ```bash
+cd c-by-example/06-strings-files
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined files.c -o files
 ./files
 ```

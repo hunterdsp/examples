@@ -43,6 +43,21 @@ bad() {
 for lesson in "$@"; do
 	lesson=${lesson%/}
 	echo "$lesson"
+
+	# The README's commands must run as written by a reader at the repo
+	# root: the first one that touches the lesson's files (cc on a .c,
+	# make, ./prog) comes after a `cd c-by-example/<lesson>` line.
+	if awk -v want="cd c-by-example/$lesson" '
+		/^```bash/ { inblk = 1; next }
+		/^```/     { inblk = 0; next }
+		inblk && $0 == want { cd = 1 }
+		inblk && /^(cc .*\.c|make|\.\/)/ { exit cd ? 0 : 1 }
+	' "$lesson/README.md"; then
+		ok "README starts from the repo root"
+	else
+		bad "README" "a command runs before \`cd c-by-example/$lesson\`"
+	fi
+
 	support=""
 	for c in "$lesson"/*.c; do
 		[ -e "$c" ] || continue

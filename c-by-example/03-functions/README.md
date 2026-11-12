@@ -1,6 +1,7 @@
 # 03 · Functions
 
 ```bash
+cd c-by-example/03-functions
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o table -lm
 ./table
 ```
