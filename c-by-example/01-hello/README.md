@@ -187,6 +187,8 @@ which folder to run it in.
    argv[0] = ./hello
    ```
 
+   And running the same program by a different path:
+
    ```bash
    ../ex2-argv0/hello
    ```
