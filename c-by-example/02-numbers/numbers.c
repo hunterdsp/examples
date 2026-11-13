@@ -49,6 +49,16 @@ main (void)
   int64_t per_day = (int64_t)48000 * (int64_t)86400;
   printf ("samples in a day at 48 kHz: %" PRId64 "\n", per_day);
 
+  /* A number in the source has a type too, set by its suffix: none is int
+     (or double, with a point), u unsigned, L long, LL long long, f float. */
+  printf ("\nNumber literals\n---------------\n");
+  printf ("1    is %zu bytes: int\n", sizeof (1));
+  printf ("1u   is %zu bytes: unsigned int\n", sizeof (1u));
+  printf ("1L   is %zu bytes: long\n", sizeof (1L));
+  printf ("1LL  is %zu bytes: long long\n", sizeof (1LL));
+  printf ("1.0f is %zu bytes: float\n", sizeof (1.0f));
+  printf ("1.0  is %zu bytes: double\n", sizeof (1.0));
+
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
   double x = 0.1 + 0.2;
   printf ("\nFloating point\n--------------\n");
@@ -56,7 +66,9 @@ main (void)
   printf ("0.1 + 0.2 == 0.3? %s\n", x == 0.3 ? "yes" : "no");
   /* A float has 24 bits of mantissa: past 2^24 it cannot count by one. */
   float big = 16777216.0f;
-  printf ("16777216.0f + 1 = %.1f\n", big + 1.0f);
+  printf ("16777216.0f + 1.0f = %.1f\n", big + 1.0f);
+  /* Without the f, 1.0 is a double and so is the sum, which can. */
+  printf ("16777216.0f + 1.0 = %.1f\n", big + 1.0);
 
   /* Decibels: the unit signal processing lives in. Amplitude ratios use
      20 log10, power ratios 10 log10. Halving amplitude is about -6 dB. */

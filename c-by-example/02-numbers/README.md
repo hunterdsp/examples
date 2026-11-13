@@ -62,6 +62,16 @@ main (void)
   int64_t per_day = (int64_t)48000 * (int64_t)86400;
   printf ("samples in a day at 48 kHz: %" PRId64 "\n", per_day);
 
+  /* A number in the source has a type too, set by its suffix: none is int
+     (or double, with a point), u unsigned, L long, LL long long, f float. */
+  printf ("\nNumber literals\n---------------\n");
+  printf ("1    is %zu bytes: int\n", sizeof (1));
+  printf ("1u   is %zu bytes: unsigned int\n", sizeof (1u));
+  printf ("1L   is %zu bytes: long\n", sizeof (1L));
+  printf ("1LL  is %zu bytes: long long\n", sizeof (1LL));
+  printf ("1.0f is %zu bytes: float\n", sizeof (1.0f));
+  printf ("1.0  is %zu bytes: double\n", sizeof (1.0));
+
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
   double x = 0.1 + 0.2;
   printf ("\nFloating point\n--------------\n");
@@ -69,7 +79,9 @@ main (void)
   printf ("0.1 + 0.2 == 0.3? %s\n", x == 0.3 ? "yes" : "no");
   /* A float has 24 bits of mantissa: past 2^24 it cannot count by one. */
   float big = 16777216.0f;
-  printf ("16777216.0f + 1 = %.1f\n", big + 1.0f);
+  printf ("16777216.0f + 1.0f = %.1f\n", big + 1.0f);
+  /* Without the f, 1.0 is a double and so is the sum, which can. */
+  printf ("16777216.0f + 1.0 = %.1f\n", big + 1.0);
 
   /* Decibels: the unit signal processing lives in. Amplitude ratios use
      20 log10, power ratios 10 log10. Halving amplitude is about -6 dB. */
@@ -115,11 +127,21 @@ Wrapping and overflow
 uint8_t 255 + 1 = 0
 samples in a day at 48 kHz: 4147200000
 
+Number literals
+---------------
+1    is 4 bytes: int
+1u   is 4 bytes: unsigned int
+1L   is 8 bytes: long
+1LL  is 8 bytes: long long
+1.0f is 4 bytes: float
+1.0  is 8 bytes: double
+
 Floating point
 --------------
 0.1 + 0.2 = 0.30000000000000004
 0.1 + 0.2 == 0.3? no
-16777216.0f + 1 = 16777216.0
+16777216.0f + 1.0f = 16777216.0
+16777216.0f + 1.0 = 16777217.0
 
 Decibels
 --------
@@ -217,6 +239,24 @@ remember which types convert.
 > Pitfalls), and a small unsigned type wraps only when the result is stored
 > back into it, as `(uint8_t)(a + b)` does above.
 
+## Number literals
+
+```
+Number literals
+---------------
+1    is 4 bytes: int
+1u   is 4 bytes: unsigned int
+1L   is 8 bytes: long
+1LL  is 8 bytes: long long
+1.0f is 4 bytes: float
+1.0  is 8 bytes: double
+```
+
+A number written in the source has a type too, and a suffix sets it. With no
+suffix, `1` is an `int` and `1.0` a `double`. `u` makes it unsigned, `L` long,
+`LL` long long, and `f` makes a floating-point one a `float`. They combine
+(`1UL`), and either case works, but write `L`: `l` looks like `1`.
+
 ## Floating point
 
 ```
@@ -224,7 +264,8 @@ Floating point
 --------------
 0.1 + 0.2 = 0.30000000000000004
 0.1 + 0.2 == 0.3? no
-16777216.0f + 1 = 16777216.0
+16777216.0f + 1.0f = 16777216.0
+16777216.0f + 1.0 = 16777217.0
 ```
 
 Floats are binary fractions, and 0.1 has no exact binary form, just as ⅓ has no
@@ -232,6 +273,11 @@ exact decimal one. So never compare floating-point results with `==`; compare
 against a tolerance. A `float` carries about 7 significant digits (24 bits):
 past 2²⁴ = 16,777,216 it cannot even count by one. That is why a long-running
 phase accumulator or a running sum is kept in `double` (lesson 22).
+
+The last line is the suffix at work: without the `f`, `1.0` is a `double`, so
+the whole sum is done in `double`, which can still count by one there. Code
+meant to run in `float` quietly runs in `double` instead: a different answer,
+and often slower. Put the `f` on every literal in `float` code.
 
 ## Decibels
 

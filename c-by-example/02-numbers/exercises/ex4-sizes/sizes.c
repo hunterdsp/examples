@@ -47,7 +47,7 @@ main (void)
 
   /* Unsigned wraps modulo 2^32: a phase accumulator stepping an eighth of
      a cycle is back at 0 after 8 steps, with no if and no fmod. */
-  uint32_t phase = 0, step = UINT32_C (1) << 29; /* 2^32 / 8 */
+  uint32_t phase = 0, step = (uint32_t)1 << 29; /* 2^32 / 8 */
   for (int k = 0; k < 8; k++)
     phase += step;
   printf ("uint32_t phase after 8 steps of 2^32/8 = %" PRIu32 "\n", phase);
