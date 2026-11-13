@@ -27,7 +27,10 @@ cat average.c
 
 /* A count known at compile time. An enum constant, unlike a const int,
    can size an array in C99. */
-enum { WINDOW = 4 };
+enum
+{
+  WINDOW = 4
+};
 
 /* `n` travels with the array, because inside this function `in` is only
    the address of the array's first element: its length did not come with
@@ -37,8 +40,8 @@ moving_average (const float in[], float out[], int n)
 {
   for (int i = 0; i < n; i++)
     {
-      float sum = 0.0f;
-      int count = 0;
+      float sum   = 0.0f;
+      int   count = 0;
       /* Look back over the window, but never before the first sample. */
       for (int k = 0; k < WINDOW && i - k >= 0; k++)
         {
@@ -57,7 +60,7 @@ main (void)
 
   /* HERE, in the scope that declared it, sizeof knows the whole array:
      total bytes / bytes per element = number of elements. */
-  int n = (int)(sizeof in / sizeof in[0]);
+  int   n = (int)(sizeof in / sizeof in[0]);
   float out[sizeof in / sizeof in[0]];
 
   moving_average (in, out, n);

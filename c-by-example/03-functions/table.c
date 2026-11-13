@@ -35,8 +35,8 @@ print_table (const char *label, const float table[], size_t n)
 static void
 count_calls (void)
 {
-  static int kept = 0;
-  int fresh = 0;
+  static int kept  = 0;
+  int        fresh = 0;
   kept++;
   fresh++;
   printf ("  kept = %d, fresh = %d\n", kept, fresh);

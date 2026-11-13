@@ -46,7 +46,7 @@ main (void)
   /* Promotion: arithmetic on small types happens in int. The sum is 300,
      and only storing it back into 8 bits wraps it (300 - 256 = 44). */
   uint8_t a = 200, b = 100;
-  int sum = a + b;
+  int     sum     = a + b;
   uint8_t wrapped = (uint8_t)(a + b);
   printf ("\nInteger promotion\n-----------------\n");
   printf ("200 + 100 = %d as int\n", sum);
@@ -65,12 +65,12 @@ main (void)
   /* A number in the source has a type too, set by its suffix: none is int
      (or double, with a point), u unsigned, L long, LL long long, f float. */
   printf ("\nNumber literals\n---------------\n");
-  printf ("1    is %zu bytes: int\n", sizeof (1));
-  printf ("1u   is %zu bytes: unsigned int\n", sizeof (1u));
-  printf ("1L   is %zu bytes: long\n", sizeof (1L));
-  printf ("1LL  is %zu bytes: long long\n", sizeof (1LL));
-  printf ("1.0f is %zu bytes: float\n", sizeof (1.0f));
-  printf ("1.0  is %zu bytes: double\n", sizeof (1.0));
+  printf ("1    is %zu bytes: int\n", sizeof 1);
+  printf ("1u   is %zu bytes: unsigned int\n", sizeof 1u);
+  printf ("1L   is %zu bytes: long\n", sizeof 1L);
+  printf ("1LL  is %zu bytes: long long\n", sizeof 1LL);
+  printf ("1.0f is %zu bytes: float\n", sizeof 1.0f);
+  printf ("1.0  is %zu bytes: double\n", sizeof 1.0);
 
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
   double x = 0.1 + 0.2;

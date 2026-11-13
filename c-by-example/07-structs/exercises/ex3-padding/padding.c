@@ -11,15 +11,15 @@
 struct interleaved
 {
   char a; /* 0, then 3 bytes of padding */
-  int b;  /* 4 */
+  int  b; /* 4 */
   char c; /* 8, then 3 more */
-  int d;  /* 12 */
+  int  d; /* 12 */
 };
 
 struct sorted
 {
-  int b;  /* 0 */
-  int d;  /* 4 */
+  int  b; /* 0 */
+  int  d; /* 4 */
   char a; /* 8 */
   char c; /* 9, then 2 bytes so an array of these keeps b aligned */
 };

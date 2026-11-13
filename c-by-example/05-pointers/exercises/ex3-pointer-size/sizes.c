@@ -12,7 +12,7 @@ main (void)
   printf ("sizeof(float *)  = %zu\n", sizeof (float *));
   printf ("sizeof(char *)   = %zu\n", sizeof (char *));
   printf ("sizeof(double *) = %zu\n", sizeof (double *));
-  printf ("but sizeof(float) = %zu and sizeof(char) = %zu\n",
-          sizeof (float), sizeof (char));
+  printf ("but sizeof(float) = %zu and sizeof(char) = %zu\n", sizeof (float),
+          sizeof (char));
   return 0;
 }

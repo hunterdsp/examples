@@ -10,7 +10,7 @@ gain (const float *in, float *out, int n, float g)
   for (int i = 0; i < n; i++)
     {
       out[i] = in[i] * g;
-      in[i] = 0.0f; /* "tidy up" the input -- not allowed */
+      in[i]  = 0.0f; /* "tidy up" the input -- not allowed */
     }
 }
 

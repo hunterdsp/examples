@@ -19,7 +19,7 @@ struct biquad_coeffs
 struct biquad
 {
   struct biquad_coeffs c;
-  float z1, z2;
+  float                z1, z2;
 };
 
 /* A typedef gives a struct type a one-word name. */
@@ -32,8 +32,8 @@ biquad_step (biquad_t *f, float x)
 {
   /* Transposed direct form II; lesson 21 derives it. */
   float y = f->c.b0 * x + f->z1; /* p->m is (*p).m */
-  f->z1 = f->c.b1 * x - f->c.a1 * y + f->z2;
-  f->z2 = f->c.b2 * x - f->c.a2 * y;
+  f->z1   = f->c.b1 * x - f->c.a1 * y + f->z2;
+  f->z2   = f->c.b2 * x - f->c.a2 * y;
   return y;
 }
 
@@ -52,7 +52,7 @@ main (void)
   struct biquad_coeffs ringing
       = { .b0 = 0.2f, .b1 = 0.4f, .b2 = 0.2f, .a1 = -1.8f, .a2 = 0.9f };
   struct biquad_coeffs unstable = ringing;
-  unstable.a2 = 1.1f;
+  unstable.a2                   = 1.1f;
 
   step_response ("a1 = -1.8, a2 = 0.9:", ringing, 40);
   step_response ("a1 = -1.8, a2 = 1.1:", unstable, 40);

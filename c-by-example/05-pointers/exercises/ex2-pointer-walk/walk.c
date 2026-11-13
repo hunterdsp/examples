@@ -27,9 +27,9 @@ gain_in_place_walk (float *buf, size_t n, float g)
 int
 main (void)
 {
-  float a[] = { 0.5f, -1.0f, 2.0f, 0.3f };
-  float b[] = { 0.5f, -1.0f, 2.0f, 0.3f };
-  size_t n = sizeof a / sizeof a[0];
+  float  a[] = { 0.5f, -1.0f, 2.0f, 0.3f };
+  float  b[] = { 0.5f, -1.0f, 2.0f, 0.3f };
+  size_t n   = sizeof a / sizeof a[0];
 
   gain_in_place (a, n, 2.0f);
   gain_in_place_walk (b, n, 2.0f);

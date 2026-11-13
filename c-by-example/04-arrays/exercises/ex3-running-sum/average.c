@@ -8,7 +8,10 @@
 #include <stdio.h>
 #include <string.h> /* memcmp */
 
-enum { WINDOW = 4 };
+enum
+{
+  WINDOW = 4
+};
 
 /* The lesson's version, kept to compare against. */
 static void
@@ -16,8 +19,8 @@ moving_average (const float in[], float out[], int n)
 {
   for (int i = 0; i < n; i++)
     {
-      float sum = 0.0f;
-      int count = 0;
+      float sum   = 0.0f;
+      int   count = 0;
       for (int k = 0; k < WINDOW && i - k >= 0; k++)
         {
           sum += in[i - k];
@@ -37,7 +40,7 @@ running_average (const float in[], float out[], int n)
       if (i >= WINDOW)
         sum -= in[i - WINDOW]; /* ...and the oldest one leaves it */
       int count = i + 1 < WINDOW ? i + 1 : WINDOW;
-      out[i] = sum / (float)count;
+      out[i]    = sum / (float)count;
     }
 }
 
@@ -45,7 +48,10 @@ int
 main (void)
 {
   float in[] = { 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
-  enum { N = sizeof in / sizeof in[0] };
+  enum
+  {
+    N = sizeof in / sizeof in[0]
+  };
   float slow[N], fast[N];
 
   moving_average (in, slow, N);

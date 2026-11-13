@@ -10,7 +10,7 @@
 int
 main (void)
 {
-  float f = 0.0f;
+  float  f          = 0.0f;
   double d_of_float = 0.0, d = 0.0;
   for (int i = 0; i < 10000; i++)
     {

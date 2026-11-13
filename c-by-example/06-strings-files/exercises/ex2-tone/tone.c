@@ -7,7 +7,10 @@
 #include <math.h>
 #include <stdio.h>
 
-enum { RATE = 48000 };
+enum
+{
+  RATE = 48000
+};
 
 int
 main (void)

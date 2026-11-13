@@ -16,8 +16,8 @@ static void
 swap (float *a, float *b)
 {
   float tmp = *a;
-  *a = *b;
-  *b = tmp;
+  *a        = *b;
+  *b        = tmp;
 }
 
 /* In place: read and write the same buffer. `buf` is a pointer to the
@@ -64,8 +64,8 @@ main (void)
   swap (&x, &y);
   printf ("after swap: x = %.1f, y = %.1f\n", x, y);
 
-  float sig[] = { 0.5f, -1.0f, 2.0f, 0.3f };
-  size_t n = sizeof sig / sizeof sig[0];
+  float  sig[] = { 0.5f, -1.0f, 2.0f, 0.3f };
+  size_t n     = sizeof sig / sizeof sig[0];
 
   float half[4];
   gain (sig, half, n, 0.5f);

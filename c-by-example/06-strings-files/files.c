@@ -26,7 +26,7 @@ main (int argc, char *argv[])
      is given, and returns how long the full result WOULD have been, so
      truncation can be detected. */
   char path[32];
-  int need = snprintf (path, sizeof path, "%s-%d.f32", name, 440);
+  int  need = snprintf (path, sizeof path, "%s-%d.f32", name, 440);
   printf ("path \"%s\" (%d chars, fits: %s)\n", path, need,
           need < (int)sizeof path ? "yes" : "no");
 
@@ -38,7 +38,7 @@ main (int argc, char *argv[])
   /* Write raw samples: no text, just the bytes of each float. "wb" opens
      for writing in binary mode. Every call that can fail is checked. */
   float out[4] = { 0.0f, 0.5f, 1.0f, -1.0f };
-  FILE *f = fopen (path, "wb");
+  FILE *f      = fopen (path, "wb");
   if (f == NULL)
     {
       perror (path); /* prints the reason, e.g. "Permission denied" */

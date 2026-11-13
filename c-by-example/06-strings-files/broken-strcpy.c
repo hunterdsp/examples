@@ -13,7 +13,7 @@ main (int argc, char *argv[])
   /* With no arguments, the name is this program's own path: far longer
      than 8 bytes. */
   const char *name = argc > 1 ? argv[1] : argv[0];
-  char copy[8];
+  char        copy[8];
   strcpy (copy, name); /* should be snprintf (copy, sizeof copy, ...) */
   printf ("%s\n", copy);
   return 0;

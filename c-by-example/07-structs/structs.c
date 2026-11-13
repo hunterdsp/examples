@@ -21,7 +21,7 @@ struct biquad_coeffs
 struct biquad
 {
   struct biquad_coeffs c;
-  float z1, z2;
+  float                z1, z2;
 };
 
 /* A typedef gives a struct type a one-word name. */
@@ -34,8 +34,8 @@ biquad_step (biquad_t *f, float x)
 {
   /* Transposed direct form II; lesson 21 derives it. */
   float y = f->c.b0 * x + f->z1; /* p->m is (*p).m */
-  f->z1 = f->c.b1 * x - f->c.a1 * y + f->z2;
-  f->z2 = f->c.b2 * x - f->c.a2 * y;
+  f->z1   = f->c.b1 * x - f->c.a1 * y + f->z2;
+  f->z2   = f->c.b2 * x - f->c.a2 * y;
   return y;
 }
 
@@ -48,16 +48,16 @@ dc_gain (struct biquad_coeffs c)
 
 struct padded
 {
-  char tag;     /* 1 byte, then 7 bytes of padding so... */
+  char   tag;   /* 1 byte, then 7 bytes of padding so... */
   double value; /* ...this lands on a multiple of 8 */
-  char flag;    /* 1 byte, then 7 more so an ARRAY of these stays aligned */
+  char   flag;  /* 1 byte, then 7 more so an ARRAY of these stays aligned */
 };
 
 struct packed
 {
   double value; /* largest first: no gaps */
-  char tag;
-  char flag;
+  char   tag;
+  char   flag;
 };
 
 int
@@ -78,7 +78,7 @@ main (void)
 
   /* Assignment copies the whole struct (unlike an array, lesson 04). */
   biquad_t copy = lp;
-  copy.z1 = 0.0f;
+  copy.z1       = 0.0f;
   printf ("copy is independent: lp.z1 = %.3f, copy.z1 = %.1f\n", lp.z1,
           copy.z1);
 

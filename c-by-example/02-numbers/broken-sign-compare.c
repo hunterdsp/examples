@@ -8,7 +8,7 @@
 int
 main (void)
 {
-  int i = -1;
+  int      i = -1;
   unsigned n = 1;
   if (i < n)
     puts ("-1 is less than 1");

@@ -11,7 +11,7 @@
 static uint32_t
 swap32 (uint32_t x)
 {
-  return (x >> 24)                /* byte 3 -> byte 0 */
+  return (x >> 24)                  /* byte 3 -> byte 0 */
          | ((x >> 8) & 0x0000ff00u) /* byte 2 -> byte 1 */
          | ((x << 8) & 0x00ff0000u) /* byte 1 -> byte 2 */
          | (x << 24);               /* byte 0 -> byte 3 */

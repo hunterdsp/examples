@@ -19,9 +19,9 @@ int
 main (int argc, char *argv[])
 {
   (void)argv;
-  float sig[4] = { 1, 2, 3, 4 };
-  size_t n = (size_t)argc - 1; /* 0 when run with no arguments */
-  const float *peak = find_peak (sig, n);
+  float        sig[4] = { 1, 2, 3, 4 };
+  size_t       n      = (size_t)argc - 1; /* 0 when run with no arguments */
+  const float *peak   = find_peak (sig, n);
   printf ("peak %.2f\n", *peak); /* forgot: if (peak == NULL) ... */
   return 0;
 }
