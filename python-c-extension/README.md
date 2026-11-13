@@ -2,6 +2,7 @@
 
 [![just-makeit](https://img.shields.io/badge/generated%20by-just--makeit-informational)](https://just-buildit.github.io/just-makeit/)
 [![C99](https://img.shields.io/badge/C-99-informational?logo=c&logoColor=white)](https://en.cppreference.com/w/c/99)
+[![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-informational?logo=python&logoColor=white)](https://www.python.org/)
 
 A C library with a Python binding, exactly as
 [just-makeit](https://just-buildit.github.io/just-makeit/) 0.128.0 generates
