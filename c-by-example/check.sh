@@ -37,7 +37,10 @@ fail=0
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 
-ok() { pass=$((pass + 1)); printf '  ok    %s\n' "$1"; }
+ok() {
+	pass=$((pass + 1))
+	printf '  ok    %s\n' "$1"
+}
 bad() {
 	fail=$((fail + 1))
 	printf '  FAIL  %s: %s\n' "$1" "$2"
@@ -65,7 +68,10 @@ git ls-files -co --exclude-standard . | while read -r f; do
 done
 # Resolved to a path first: with CC=cc, a bare `cc` here would find this
 # stand-in again and exec itself forever.
-real_cc=$(command -v "$cc_test") || { echo "no compiler: $cc_test" >&2; exit 2; }
+real_cc=$(command -v "$cc_test") || {
+	echo "no compiler: $cc_test" >&2
+	exit 2
+}
 # clang (Apple's cc included) calls a flag it did not need, such as
 # -pedantic when only assembling a .s, an error under -Werror.
 quiet=""
@@ -216,7 +222,10 @@ for lesson in "$@"; do
 			# shellcheck disable=SC2086  # flag lists are word-split
 			if "$real_cc" $CFLAGS -o "$work/$base" "$c" $LDLIBS >"$work/out" 2>&1; then
 				(cd "$work" && "./$base" >>"$work/out" 2>&1) &&
-					{ bad "$base" "built and ran cleanly; it should fail"; continue; }
+					{
+						bad "$base" "built and ran cleanly; it should fail"
+						continue
+					}
 			fi
 			if grep -Eq "$(cat "$name.expect")" "$work/out"; then
 				ok "$base (fails as it should)"

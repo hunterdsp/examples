@@ -1,0 +1,15 @@
+# The repo's own lint tools, pinned in uv.lock. Each example keeps its own
+# (c-by-example/pyproject.toml); this one covers the shell scripts.
+[project]
+name = "examples"
+version = "0"
+requires-python = ">=3.9"
+
+[dependency-groups]
+lint = [
+  "shellcheck-py==0.11.0.1",  # shellcheck 0.11.0, as just-bashit pins it
+  "shfmt-py==4.0.0",          # shfmt 3.13.1, as just-bashit pins it
+]
+
+[tool.uv]
+package = false

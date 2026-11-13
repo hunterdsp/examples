@@ -1,0 +1,24 @@
+name: lint
+
+# Every gate in the repo, run as `make lint` runs it locally: shellcheck and
+# shfmt on every shell script, scripts/README.md's hash table against the
+# scripts, and c-by-example's formatting (mdformat, clang-format). Tools
+# are pinned in the uv.lock files, so CI and a laptop run the same ones.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: make lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.11.21"
+      - run: make lint

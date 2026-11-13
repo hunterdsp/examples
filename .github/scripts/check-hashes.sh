@@ -17,6 +17,8 @@ for path in scripts/*.sh; do
 	# else: the "What each one shows" table lists the same names with prose.
 	row="^\\| \`$f\` +\\| \`[0-9a-f]{64}\` \\|\$"
 	rows=$(grep -cE "$row" "$readme")
+	# The backticks are Markdown's, matched literally: nothing to expand.
+	# shellcheck disable=SC2016
 	got=$(grep -E "$row" "$readme" | sed -E 's/.*\| `([0-9a-f]{64})` \|$/\1/')
 	if [ "$rows" -ne 1 ]; then
 		echo "FAIL $f: $rows rows in $readme's hash table, want 1"
@@ -30,7 +32,14 @@ for path in scripts/*.sh; do
 	fi
 done
 # A row for a script that no longer exists would send readers to a 404.
-for f in $(sed -nE 's/^\| `([^`]+\.sh)` +\| `[0-9a-f]{64}` \|$/\1/p' "$readme"); do
-	[ -e "scripts/$f" ] || { echo "FAIL $f: listed in $readme, not in scripts/"; fail=1; }
-done
+# shellcheck disable=SC2016  # Markdown's backticks, matched literally
+listed=$(sed -nE 's/^\| `([^`]+\.sh)` +\| `[0-9a-f]{64}` \|$/\1/p' "$readme")
+while read -r f; do
+	[ -n "$f" ] && [ ! -e "scripts/$f" ] && {
+		echo "FAIL $f: listed in $readme, not in scripts/"
+		fail=1
+	}
+done <<EOF
+$listed
+EOF
 exit $fail
