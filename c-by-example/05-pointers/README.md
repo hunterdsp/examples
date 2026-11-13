@@ -5,10 +5,54 @@ Run this lesson's commands in `c-by-example/05-pointers/`.
 Every variable lives somewhere in memory, at an *address*. A **pointer** is a
 variable that holds an address. Two operators are all there is:
 
-|      |                                               |
-| ---- | --------------------------------------------- |
-| `&x` | the address of `x`                            |
-| `*p` | the thing `p` points at: read it, or write it |
+|                  |                                                         |
+| ---------------- | ------------------------------------------------------- |
+| `float *p = &x;` | `p` holds the address of `x`                            |
+| `&x`             | the address of `x`                                      |
+| `*p`             | the thing `p` points at, here `x`: read it, or write it |
+
+In a program:
+
+```bash
+cat address.c
+```
+
+```c
+/* address.c -- a pointer, and writing through it.
+ *
+ *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
+ *       address.c -o address && ./address
+ */
+#include <stdio.h>
+
+int
+main (void)
+{
+  float  x = 1.0f;
+  float *p = &x; /* p holds the address of x */
+
+  printf ("x is %.1f\n", x);
+  printf ("*p is %.1f\n", *p); /* the thing p points at: x */
+
+  *p = 2.0f; /* write through p, and x changes */
+  printf ("after *p = 2.0f, x is %.1f\n", x);
+  return 0;
+}
+```
+
+```bash
+cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined address.c -o address
+./address
+```
+
+```
+x is 1.0
+*p is 1.0
+after *p = 2.0f, x is 2.0
+```
+
+`p` never held a copy of `x`, only where `x` lives, so writing through `p`
+changes `x` itself.
 
 You have used addresses already: lessons 03 and 04 passed arrays to functions,
 and what arrived was the address of the first element. A pointer gives that
