@@ -7,8 +7,8 @@ variable that holds an address. Two operators are all there is:
 
 |                  |                                                         |
 | ---------------- | ------------------------------------------------------- |
-| `float *p = &x;` | `p` holds the address of `x`                            |
 | `&x`             | the address of `x`                                      |
+| `float *p = &x;` | `p` holds the address of `x`                            |
 | `*p`             | the thing `p` points at, here `x`: read it, or write it |
 
 In a program:
