@@ -40,13 +40,14 @@ jbx -k sha256:5c847edda073c53e57fa6ece0a3d3e2c36551c37fc097d230806b43f9d499ab4 \
 # Hello World!
 ```
 
-To pin a script yourself, hash it at the commit you reviewed:
+Each script's hash, as it is on `main` now. A hash here is all `-k` needs:
+it checks that what arrived is what you asked for. When a script changes, so
+does its row.
 
-```bash
-c=50b94ecae1a1298160104edf89e67856001818e0
-curl -sSL https://raw.githubusercontent.com/hunterdsp/examples/$c/scripts/hello-world.sh |
-    sha256sum
-```
+| Script                   | SHA-256                                                            |
+| ------------------------ | ------------------------------------------------------------------ |
+| `scripts/greet.sh`       | `9d8179208a0678324cfd94a0371b4b84b0c9f4c33df198d445b4a4219694f914` |
+| `scripts/hello-world.sh` | `5c847edda073c53e57fa6ece0a3d3e2c36551c37fc097d230806b43f9d499ab4` |
 
 ## One script, many functions
 
