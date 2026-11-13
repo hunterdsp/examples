@@ -1,19 +1,36 @@
+Size of number types
+--------------------
 int is 4 bytes
 long is 8 bytes
 float is 4 bytes
 double is 8 bytes
 int16_t holds -32768 .. 32767
+
+Integer division
+----------------
 7 / 2 = 3
 7 % 2 = 1
 -7 / 2 = -3
 7 / 2.0 = 3.5
+
+Integer promotion
+-----------------
 200 + 100 = 300 as int
 200 + 100 = 44 as uint8_t
+
+Wrapping and overflow
+---------------------
 uint8_t 255 + 1 = 0
 samples in a day at 48 kHz: 4147200000
+
+Floating point
+--------------
 0.1 + 0.2 = 0.30000000000000004
 0.1 + 0.2 == 0.3? no
 16777216.0f + 1 = 16777216.0
+
+Decibels
+--------
 half amplitude = -6.0206 dB
 -6 dB = 0.5012 x amplitude
 double the power = 3.0103 dB
