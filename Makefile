@@ -12,7 +12,7 @@
 
 lint: lint-hashes lint-c-by-example ## Every gate CI runs
 
-lint-hashes: ## README.md's sha256 table matches scripts/
+lint-hashes: ## scripts/README.md's sha256 table matches the scripts
 	@.github/scripts/check-hashes.sh
 
 lint-c-by-example: ## Every lesson README and C file is formatted

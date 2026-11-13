@@ -1,6 +1,28 @@
 # hello
 
-TODO: describe your project.
+A C library with a Python binding, exactly as
+[just-makeit](https://just-buildit.github.io/just-makeit/) 0.128.0 generates
+it with:
+
+```bash
+. <(curl -fsSL https://just-buildit.github.io/just-makeit/install.sh)   # jm
+jm new hello python-c-extension --object gain --state k:double:2.0
+```
+
+Nothing is edited by hand except this description, which replaces the
+generated `TODO`.
+
+To build it and run its tests (C through CTest, Python through unittest), in
+`python-c-extension/`:
+
+```bash
+jbx install-deps -g dev   # compiler, CMake: whatever bootstrap.toml lists
+make test
+```
+
+`Gain(k=2.0).step(x)` returns `x` unchanged: the generated `step()` is a
+stub, marked `TODO`, in `native/inc/hello/gain/gain_core.h`. That body is
+the part you write; everything around it is generated.
 
 ## Requirements
 

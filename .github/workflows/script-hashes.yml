@@ -1,6 +1,6 @@
 name: script-hashes
 
-# README.md lists each script's sha256 for `jbx -k`. A stale row makes jbx
+# scripts/README.md lists each script's sha256 for `jbx -k`. A stale row makes jbx
 # refuse the script it names, so every change to a script or to the table
 # must leave them in step.
 
@@ -9,14 +9,12 @@ on:
     branches: [main]
     paths:
       - "scripts/**"
-      - "README.md"
       - ".github/scripts/check-hashes.sh"
       - "Makefile"
       - ".github/workflows/script-hashes.yml"
   pull_request:
     paths:
       - "scripts/**"
-      - "README.md"
       - ".github/scripts/check-hashes.sh"
       - "Makefile"
       - ".github/workflows/script-hashes.yml"
