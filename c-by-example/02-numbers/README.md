@@ -133,6 +133,34 @@ Arithmetic on small types is done in `int` (*integer promotion*), so
 `200 + 100` really is 300. Squeezing it back into 8 bits wraps it to 300 − 256,
 which is 44. **Unsigned** types wrap like this by definition.
 
+To keep every bit of a result, the type that holds it must be big enough:
+
+| Operation                  | Result needs      | For example                     |
+| -------------------------- | ----------------- | ------------------------------- |
+| `a + b`, both N bits       | N + 1 bits        | two `int16_t` samples: 17 bits  |
+| sum of K values of N bits  | N + ⌈log₂ K⌉ bits | 1024 `int16_t` samples: 26 bits |
+| `a * b`, N bits and M bits | N + M bits        | `int16_t` × `int16_t`: 32 bits  |
+
+Widen *before* the operation, not after. For two `int32_t`s, `(int64_t)a * b`
+multiplies in 64 bits, but `(int64_t)(a * b)` multiplies in 32, overflows, and
+then widens the wrong answer. Two `int16_t`s need no cast, because promotion
+already does their multiply in a 32-bit `int`.
+
+> [!TIP]
+> **Unsigned overflow is a free modulus.** An N-bit unsigned result is always
+> taken modulo 2ᴺ, and the hardware does it at no cost: the carry out of the
+> top bit is simply dropped. A lot of code relies on that on purpose:
+>
+> - A `uint32_t` phase accumulator in an oscillator wraps exactly once per
+>   cycle, with no `if` and no `fmod` (lesson 22).
+> - A `uint8_t` index into a 256-entry buffer goes round by itself (lesson 12).
+> - Hashes and checksums are defined modulo 2³² or 2⁶⁴, so they are written to
+>   overflow.
+>
+> Only unsigned types promise this. A signed type that overflows is a bug (see
+> Pitfalls), and a small unsigned type wraps only when the result is stored
+> back into it, as `(uint8_t)(a + b)` does above.
+
 ## Floating point
 
 ```
