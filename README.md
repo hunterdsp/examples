@@ -35,7 +35,9 @@ make hooks    # needs uv: https://docs.astral.sh/uv/
 `make test` builds and checks every c-by-example lesson. CI runs the same
 targets.
 
-Authors: Matthew T. Hunter, Ph.D. & Claude Code (AI Collaborator)
+## Authors
+
+Matthew T. Hunter, Ph.D. & Claude Code (AI Collaborator)
 
 <!-- Define your link aliases anywhere at the bottom of the file -->
 [jbx]: https://just-buildit.github.io/just-bashit/just-runit/
