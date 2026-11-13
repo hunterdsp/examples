@@ -25,7 +25,7 @@ cat sine.h
 #include <stddef.h> /* size_t */
 
 /* Fill out[0..n-1] with `cycles` periods of a unit sine wave. */
-void sine_table (float *out, size_t n, double cycles);
+void sine_table (float out[], size_t n, double cycles);
 
 /* How many tables sine_table has filled so far. */
 int sine_tables_made (void);
@@ -53,7 +53,7 @@ static const double TWO_PI = 6.283185307179586;
 static int made = 0;
 
 void
-sine_table (float *out, size_t n, double cycles)
+sine_table (float out[], size_t n, double cycles)
 {
   for (size_t i = 0; i < n; i++)
     out[i] = (float)sin (TWO_PI * cycles * (double)i / (double)n);
@@ -93,9 +93,9 @@ try_to_double (int x)
   printf ("  inside:  x = %d\n", x);
 }
 
-/* Here `float table[]` is really `float *table`: an array argument is
-   passed as the address of its first element, so the function CAN write
-   into the caller's array. More in lesson 04. */
+/* An array argument is passed as the address of its first element, so
+   the function CAN write into the caller's array; `const` promises this
+   one won't. More in lesson 04. */
 static void
 print_table (const char *label, const float table[], size_t n)
 {
@@ -219,7 +219,7 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Add `void sine_scale(float *table, size_t n, float gain)` to `sine.h` and
+1. Add `void sine_scale(float table[], size_t n, float gain)` to `sine.h` and
    `sine.c`, and use it to halve a table.
 
    <details><summary>Output and answer</summary>

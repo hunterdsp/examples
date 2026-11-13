@@ -17,9 +17,9 @@ try_to_double (int x)
   printf ("  inside:  x = %d\n", x);
 }
 
-/* Here `float table[]` is really `float *table`: an array argument is
-   passed as the address of its first element, so the function CAN write
-   into the caller's array. More in lesson 04. */
+/* An array argument is passed as the address of its first element, so
+   the function CAN write into the caller's array; `const` promises this
+   one won't. More in lesson 04. */
 static void
 print_table (const char *label, const float table[], size_t n)
 {

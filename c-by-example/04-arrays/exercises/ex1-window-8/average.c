@@ -12,8 +12,9 @@
    can size an array in C99. */
 enum { WINDOW = 8 }; /* exercise 1: was 4 */
 
-/* `n` travels with the array, because inside this function `in` is only a
-   pointer: the array's length did not come with it (see broken-sizeof.c). */
+/* `n` travels with the array, because inside this function `in` is only
+   the address of the array's first element: its length did not come with
+   it (see broken-sizeof.c). */
 static void
 moving_average (const float in[], float out[], int n)
 {

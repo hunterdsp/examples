@@ -10,7 +10,7 @@
 #include <stddef.h> /* size_t */
 
 /* Fill out[0..n-1] with `cycles` periods of a unit sine wave. */
-void sine_table (float *out, size_t n, double cycles);
+void sine_table (float out[], size_t n, double cycles);
 
 /* How many tables sine_table has filled so far. */
 int sine_tables_made (void);

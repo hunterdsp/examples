@@ -29,8 +29,9 @@ cat average.c
    can size an array in C99. */
 enum { WINDOW = 4 };
 
-/* `n` travels with the array, because inside this function `in` is only a
-   pointer: the array's length did not come with it (see broken-sizeof.c). */
+/* `n` travels with the array, because inside this function `in` is only
+   the address of the array's first element: its length did not come with
+   it (see broken-sizeof.c). */
 static void
 moving_average (const float in[], float out[], int n)
 {
@@ -92,9 +93,9 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
 - **`sizeof` in the declaring scope knows the whole array.**
   `sizeof in / sizeof in[0]` is total bytes over bytes per element: the element
   count. This is the idiom for "how long is this array".
-- **Passed to a function, the array decays to a pointer** to its first element,
-  and its length is lost. That's why `moving_average` takes `n`. Every C
-  function that takes a buffer takes its length too.
+- **Passed to a function, an array arrives as the address of its first
+  element**, and its length is lost. That's why `moving_average` takes `n`.
+  Every C function that takes a buffer takes its length too.
 - **The inner loop guards its edge.** `i - k >= 0` stops the window looking
   before sample 0. Edges are where filters and indexes go wrong.
 
@@ -117,10 +118,10 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
   answer. For N elements, loop `i < N`.
 
 - **`sizeof` on an array parameter.** In [`broken-sizeof.c`](broken-sizeof.c),
-  `float buf[8]` as a *parameter* means `float *buf`, so `sizeof buf` is 8, the
-  size of a pointer, and the "length" comes out as 2. The compiler warns
-  (`-Wsizeof-array-argument`). The `[8]` in a parameter is documentation,
-  nothing more.
+  `float buf[8]` as a *parameter* receives only the address of the first
+  element, so `sizeof buf` is 8, the size of an address, and the "length" comes
+  out as 2. The compiler warns (`-Wsizeof-array-argument`). The `[8]` in a
+  parameter is documentation, nothing more.
 
 - **Arrays don't assign.** `out = in;` does not compile: copy element by
   element, or with `memcpy` (lesson 06).

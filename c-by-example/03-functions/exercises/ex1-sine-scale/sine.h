@@ -10,10 +10,10 @@
 #include <stddef.h> /* size_t */
 
 /* Fill out[0..n-1] with `cycles` periods of a unit sine wave. */
-void sine_table (float *out, size_t n, double cycles);
+void sine_table (float out[], size_t n, double cycles);
 
 /* Multiply every sample of table[0..n-1] by gain, in place. */
-void sine_scale (float *table, size_t n, float gain);
+void sine_scale (float table[], size_t n, float gain);
 
 /* How many tables sine_table has filled so far. */
 int sine_tables_made (void);
