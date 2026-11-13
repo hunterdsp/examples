@@ -11,12 +11,14 @@ on:
       - "scripts/**"
       - "README.md"
       - ".github/scripts/check-hashes.sh"
+      - "Makefile"
       - ".github/workflows/script-hashes.yml"
   pull_request:
     paths:
       - "scripts/**"
       - "README.md"
       - ".github/scripts/check-hashes.sh"
+      - "Makefile"
       - ".github/workflows/script-hashes.yml"
   workflow_dispatch:
 
@@ -27,4 +29,4 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v7
-      - run: .github/scripts/check-hashes.sh
+      - run: make lint-hashes
