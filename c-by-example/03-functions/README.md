@@ -159,11 +159,11 @@ tables made: 2
 
 ## A header is a promise
 
-| File                 | Holds                                                                            |
-| -------------------- | -------------------------------------------------------------------------------- |
-| [`sine.h`](sine.h)   | **Declarations**: the name, arguments and return type of each function. No code. |
-| [`sine.c`](sine.c)   | **Definitions**: the code.                                                       |
-| [`table.c`](table.c) | A caller. It includes `sine.h`, so the compiler checks every call.               |
+| File                 | Holds                                                                   |
+| -------------------- | ----------------------------------------------------------------------- |
+| [`sine.h`](sine.h)   | **Declarations**: the name, arguments and return type of each function. |
+| [`sine.c`](sine.c)   | **Definitions**: the code.                                              |
+| [`table.c`](table.c) | A caller. It includes `sine.h`, so the compiler checks every call.      |
 
 The compiler builds `sine.c` and `table.c` separately, and the linker joins
 them (lesson 00). The header is how the two agree on what a function looks like
