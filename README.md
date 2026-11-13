@@ -10,8 +10,6 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](.pre-commit-config.yaml)
 [![jbx](https://img.shields.io/badge/-jbx-1a3050?labelColor=0d1b2a&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjE0IDQ0IDE0MCAxMTIiPjxwYXRoIGQ9Ik0zMCA2MiBMODYgMTAwIEwzMCAxMzgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y1OWUwYiIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InNxdWFyZSIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIvPjxyZWN0IHg9IjEwNCIgeT0iMTI5IiB3aWR0aD0iNDAiIGhlaWdodD0iMTgiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4K)](https://just-buildit.github.io/just-bashit/just-runit/#getting-just-runit)
 
-Authors: Matthew T. Hunter, Ph.D. & Claude Code (AI Collaborator)
-
 Examples are a great way to learn new tools and languages.
 
 That's the whole point of this space: one repo dedicated to various examples.
@@ -36,6 +34,8 @@ make hooks    # needs uv: https://docs.astral.sh/uv/
 `make lint` runs every check, `make format` fixes the formatting ones, and
 `make test` builds and checks every c-by-example lesson. CI runs the same
 targets.
+
+Authors: Matthew T. Hunter, Ph.D. & Claude Code (AI Collaborator)
 
 <!-- Define your link aliases anywhere at the bottom of the file -->
 [jbx]: https://just-buildit.github.io/just-bashit/just-runit/
