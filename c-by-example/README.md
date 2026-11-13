@@ -12,6 +12,8 @@
 
 **Deceptively simple. Extremely powerful.**
 
+Authors: Matthew T. Hunter, Ph.D. & Claude Code (AI Collaborator)
+
 C has a small grammar and almost no runtime, which is exactly why it is still
 what fast code is written in. This course starts from an empty file and ends
 with a C library ready for distribution, built one runnable example at a time.
