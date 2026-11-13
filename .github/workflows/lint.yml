@@ -22,3 +22,6 @@ jobs:
         with:
           version: "0.11.21"
       - run: make lint
+      # The same gates through .pre-commit-config.yaml, so a hook calling a
+      # target that no longer exists fails here, not on someone's commit.
+      - run: uv run --frozen --only-group lint pre-commit run --all-files

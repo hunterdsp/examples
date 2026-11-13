@@ -1,0 +1,48 @@
+# pre-commit: run the lint gates on every commit, so nobody has to remember.
+#
+# This file decides only WHEN a check runs (which paths trigger it). The
+# Makefile owns HOW each tool runs and pyproject.toml/uv.lock own WHICH
+# version, so every hook calls back into `make -s lint-<tool>`, the same
+# target `make lint` and CI run. A hook that fails says what is wrong;
+# `make format` fixes the formatting ones.
+#
+# Install once per clone:  make hooks
+
+repos:
+  - repo: local
+    hooks:
+      - id: shellcheck
+        name: shellcheck
+        entry: make -s lint-shellcheck
+        language: system
+        pass_filenames: false
+        files: \.sh$
+
+      - id: shfmt
+        name: shfmt
+        entry: make -s lint-shfmt
+        language: system
+        pass_filenames: false
+        files: \.sh$
+
+      # A changed script changes its hash, so its row must change with it.
+      - id: script-hashes
+        name: scripts/README.md hash table
+        entry: make -s lint-hashes
+        language: system
+        pass_filenames: false
+        files: ^scripts/
+
+      - id: mdformat
+        name: mdformat (c-by-example)
+        entry: make -s lint-mdformat
+        language: system
+        pass_filenames: false
+        files: ^c-by-example/.*\.md$
+
+      - id: clang-format
+        name: clang-format (c-by-example)
+        entry: make -s lint-clang-format
+        language: system
+        pass_filenames: false
+        files: ^c-by-example/.*\.[ch]$

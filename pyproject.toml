@@ -1,14 +1,19 @@
 # The repo's own lint tools, pinned in uv.lock. Each example keeps its own
-# (c-by-example/pyproject.toml); this one covers the shell scripts.
+# (c-by-example/pyproject.toml); this one covers the shell scripts and
+# pre-commit.
 [project]
 name = "examples"
 version = "0"
-requires-python = ">=3.9"
+requires-python = ">=3.11"  # pre-commit 4.7 needs it
 
 [dependency-groups]
 lint = [
   "shellcheck-py==0.11.0.1",  # shellcheck 0.11.0, as just-bashit pins it
   "shfmt-py==4.0.0",          # shfmt 3.13.1, as just-bashit pins it
+  # `make hooks` installs it; every hook calls back into `make -s lint-<tool>`.
+  # In this group, not its own: the hooks run from this same .venv, and a
+  # sync to any other group alone would uninstall the tools they call.
+  "pre-commit==4.7.0",
 ]
 
 [tool.uv]

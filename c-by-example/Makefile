@@ -9,7 +9,7 @@
 
 LESSONS ?= $(sort $(wildcard [0-9][0-9]-*))
 
-.PHONY: test lint format help
+.PHONY: test lint lint-mdformat lint-clang-format format help
 
 # Every README in the course, formatted by mdformat (settings in
 # .mdformat.toml). `make lint` fails if formatting would change any of
@@ -25,8 +25,12 @@ CLANG_FORMAT := uv run --frozen --only-group lint clang-format --style=file
 test: ## Build, run and check every example in LESSONS
 	@CC="$(CC)" ./check.sh $(LESSONS)
 
-lint: ## Fail if any README or C file is not as its formatter would write it
+lint: lint-mdformat lint-clang-format ## Every README and C file is formatted
+
+lint-mdformat: ## Fail if any README is not as mdformat would write it
 	@$(MDFORMAT) --check $(MD_FILES)
+
+lint-clang-format: ## Fail if any C file is not as clang-format would write it
 	@$(CLANG_FORMAT) --dry-run --Werror $(C_FILES)
 
 format: ## Format every README (mdformat) and C file (clang-format)
