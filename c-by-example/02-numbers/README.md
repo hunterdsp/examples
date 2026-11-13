@@ -29,20 +29,25 @@ main (void)
   /* Sizes. `int` is 32 bits on every machine this course runs on, but C
      only promises at least 16. When the size matters, say so: int16_t is
      exactly 16 bits everywhere. */
-  printf ("int %zu, long %zu, float %zu, double %zu bytes\n", sizeof (int),
-          sizeof (long), sizeof (float), sizeof (double));
+  printf ("int %zu\n", sizeof (int));
+  printf ("long %zu\n", sizeof (long));
+  printf ("float %zu\n", sizeof (float));
+  printf ("double %zu\n", sizeof (double));
   printf ("int16_t holds %d .. %d\n", INT16_MIN, INT16_MAX);
 
   /* Integer division throws the remainder away, toward zero. */
-  printf ("7 / 2 = %d, 7 %% 2 = %d, -7 / 2 = %d, 7 / 2.0 = %.1f\n", 7 / 2,
-          7 % 2, -7 / 2, 7 / 2.0);
+  printf ("7 / 2 = %d\n", 7 / 2);
+  printf ("7 %% 2 = %d\n", 7 % 2);
+  printf ("-7 / 2 = %d\n", -7 / 2);
+  printf ("7 / 2.0 = %.1f\n", 7 / 2.0);
 
   /* Promotion: arithmetic on small types happens in int. The sum is 300,
      and only storing it back into 8 bits wraps it (300 - 256 = 44). */
   uint8_t a = 200, b = 100;
   int sum = a + b;
   uint8_t wrapped = (uint8_t)(a + b);
-  printf ("200 + 100 = %d as int, %d as uint8_t\n", sum, wrapped);
+  printf ("200 + 100 = %d as int\n", sum);
+  printf ("200 + 100 = %d as uint8_t\n", wrapped);
 
   /* Unsigned arithmetic wraps by definition... */
   uint8_t counter = 255;
@@ -55,7 +60,8 @@ main (void)
 
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
   double x = 0.1 + 0.2;
-  printf ("0.1 + 0.2 = %.17f, == 0.3? %s\n", x, x == 0.3 ? "yes" : "no");
+  printf ("0.1 + 0.2 = %.17f\n", x);
+  printf ("0.1 + 0.2 == 0.3? %s\n", x == 0.3 ? "yes" : "no");
   /* A float has 24 bits of mantissa: past 2^24 it cannot count by one. */
   float big = 16777216.0f;
   printf ("16777216.0f + 1 = %.1f\n", big + 1.0f);
@@ -78,13 +84,21 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined numbers.c -o numbers -
 ```
 
 ```
-int 4, long 8, float 4, double 8 bytes
+int 4
+long 8
+float 4
+double 8
 int16_t holds -32768 .. 32767
-7 / 2 = 3, 7 % 2 = 1, -7 / 2 = -3, 7 / 2.0 = 3.5
-200 + 100 = 300 as int, 44 as uint8_t
+7 / 2 = 3
+7 % 2 = 1
+-7 / 2 = -3
+7 / 2.0 = 3.5
+200 + 100 = 300 as int
+200 + 100 = 44 as uint8_t
 uint8_t 255 + 1 = 0
 samples in a day at 48 kHz: 4147200000
-0.1 + 0.2 = 0.30000000000000004, == 0.3? no
+0.1 + 0.2 = 0.30000000000000004
+0.1 + 0.2 == 0.3? no
 16777216.0f + 1 = 16777216.0
 half amplitude = -6.0206 dB
 -6 dB = 0.5012 x amplitude
@@ -96,13 +110,16 @@ Each section below takes a few of those lines in turn.
 ## Integers
 
 ```
-int 4, long 8, float 4, double 8 bytes
+int 4
+long 8
+float 4
+double 8
 int16_t holds -32768 .. 32767
 ```
 
-C only promises `int` is *at least* 16 bits, and `long` at least 32: it is 8
-bytes here, but 4 on 64-bit Windows. The same program can hold different
-numbers on different machines.
+`sizeof` counts bytes. C only promises `int` is *at least* 16 bits, and `long`
+at least 32: it is 8 bytes here, but 4 on 64-bit Windows. The same program can
+hold different numbers on different machines.
 
 > [!TIP]
 > **Use explicitly sized types to limit surprises.** `<stdint.h>` puts the
@@ -118,14 +135,18 @@ numbers on different machines.
 > 16-bit audio sample, a hardware register, a count that grows with time.
 
 ```
-7 / 2 = 3, 7 % 2 = 1, -7 / 2 = -3, 7 / 2.0 = 3.5
+7 / 2 = 3
+7 % 2 = 1
+-7 / 2 = -3
+7 / 2.0 = 3.5
 ```
 
 Integer division throws the remainder away, rounding toward zero. Make one side
 a floating-point number (`2.0`) and you get the real quotient.
 
 ```
-200 + 100 = 300 as int, 44 as uint8_t
+200 + 100 = 300 as int
+200 + 100 = 44 as uint8_t
 uint8_t 255 + 1 = 0
 ```
 
@@ -166,7 +187,8 @@ remember which types convert.
 ## Floating point
 
 ```
-0.1 + 0.2 = 0.30000000000000004, == 0.3? no
+0.1 + 0.2 = 0.30000000000000004
+0.1 + 0.2 == 0.3? no
 16777216.0f + 1 = 16777216.0
 ```
 

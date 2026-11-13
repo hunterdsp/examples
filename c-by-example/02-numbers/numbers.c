@@ -16,20 +16,25 @@ main (void)
   /* Sizes. `int` is 32 bits on every machine this course runs on, but C
      only promises at least 16. When the size matters, say so: int16_t is
      exactly 16 bits everywhere. */
-  printf ("int %zu, long %zu, float %zu, double %zu bytes\n", sizeof (int),
-          sizeof (long), sizeof (float), sizeof (double));
+  printf ("int %zu\n", sizeof (int));
+  printf ("long %zu\n", sizeof (long));
+  printf ("float %zu\n", sizeof (float));
+  printf ("double %zu\n", sizeof (double));
   printf ("int16_t holds %d .. %d\n", INT16_MIN, INT16_MAX);
 
   /* Integer division throws the remainder away, toward zero. */
-  printf ("7 / 2 = %d, 7 %% 2 = %d, -7 / 2 = %d, 7 / 2.0 = %.1f\n", 7 / 2,
-          7 % 2, -7 / 2, 7 / 2.0);
+  printf ("7 / 2 = %d\n", 7 / 2);
+  printf ("7 %% 2 = %d\n", 7 % 2);
+  printf ("-7 / 2 = %d\n", -7 / 2);
+  printf ("7 / 2.0 = %.1f\n", 7 / 2.0);
 
   /* Promotion: arithmetic on small types happens in int. The sum is 300,
      and only storing it back into 8 bits wraps it (300 - 256 = 44). */
   uint8_t a = 200, b = 100;
   int sum = a + b;
   uint8_t wrapped = (uint8_t)(a + b);
-  printf ("200 + 100 = %d as int, %d as uint8_t\n", sum, wrapped);
+  printf ("200 + 100 = %d as int\n", sum);
+  printf ("200 + 100 = %d as uint8_t\n", wrapped);
 
   /* Unsigned arithmetic wraps by definition... */
   uint8_t counter = 255;
@@ -42,7 +47,8 @@ main (void)
 
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
   double x = 0.1 + 0.2;
-  printf ("0.1 + 0.2 = %.17f, == 0.3? %s\n", x, x == 0.3 ? "yes" : "no");
+  printf ("0.1 + 0.2 = %.17f\n", x);
+  printf ("0.1 + 0.2 == 0.3? %s\n", x == 0.3 ? "yes" : "no");
   /* A float has 24 bits of mantissa: past 2^24 it cannot count by one. */
   float big = 16777216.0f;
   printf ("16777216.0f + 1 = %.1f\n", big + 1.0f);
