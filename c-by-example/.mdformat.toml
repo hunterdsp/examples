@@ -1,0 +1,5 @@
+# mdformat's settings, read by `make format`, `make lint` and any editor
+# that runs mdformat here. Lines of 79, like everything else; numbered
+# lists keep their numbers (1. 2. 3.) instead of all becoming 1.
+wrap = 79
+number = true

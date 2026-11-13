@@ -2,7 +2,8 @@ name: c-by-example
 
 # Every lesson's examples must print what their README says, and every
 # broken-*.c must still fail for the reason it gives -- on Linux with gcc
-# and clang, and on macOS with Apple's clang.
+# and clang, and on macOS with Apple's clang. And every README must be as
+# mdformat writes it (make lint).
 
 on:
   push:
@@ -27,4 +28,21 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: ${{ matrix.cc }} --version
-      - run: make -C c-by-example test CC=${{ matrix.cc }}
+      # make exits 0 when it has nothing to do (a target lost from the
+      # Makefile but still .PHONY does exactly that), so require the
+      # summary check.sh prints, not just the exit code.
+      - run: |
+          set -o pipefail
+          make -C c-by-example test CC=${{ matrix.cc }} | tee test.log
+          grep -E '^[1-9][0-9]* passed, 0 failed' test.log
+
+  lint:
+    name: markdown (mdformat)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.11.21"
+      - run: make -C c-by-example lint

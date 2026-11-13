@@ -2,10 +2,11 @@
 
 ## One time set up
 
-Install [`jbx`](https://just-buildit.github.io/just-bashit/) which gets
-you a working dev machine in one command.
+Install [`jbx`](https://just-buildit.github.io/just-bashit/) which gets you a
+working dev machine in one command.
 
 <!-- no-run -->
+
 ```bash
 . <(curl -sSL https://just-buildit.github.io/get-jb.sh)
 ```
@@ -13,28 +14,28 @@ you a working dev machine in one command.
 Clone this repository and move into the project root
 
 <!-- no-run -->
+
 ```bash
 git clone https://github.com/hunterdsp/examples.git
 cd examples
 ```
 
-On macOS, run `xcode-select --install` first: it brings `cc` (clang),
-`make` and `lldb`.
+On macOS, run `xcode-select --install` first: it brings `cc` (clang), `make`
+and `lldb`.
 
-You need three things: a C compiler, `make`, and a debugger. One line
-installs them, along with a few other tools that help later on (a second
-compiler, a memory checker, CMake, Doxygen), using your system package
-manager:
+You need three things: a C compiler, `make`, and a debugger. One line installs
+them, along with a few other tools that help later on (a second compiler, a
+memory checker, CMake, Doxygen), using your system package manager:
 
 <!-- no-run -->
+
 ```bash
 jbx install-deps -g dev c-by-example/bootstrap.toml
 ```
 
-Each lesson is a folder under `c-by-example/`, and its commands run in
-that folder: `cd` into it before you start, as this lesson does below. An
-exercise answer runs in its own folder, under `exercises/`, and says
-which.
+Each lesson is a folder under `c-by-example/`, and its commands run in that
+folder: `cd` into it before you start, as this lesson does below. An exercise
+answer runs in its own folder, under `exercises/`, and says which.
 
 Check it worked:
 
@@ -48,8 +49,8 @@ cc --version
 `cc` is not a compiler of its own: it is the traditional name for *your
 system's* C compiler, so the same command works everywhere. On Linux it is
 usually GCC (the Free Software Foundation line above gives it away; your
-version may differ), and on macOS it is Apple's clang. This course uses
-`cc` so you never have to care which, and checks every example with both:
+version may differ), and on macOS it is Apple's clang. This course uses `cc` so
+you never have to care which, and checks every example with both:
 
 ```bash
 gcc --version     # GCC by name
@@ -58,8 +59,8 @@ clang --version   # clang by name (installed above)
 
 ## What `cc` actually does
 
-Here is the program we will take apart. Note the two lines starting with
-`#`: they are not C, but instructions to the first stage below.
+Here is the program we will take apart. Note the two lines starting with `#`:
+they are not C, but instructions to the first stage below.
 
 ```bash
 cd c-by-example/00-tools
@@ -84,11 +85,11 @@ main (void)
 }
 ```
 
-Every C program starts running at `main`. This one does a single thing:
-`puts` ("put string") prints a line of text. We did not write `puts`; it
-comes with C, in the *standard library*, and `#include <stdio.h>` is what
-tells the compiler it exists. Keep an eye on it: each stage below changes
-what `puts` looks like, and the last one finally finds its code.
+Every C program starts running at `main`. This one does a single thing: `puts`
+("put string") prints a line of text. We did not write `puts`; it comes with C,
+in the *standard library*, and `#include <stdio.h>` is what tells the compiler
+it exists. Keep an eye on it: each stage below changes what `puts` looks like,
+and the last one finally finds its code.
 
 Build and run it in one step:
 
@@ -109,15 +110,15 @@ stages.c  --preprocess-->  stages.i  --compile-->  stages.s
 
 **1. Preprocess** (`-E`): C in, C out.
 
-`#include` pastes in a whole file and `#define` replaces names,
-so `stages.i` is still C, just with every `#` line carried out:
+`#include` pastes in a whole file and `#define` replaces names, so `stages.i`
+is still C, just with every `#` line carried out:
 
 ```bash
 cc -E stages.c -o stages.i
 ```
 
-Use `wc` to count the lines before and after preprocessing (your numbers
-may differ):
+Use `wc` to count the lines before and after preprocessing (your numbers may
+differ):
 
 ```bash
 wc -l stages.c stages.i
@@ -143,8 +144,8 @@ main (void)
 }
 ```
 
-`GREETING` is gone, replaced by the string it stood for, and the hundreds
-of lines above `main` are `stdio.h` pasted in, `puts` among them.
+`GREETING` is gone, replaced by the string it stood for, and the hundreds of
+lines above `main` are `stdio.h` pasted in, `puts` among them.
 
 **2. Compile** (`-S`): the preprocessed C becomes assembly, the CPU's own
 instructions written out as text. Our `puts (...)` line has become one
@@ -156,15 +157,15 @@ grep puts stages.s
 #       call    puts@PLT
 ```
 
-That is GCC on an x86-64 CPU. The exact text depends on your compiler and
-CPU: clang writes `callq` and adds a line or two, and an Arm CPU (an Apple
-Silicon Mac, say) uses a different instruction altogether. What matters is
-that `puts` is still just a name here. The `@PLT` suffix is how a call
-reaches a function in a shared library; you can ignore it for now.
+That is GCC on an x86-64 CPU. The exact text depends on your compiler and CPU:
+clang writes `callq` and adds a line or two, and an Arm CPU (an Apple Silicon
+Mac, say) uses a different instruction altogether. What matters is that `puts`
+is still just a name here. The `@PLT` suffix is how a call reaches a function
+in a shared library; you can ignore it for now.
 
 **3. Assemble** (`-c`): the assembly becomes an *object file*, machine code
-with holes in it. `nm` lists what it defines (`T main`) and what it still
-needs from somewhere else (`U puts`, undefined):
+with holes in it. `nm` lists what it defines (`T main`) and what it still needs
+from somewhere else (`U puts`, undefined):
 
 ```bash
 cc -c stages.s -o stages.o
@@ -189,21 +190,22 @@ file in between.
 ## Pitfalls
 
 - **"undefined reference to …"** is the *linker* talking (stage 4), not the
-  compiler. The code compiled fine; a function it calls was never defined,
-  or its library was not linked. Lesson 08 shows this on purpose.
+  compiler. The code compiled fine; a function it calls was never defined, or
+  its library was not linked. Lesson 08 shows this on purpose.
 - **A missing `#include`** shows up at stage 2, as "implicit declaration of
   function". Lesson 01 shows that one.
 
 ## Exercises
 
-Try each one before opening its answer. The output shown is GCC on Linux;
-clang words its messages differently but stops at the same stage. (For
-exercises 2 and 3, [`exercises/`](exercises/) holds the broken program,
-and `make test` checks that each still stops where the answer says.)
+Try each one before opening its answer. The output shown is GCC on Linux; clang
+words its messages differently but stops at the same stage. (For exercises 2
+and 3, [`exercises/`](exercises/) holds the broken program, and `make test`
+checks that each still stops where the answer says.)
 
 1. Find `puts` in `stages.i`. Where does the preprocessor say it came from?
 
    <!-- no-run -->
+
    ```bash
    grep -n -w puts stages.i
    ```
@@ -215,16 +217,17 @@ and `make test` checks that each still stops where the answer says.)
    851:  puts ("compiled, linked, ran");
    ```
 
-   Line 716 is the *declaration*: it tells the compiler `puts` takes a
-   string and returns an `int`, without saying how it does it. Lines
-   starting `# 1 "/usr/include/stdio.h"` near the top of `stages.i` mark
-   where the pasted-in file begins. Your line numbers may differ.
+   Line 716 is the *declaration*: it tells the compiler `puts` takes a string
+   and returns an `int`, without saying how it does it. Lines starting
+   `# 1 "/usr/include/stdio.h"` near the top of `stages.i` mark where the
+   pasted-in file begins. Your line numbers may differ.
 
    </details>
 
 2. Delete `#include <stdio.h>` and build. Which stage complains?
 
    <!-- no-run -->
+
    ```bash
    cc stages.c -o stages && ./stages
    ```
@@ -241,17 +244,18 @@ and `make test` checks that each still stops where the answer says.)
        1 | /* stages.c -- the smallest program worth taking apart.
    ```
 
-   The *compiler* (stage 2). The preprocessor is happy: there is simply
-   nothing to paste. But without the declaration from exercise 1, the
-   compiler meets `puts` with no idea what it is, and refuses to guess.
-   Put the line back before going on.
+   The *compiler* (stage 2). The preprocessor is happy: there is simply nothing
+   to paste. But without the declaration from exercise 1, the compiler meets
+   `puts` with no idea what it is, and refuses to guess. Put the line back
+   before going on.
 
    </details>
 
-3. Rename `main` to `start` and build. Which stage complains now, and why
-   that one?
+3. Rename `main` to `start` and build. Which stage complains now, and why that
+   one?
 
    <!-- no-run -->
+
    ```bash
    cc stages.c -o stages && ./stages
    ```
@@ -265,10 +269,9 @@ and `make test` checks that each still stops where the answer says.)
    ```
 
    The *linker* (stage 4): `ld` is the linker. `start` is a perfectly good
-   function name, so stages 1 to 3 succeed, and `nm` on the object file
-   shows `T start`. But every program is linked with a little startup
-   code from the C library (`Scrt1.o` above), and its `_start` calls
-   `main`. Nothing defines `main`, so that hole cannot be filled. Rename
-   it back.
+   function name, so stages 1 to 3 succeed, and `nm` on the object file shows
+   `T start`. But every program is linked with a little startup code from the C
+   library (`Scrt1.o` above), and its `_start` calls `main`. Nothing defines
+   `main`, so that hole cannot be filled. Rename it back.
 
    </details>
