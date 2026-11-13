@@ -1,7 +1,7 @@
-int 4
-long 8
-float 4
-double 8
+int is 4 bytes
+long is 8 bytes
+float is 4 bytes
+double is 8 bytes
 int16_t holds -32768 .. 32767
 7 / 2 = 3
 7 % 2 = 1

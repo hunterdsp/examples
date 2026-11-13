@@ -16,10 +16,10 @@ main (void)
   /* Sizes. `int` is 32 bits on every machine this course runs on, but C
      only promises at least 16. When the size matters, say so: int16_t is
      exactly 16 bits everywhere. */
-  printf ("int %zu\n", sizeof (int));
-  printf ("long %zu\n", sizeof (long));
-  printf ("float %zu\n", sizeof (float));
-  printf ("double %zu\n", sizeof (double));
+  printf ("int is %zu bytes\n", sizeof (int));
+  printf ("long is %zu bytes\n", sizeof (long));
+  printf ("float is %zu bytes\n", sizeof (float));
+  printf ("double is %zu bytes\n", sizeof (double));
   printf ("int16_t holds %d .. %d\n", INT16_MIN, INT16_MAX);
 
   /* Integer division throws the remainder away, toward zero. */

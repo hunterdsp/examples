@@ -29,10 +29,10 @@ main (void)
   /* Sizes. `int` is 32 bits on every machine this course runs on, but C
      only promises at least 16. When the size matters, say so: int16_t is
      exactly 16 bits everywhere. */
-  printf ("int %zu\n", sizeof (int));
-  printf ("long %zu\n", sizeof (long));
-  printf ("float %zu\n", sizeof (float));
-  printf ("double %zu\n", sizeof (double));
+  printf ("int is %zu bytes\n", sizeof (int));
+  printf ("long is %zu bytes\n", sizeof (long));
+  printf ("float is %zu bytes\n", sizeof (float));
+  printf ("double is %zu bytes\n", sizeof (double));
   printf ("int16_t holds %d .. %d\n", INT16_MIN, INT16_MAX);
 
   /* Integer division throws the remainder away, toward zero. */
@@ -84,10 +84,10 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined numbers.c -o numbers -
 ```
 
 ```
-int 4
-long 8
-float 4
-double 8
+int is 4 bytes
+long is 8 bytes
+float is 4 bytes
+double is 8 bytes
 int16_t holds -32768 .. 32767
 7 / 2 = 3
 7 % 2 = 1
@@ -110,16 +110,16 @@ Each section below takes a few of those lines in turn.
 ## Integers
 
 ```
-int 4
-long 8
-float 4
-double 8
+int is 4 bytes
+long is 8 bytes
+float is 4 bytes
+double is 8 bytes
 int16_t holds -32768 .. 32767
 ```
 
-`sizeof` counts bytes. C only promises `int` is *at least* 16 bits, and `long`
-at least 32: it is 8 bytes here, but 4 on 64-bit Windows. The same program can
-hold different numbers on different machines.
+C only promises `int` is *at least* 16 bits, and `long` at least 32: it is 8
+bytes here, but 4 on 64-bit Windows. The same program can hold different
+numbers on different machines.
 
 > [!TIP]
 > **Use explicitly sized types to limit surprises.** `<stdint.h>` puts the
