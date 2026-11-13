@@ -296,3 +296,53 @@ folder to run it in.
    whenever a sum runs long.
 
    </details>
+
+4. Check the table: add two full-scale `int16_t`s, sum 1024 of them, square the
+   most negative one, and multiply two `int32_t`s of 100000. How many bits does
+   each result need? Then multiply the `int32_t`s again, widening *after* the
+   multiply. Finally, step a `uint32_t` phase by 2³²/8 eight times.
+
+   <details><summary>Output and answer</summary>
+
+   In `exercises/ex4-sizes/`:
+
+   ```bash
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined sizes.c -o sizes
+   ./sizes
+   ```
+
+   ```
+   int16_t + int16_t   = 65534 (17 bits)
+   1024 int16_t summed = 33553408 (26 bits)
+   int16_t * int16_t   = 1073741824 (32 bits)
+   int32_t * int32_t   = 10000000000 (35 bits)
+   uint32_t phase after 8 steps of 2^32/8 = 0
+   ```
+
+   The first three are the table's rows exactly: N + 1 = 17, N + log₂ 1024 =
+   26, and N + M = 32. The `int32_t` product needs 35 bits, more than 32, and
+   other values need up to 64, so it is held in an `int64_t` and one operand is
+   widened first. The phase is back at 0: eight eighths of a cycle is one whole
+   cycle, and the wrap did the modulo.
+
+   Widening after the multiply instead:
+
+   <!-- no-run -->
+
+   ```bash
+   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined broken-late.c -o broken-late
+   ./broken-late
+   ```
+
+   ```
+   broken-late.c:17:27: runtime error: signed integer overflow: 100000 * 100000 cannot be represented in type 'int'
+   1410065408
+   ```
+
+   The multiply happened in 32 bits and overflowed before the cast was reached,
+   so the `int64_t` holds a wrong answer: 10¹⁰ modulo 2³², read as a signed
+   number. UBSan reports it and, under this build command, lets the program
+   carry on; `check.sh` builds with `-fno-sanitize-recover`, which stops it
+   there instead.
+
+   </details>
