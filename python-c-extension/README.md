@@ -1,5 +1,8 @@
 # hello
 
+[![just-makeit](https://img.shields.io/badge/generated%20by-just--makeit-informational)](https://just-buildit.github.io/just-makeit/)
+[![C99](https://img.shields.io/badge/C-99-informational?logo=c&logoColor=white)](https://en.cppreference.com/w/c/99)
+
 A C library with a Python binding, exactly as
 [just-makeit](https://just-buildit.github.io/just-makeit/) 0.128.0 generates
 it with:
@@ -9,8 +12,8 @@ it with:
 jm new hello python-c-extension --object gain --state k:double:2.0
 ```
 
-Nothing is edited by hand except this description, which replaces the
-generated `TODO`.
+Nothing is edited by hand except the badges and this description, which
+replaces the generated `TODO`.
 
 To build it and run its tests (C through CTest, Python through unittest), in
 `python-c-extension/`:

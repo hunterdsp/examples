@@ -1,5 +1,11 @@
 # Learning C by Example
 
+[![CI](https://github.com/hunterdsp/examples/actions/workflows/c-by-example.yml/badge.svg)](https://github.com/hunterdsp/examples/actions/workflows/c-by-example.yml)
+[![Under construction](https://img.shields.io/badge/status-under%20construction-orange)](#learning-c-by-example)
+[![C99](https://img.shields.io/badge/C-99-informational?logo=c&logoColor=white)](https://en.cppreference.com/w/c/99)
+[![Linux | macOS](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS-informational?logo=linux&logoColor=white)](../.github/workflows/c-by-example.yml)
+[![clang-format](https://img.shields.io/badge/clang--format-GNU-blue)](.clang-format)
+
 > [!WARNING]
 > **UNDER CONSTRUCTION.** Parts 0 and I (lessons 00–08) are written and tested;
 > Parts II–V are still to come, and lessons may change as they do.
