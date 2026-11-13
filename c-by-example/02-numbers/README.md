@@ -100,9 +100,22 @@ int 4, long 8, float 4, double 8 bytes
 int16_t holds -32768 .. 32767
 ```
 
-C only promises `int` is *at least* 16 bits. When the size matters (a file
-format, a 16-bit audio sample, a hardware register) use `<stdint.h>`: `int16_t`
-is exactly 16 bits on every machine, `uint32_t` exactly 32 and unsigned.
+C only promises `int` is *at least* 16 bits, and `long` at least 32: it is 8
+bytes here, but 4 on 64-bit Windows. The same program can hold different
+numbers on different machines.
+
+> [!TIP]
+> **Use explicitly sized types to limit surprises.** `<stdint.h>` puts the
+> width in the name, so it means the same on every machine:
+>
+> - `int8_t`, `int16_t`, `int32_t`, `int64_t`: signed, exactly 8, 16, 32 and 64
+>   bits.
+> - `uint8_t`, `uint16_t`, `uint32_t`, `uint64_t`: the same widths, unsigned.
+>
+> Each comes with its limits (`INT16_MIN`, `INT16_MAX`, `UINT8_MAX`), and
+> `<inttypes.h>` gives its `printf` format (`PRId64` for `int64_t`, as in
+> `numbers.c`). Reach for them whenever the size matters: a file format, a
+> 16-bit audio sample, a hardware register, a count that grows with time.
 
 ```
 7 / 2 = 3, 7 % 2 = 1, -7 / 2 = -3, 7 / 2.0 = 3.5
