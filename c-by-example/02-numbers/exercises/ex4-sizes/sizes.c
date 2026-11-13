@@ -21,21 +21,23 @@ bits (int64_t v)
 int
 main (void)
 {
-  /* a + b: N + 1 bits. Promotion does the sum in int, which has room. */
+  /* a + b: N + 1 bits. Every operation below widens one operand itself
+     rather than counting on promotion: the cast is free, and it says what
+     the code means. */
   int16_t x = INT16_MAX, y = INT16_MAX;
-  int32_t sum2 = x + y;
+  int32_t sum2 = (int32_t)x + y;
   printf ("int16_t + int16_t   = %" PRId32 " (%d bits)\n", sum2, bits (sum2));
 
   /* K values: N + ceil(log2 K) bits. 1024 = 2^10 adds 10 bits. */
   int32_t sum = 0;
   for (int k = 0; k < 1024; k++)
-    sum += INT16_MAX;
+    sum += (int32_t)INT16_MAX;
   printf ("1024 int16_t summed = %" PRId32 " (%d bits)\n", sum, bits (sum));
 
   /* a * b: N + M bits. The most negative int16_t, squared, is the
-     largest product, and promotion multiplies it in a 32-bit int. */
+     largest product. */
   int16_t lo = INT16_MIN;
-  int32_t sq = lo * lo;
+  int32_t sq = (int32_t)lo * lo;
   printf ("int16_t * int16_t   = %" PRId32 " (%d bits)\n", sq, bits (sq));
 
   /* Two int32_t need 64 bits, so widen one operand first. */

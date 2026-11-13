@@ -143,8 +143,9 @@ To keep every bit of a result, the type that holds it must be big enough:
 
 Widen *before* the operation, not after. For two `int32_t`s, `(int64_t)a * b`
 multiplies in 64 bits, but `(int64_t)(a * b)` multiplies in 32, overflows, and
-then widens the wrong answer. Two `int16_t`s need no cast, because promotion
-already does their multiply in a 32-bit `int`.
+then widens the wrong answer. Widen explicitly every time, even where promotion
+would happen to save you: the cast costs nothing (it compiles to the same
+instructions), and nobody has to remember which types promote.
 
 > [!TIP]
 > **Unsigned overflow is a free modulus.** An N-bit unsigned result is always
