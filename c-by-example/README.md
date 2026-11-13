@@ -1,5 +1,9 @@
 # Learning C by Example
 
+> [!WARNING]
+> **UNDER CONSTRUCTION.** Parts 0 and I (lessons 00–08) are written and tested;
+> Parts II–V are still to come, and lessons may change as they do.
+
 **Deceptively simple. Extremely powerful.**
 
 C has a small grammar and almost no runtime, which is exactly why it is still
