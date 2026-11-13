@@ -2,6 +2,128 @@
 
 Run this lesson's commands in `c-by-example/03-functions/`.
 
+A sine wave is the atom of signal processing: every signal is a sum of them
+(lesson 24 proves it). This lesson builds a table of one, and in doing so
+splits a program across files, the way every C library is built.
+
+The header, `sine.h`, declares what `sine.c` offers:
+
+```bash
+cat sine.h
+```
+
+```c
+/* sine.h -- the PROMISE: what sine.c offers, and nothing about how.
+ *
+ * Any file that calls these includes this header, so the compiler can
+ * check every call against the declaration. The include guard (#ifndef)
+ * makes including it twice harmless; lesson 08 says more.
+ */
+#ifndef SINE_H
+#define SINE_H
+
+#include <stddef.h> /* size_t */
+
+/* Fill out[0..n-1] with `cycles` periods of a unit sine wave. */
+void sine_table (float *out, size_t n, double cycles);
+
+/* How many tables sine_table has filled so far. */
+int sine_tables_made (void);
+
+#endif /* SINE_H */
+```
+
+`sine.c` holds the code:
+
+```bash
+cat sine.c
+```
+
+```c
+/* sine.c -- the IMPLEMENTATION of sine.h. */
+#include "sine.h"
+
+#include <math.h>
+
+/* M_PI is POSIX, not C99, so -std=c99 does not provide it: define our own. */
+static const double TWO_PI = 6.283185307179586;
+
+/* `static` at file scope means PRIVATE: visible in this file only. Nothing
+   outside can reach `made` except through sine_tables_made(). */
+static int made = 0;
+
+void
+sine_table (float *out, size_t n, double cycles)
+{
+  for (size_t i = 0; i < n; i++)
+    out[i] = (float)sin (TWO_PI * cycles * (double)i / (double)n);
+  made++;
+}
+
+int
+sine_tables_made (void)
+{
+  return made;
+}
+```
+
+And `table.c` calls it:
+
+```bash
+cat table.c
+```
+
+```c
+/* table.c -- calling functions, and what "pass by value" means.
+ *
+ *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
+ *       table.c sine.c -o table -lm && ./table
+ */
+#include <stdio.h>
+
+#include "sine.h"
+
+/* Arguments are COPIES. `x` here is a new variable holding the caller's
+   value; changing it changes nothing outside. (Lesson 05 shows how a
+   function changes its caller's data: pass where the data lives.) */
+static void
+try_to_double (int x)
+{
+  x = x * 2;
+  printf ("  inside:  x = %d\n", x);
+}
+
+/* Here `float table[]` is really `float *table`: an array argument is
+   passed as the address of its first element, so the function CAN write
+   into the caller's array. More in lesson 04. */
+static void
+print_table (const char *label, const float table[], size_t n)
+{
+  printf ("%s:", label);
+  for (size_t i = 0; i < n; i++)
+    printf (" %7.4f", table[i]);
+  printf ("\n");
+}
+
+int
+main (void)
+{
+  int n = 21;
+  try_to_double (n);
+  printf ("  outside: n = %d\n", n);
+
+  float one[8], two[8];
+  sine_table (one, 8, 1.0); /* one period over 8 samples */
+  sine_table (two, 8, 2.0); /* two periods: twice the frequency */
+  print_table ("1 cycle ", one, 8);
+  print_table ("2 cycles", two, 8);
+  printf ("tables made: %d\n", sine_tables_made ());
+  return 0;
+}
+```
+
+Build both `.c` files into one program, and run it:
+
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o table -lm
 ./table
@@ -14,10 +136,6 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o tabl
 2 cycles:  0.0000  1.0000  0.0000 -1.0000 -0.0000  1.0000  0.0000 -1.0000
 tables made: 2
 ```
-
-A sine wave is the atom of signal processing: every signal is a sum of them
-(lesson 24 proves it). This lesson builds a table of one, and in doing so
-splits a program into two files, the way every C library is built.
 
 ## A header is a promise
 
