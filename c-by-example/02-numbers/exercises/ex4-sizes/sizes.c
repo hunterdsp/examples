@@ -21,11 +21,11 @@ bits (int64_t v)
 int
 main (void)
 {
-  /* a + b: N + 1 bits. Every operation below widens one operand itself
-     rather than counting on promotion: the cast is free, and it says what
-     the code means. */
+  /* a + b: N + 1 bits. Every operation below casts both operands
+     itself rather than counting on C to convert them: the casts are free,
+     and they say what the code means. */
   int16_t x = INT16_MAX, y = INT16_MAX;
-  int32_t sum2 = (int32_t)x + y;
+  int32_t sum2 = (int32_t)x + (int32_t)y;
   printf ("int16_t + int16_t   = %" PRId32 " (%d bits)\n", sum2, bits (sum2));
 
   /* K values: N + ceil(log2 K) bits. 1024 = 2^10 adds 10 bits. */
@@ -37,12 +37,12 @@ main (void)
   /* a * b: N + M bits. The most negative int16_t, squared, is the
      largest product. */
   int16_t lo = INT16_MIN;
-  int32_t sq = (int32_t)lo * lo;
+  int32_t sq = (int32_t)lo * (int32_t)lo;
   printf ("int16_t * int16_t   = %" PRId32 " (%d bits)\n", sq, bits (sq));
 
   /* Two int32_t need 64 bits, so widen one operand first. */
   int32_t a = 100000, b = 100000;
-  int64_t p = (int64_t)a * b;
+  int64_t p = (int64_t)a * (int64_t)b;
   printf ("int32_t * int32_t   = %" PRId64 " (%d bits)\n", p, bits (p));
 
   /* Unsigned wraps modulo 2^32: a phase accumulator stepping an eighth of

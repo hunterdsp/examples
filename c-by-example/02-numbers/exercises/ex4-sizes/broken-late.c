@@ -2,7 +2,8 @@
  *
  * (int64_t)(a * b) multiplies two int32_t in 32 bits, overflows, and only
  * then widens the wrong answer. Signed overflow is undefined behaviour,
- * so UBSan stops the program. The fix is (int64_t)a * b: see sizes.c.
+ * so UBSan stops the program. The fix is (int64_t)a * (int64_t)b:
+ * see sizes.c.
  */
 #include <inttypes.h>
 #include <stdint.h>

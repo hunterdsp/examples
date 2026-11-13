@@ -50,7 +50,7 @@ main (void)
   printf ("uint8_t 255 + 1 = %d\n", counter);
   /* ...signed arithmetic does NOT: see broken-overflow.c. A day of audio
      at 48 kHz needs 64 bits. */
-  int64_t per_day = (int64_t)48000 * 86400;
+  int64_t per_day = (int64_t)48000 * (int64_t)86400;
   printf ("samples in a day at 48 kHz: %" PRId64 "\n", per_day);
 
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
@@ -141,11 +141,12 @@ To keep every bit of a result, the type that holds it must be big enough:
 | sum of K values of N bits  | N + ⌈log₂ K⌉ bits | 1024 `int16_t` samples: 26 bits |
 | `a * b`, N bits and M bits | N + M bits        | `int16_t` × `int16_t`: 32 bits  |
 
-Widen *before* the operation, not after. For two `int32_t`s, `(int64_t)a * b`
-multiplies in 64 bits, but `(int64_t)(a * b)` multiplies in 32, overflows, and
-then widens the wrong answer. Widen explicitly every time, even where promotion
-would happen to save you: the cast costs nothing (it compiles to the same
-instructions), and nobody has to remember which types promote.
+Widen *before* the operation, not after. For two `int32_t`s,
+`(int64_t)a * (int64_t)b` multiplies in 64 bits, but `(int64_t)(a * b)`
+multiplies in 32, overflows, and then widens the wrong answer. Cast both
+operands, every time, even where C would convert or promote them for you: the
+casts cost nothing (they compile to the same instructions), and nobody has to
+remember which types convert.
 
 > [!TIP]
 > **Unsigned overflow is a free modulus.** An N-bit unsigned result is always
@@ -202,7 +203,7 @@ remembering: **−6 dB is half the amplitude, +3 dB is double the power.**
   ```
 
   The fix is a type big enough for the answer, made big *before* the
-  multiplication: `(int64_t)48000 * 86400`.
+  multiplication: `(int64_t)48000 * (int64_t)86400`.
 
 - **Mixing signed and unsigned.** In
   [`broken-sign-compare.c`](broken-sign-compare.c), `-1 < 1u` is false: the −1

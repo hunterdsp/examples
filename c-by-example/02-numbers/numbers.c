@@ -37,7 +37,7 @@ main (void)
   printf ("uint8_t 255 + 1 = %d\n", counter);
   /* ...signed arithmetic does NOT: see broken-overflow.c. A day of audio
      at 48 kHz needs 64 bits. */
-  int64_t per_day = (int64_t)48000 * 86400;
+  int64_t per_day = (int64_t)48000 * (int64_t)86400;
   printf ("samples in a day at 48 kHz: %" PRId64 "\n", per_day);
 
   /* Floating point is binary, so 0.1 is not exactly 0.1. */
