@@ -29,6 +29,19 @@ print_table (const char *label, const float table[], size_t n)
   printf ("\n");
 }
 
+/* `static` INSIDE a function means something else: the variable is made
+   once, when the program starts, and keeps its value between calls. A
+   plain local is made afresh on every call. */
+static void
+count_calls (void)
+{
+  static int kept = 0;
+  int fresh = 0;
+  kept++;
+  fresh++;
+  printf ("  kept = %d, fresh = %d\n", kept, fresh);
+}
+
 int
 main (void)
 {
@@ -42,5 +55,9 @@ main (void)
   print_table ("1 cycle ", one, 8);
   print_table ("2 cycles", two, 8);
   printf ("tables made: %d\n", sine_tables_made ());
+
+  count_calls ();
+  count_calls ();
+  count_calls ();
   return 0;
 }

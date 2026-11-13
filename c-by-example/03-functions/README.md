@@ -105,6 +105,19 @@ print_table (const char *label, const float table[], size_t n)
   printf ("\n");
 }
 
+/* `static` INSIDE a function means something else: the variable is made
+   once, when the program starts, and keeps its value between calls. A
+   plain local is made afresh on every call. */
+static void
+count_calls (void)
+{
+  static int kept = 0;
+  int fresh = 0;
+  kept++;
+  fresh++;
+  printf ("  kept = %d, fresh = %d\n", kept, fresh);
+}
+
 int
 main (void)
 {
@@ -118,6 +131,10 @@ main (void)
   print_table ("1 cycle ", one, 8);
   print_table ("2 cycles", two, 8);
   printf ("tables made: %d\n", sine_tables_made ());
+
+  count_calls ();
+  count_calls ();
+  count_calls ();
   return 0;
 }
 ```
@@ -135,6 +152,9 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined table.c sine.c -o tabl
 1 cycle :  0.0000  0.7071  1.0000  0.7071  0.0000 -0.7071 -1.0000 -0.7071
 2 cycles:  0.0000  1.0000  0.0000 -1.0000 -0.0000  1.0000  0.0000 -1.0000
 tables made: 2
+  kept = 1, fresh = 1
+  kept = 2, fresh = 1
+  kept = 3, fresh = 1
 ```
 
 ## A header is a promise
@@ -157,9 +177,14 @@ without either seeing the other's code.
 - **Arrays are different.** `sine_table(one, 8, 1.0)` fills the caller's array.
   An array argument is passed as the address of its first element, so the
   function writes straight into it.
-- **`static` makes a name private.** `made` in `sine.c` is invisible to every
-  other file; only `sine_tables_made()` can read it. This is the first step
-  toward the objects of Part III.
+- **`static` means two things, depending on where it is.** At file scope it
+  makes a name private to its file: `made` in `sine.c` is invisible to every
+  other file, and only `sine_tables_made()` can read it. The same goes for
+  functions: `try_to_double` and `print_table` are `static`, so no other file
+  can call them. This is the first step toward the objects of Part III. Inside
+  a function, `static` changes how long a variable lives instead: in
+  `count_calls`, `kept` is made once and keeps counting across calls, while the
+  plain local `fresh` is made anew each time and is always 1.
 - **`const` is a promise not to write.** `print_table` takes
   `const float table[]`, and the compiler holds it to that.
 
