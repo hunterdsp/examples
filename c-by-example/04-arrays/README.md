@@ -2,6 +2,78 @@
 
 Run this lesson's commands in `c-by-example/04-arrays/`.
 
+A signal in a program is an array of samples. The **moving average** is the
+simplest filter there is: each output is the mean of the last 4 inputs. Feed it
+a sudden step and it answers with a ramp. It smooths, which is what a
+*low-pass* filter does: slow changes pass, fast ones are blunted. Lesson 20's
+FIR filter is this same loop with a weight on each tap.
+
+Here is the program:
+
+```bash
+cat average.c
+```
+
+```c
+/* average.c -- a moving average: the simplest filter there is.
+ *
+ *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
+ *       average.c -o average && ./average
+ *
+ * Each output is the mean of the last WINDOW inputs, so a sudden jump in
+ * the input becomes a ramp in the output: the filter smooths.
+ */
+#include <stdio.h>
+
+/* A count known at compile time. An enum constant, unlike a const int,
+   can size an array in C99. */
+enum { WINDOW = 4 };
+
+/* `n` travels with the array, because inside this function `in` is only a
+   pointer: the array's length did not come with it (see broken-sizeof.c). */
+static void
+moving_average (const float in[], float out[], int n)
+{
+  for (int i = 0; i < n; i++)
+    {
+      float sum = 0.0f;
+      int count = 0;
+      /* Look back over the window, but never before the first sample. */
+      for (int k = 0; k < WINDOW && i - k >= 0; k++)
+        {
+          sum += in[i - k];
+          count++;
+        }
+      out[i] = sum / (float)count;
+    }
+}
+
+int
+main (void)
+{
+  /* A step: silence, then a constant level, then silence again. */
+  float in[] = { 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0 };
+
+  /* HERE, in the scope that declared it, sizeof knows the whole array:
+     total bytes / bytes per element = number of elements. */
+  int n = (int)(sizeof in / sizeof in[0]);
+  float out[sizeof in / sizeof in[0]];
+
+  moving_average (in, out, n);
+  printf ("%d samples, window %d\n", n, WINDOW);
+  printf (" in :");
+  for (int i = 0; i < n; i++)
+    printf (" %4.2f", in[i]);
+  printf ("\n out:");
+  for (int i = 0; i < n; i++)
+    printf (" %4.2f", out[i]);
+  printf ("\n");
+  return 0;
+}
+```
+
+Build and run it:
+
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
 ./average
@@ -12,12 +84,6 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
  in : 0.00 0.00 0.00 1.00 1.00 1.00 1.00 1.00 1.00 0.00 0.00 0.00 0.00 0.00
  out: 0.00 0.00 0.00 0.25 0.50 0.75 1.00 1.00 1.00 0.75 0.50 0.25 0.00 0.00
 ```
-
-A signal in a program is an array of samples. The **moving average** is the
-simplest filter there is: each output is the mean of the last 4 inputs. Feed it
-a sudden step and it answers with a ramp. It smooths, which is what a
-*low-pass* filter does: slow changes pass, fast ones are blunted. Lesson 20's
-FIR filter is this same loop with a weight on each tap.
 
 ## What it shows
 
