@@ -345,10 +345,11 @@ After the reset, the second run matches the first.
   ```
 
   clang's build is stopped one step earlier, by a check that the function
-  called has the pointer's type (there is no function at address 0). Either
-  way, nothing complained when the table was written: the hole is found when it
-  is used. Fill in every slot, or make an operation optional on purpose
-  (exercise 3).
+  called has the pointer's type (there is no function at address 0). On an ARM
+  Mac, Apple's clang build stops at a trap instruction instead, and the shell
+  reports `Trace/BPT trap: 5`. Either way, nothing complained when the table
+  was written: the hole is found when it is used. Fill in every slot, or make
+  an operation optional on purpose (exercise 3).
 
 - **Casting to the wrong kind.** `(gain_t *)self` is only right if `self`
   really is a gain. Each kind's functions are reached only through its own

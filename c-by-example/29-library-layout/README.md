@@ -12,10 +12,11 @@ following lesson 18's rules, and then ships it: a build (lesson 30), tests
 (31), documentation (32), command-line tools (33), an install that other
 projects can find (34), and a Python interface (35). The library lives in
 [`c-by-example/sig/`](../sig/), and each of these lessons works on it from its
-own folder, as `../sig`:
+own folder, as `../sig`. (`LC_ALL=C` makes `ls` sort by byte value, capitals
+first, as it does on macOS; Linux's usual setting ignores case.)
 
 ```bash
-ls ../sig ../sig/include/sig ../sig/src
+LC_ALL=C ls ../sig ../sig/include/sig ../sig/src
 ```
 
 ```
