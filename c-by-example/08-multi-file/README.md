@@ -2,6 +2,129 @@
 
 Run this lesson's commands in `c-by-example/08-multi-file/`.
 
+A level meter in three files: a header that promises (`dsp.h`), the code that
+keeps the promise (`dsp.c`), and a program that uses it (`meter.c`).
+
+The header, `dsp.h`, declares what `dsp.c` offers:
+
+```bash
+cat dsp.h
+```
+
+```c
+/* dsp.h -- level measurements on a buffer of samples.
+ *
+ * The include guard below means the body is seen once per translation
+ * unit, however many times it is #included (meter.c does it twice, on
+ * purpose, to show this).
+ */
+#ifndef DSP_H
+#define DSP_H
+
+#include <stddef.h>
+
+/* A function-like macro, written defensively: every use of the argument
+   and the whole expansion are in parentheses (see meter.c for why). */
+#define DSP_SQUARE(x) ((x) * (x))
+
+/* Root mean square: the "average loudness" of a buffer. n must be > 0. */
+float dsp_rms (const float *buf, size_t n);
+
+/* Largest absolute sample value. n must be > 0. */
+float dsp_peak (const float *buf, size_t n);
+
+/* An amplitude in decibels relative to full scale (1.0 = 0 dBFS). */
+float dsp_dbfs (float amplitude);
+
+#endif /* DSP_H */
+```
+
+`dsp.c` keeps the promise:
+
+```bash
+cat dsp.c
+```
+
+```c
+/* dsp.c -- the implementation of dsp.h. */
+#include "dsp.h"
+
+#include <math.h>
+
+float
+dsp_rms (const float *buf, size_t n)
+{
+  double sum = 0.0; /* accumulate in double: lesson 02 */
+  for (size_t i = 0; i < n; i++)
+    sum += DSP_SQUARE ((double)buf[i]);
+  return (float)sqrt (sum / (double)n);
+}
+
+float
+dsp_peak (const float *buf, size_t n)
+{
+  float peak = 0.0f;
+  for (size_t i = 0; i < n; i++)
+    {
+      float a = fabsf (buf[i]);
+      if (a > peak)
+        peak = a;
+    }
+  return peak;
+}
+
+float
+dsp_dbfs (float amplitude)
+{
+  return 20.0f * log10f (amplitude);
+}
+```
+
+`meter.c` uses it:
+
+```bash
+cat meter.c
+```
+
+```c
+/* meter.c -- a level meter, built from more than one file.
+ *
+ *   make && ./meter                       (see the Makefile)
+ *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
+ *       meter.c dsp.c -o meter -lm        (the same, by hand)
+ */
+#include <stdio.h>
+
+#include "dsp.h"
+#include "dsp.h" /* twice, on purpose: the include guard makes it harmless */
+
+/* The naive version of DSP_SQUARE, without the parentheses. */
+#define BAD_SQUARE(x) x *x
+
+int
+main (void)
+{
+  /* A full-scale square wave, then the same at half amplitude. */
+  float  loud[]  = { 1, -1, 1, -1, 1, -1, 1, -1 };
+  float  quiet[] = { 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f };
+  size_t n       = sizeof loud / sizeof loud[0];
+
+  printf ("loud : rms %.3f, peak %.3f = %6.2f dBFS\n", dsp_rms (loud, n),
+          dsp_peak (loud, n), dsp_dbfs (dsp_peak (loud, n)));
+  printf ("quiet: rms %.3f, peak %.3f = %6.2f dBFS\n", dsp_rms (quiet, n),
+          dsp_peak (quiet, n), dsp_dbfs (dsp_peak (quiet, n)));
+
+  /* Macros are text substitution, done before the compiler sees the code.
+     BAD_SQUARE(1 + 2) becomes 1 + 2 * 1 + 2, which is 5. */
+  printf ("BAD_SQUARE(1 + 2) = %d, DSP_SQUARE(1 + 2) = %d\n",
+          BAD_SQUARE (1 + 2), DSP_SQUARE (1 + 2));
+  return 0;
+}
+```
+
+Build all three with `make` (the [`Makefile`](Makefile) is below), and run the
+meter:
+
 ```bash
 make && ./meter
 ```
@@ -15,9 +138,7 @@ quiet: rms 0.500, peak 0.500 =  -6.02 dBFS
 BAD_SQUARE(1 + 2) = 5, DSP_SQUARE(1 + 2) = 9
 ```
 
-A level meter in three files: a header that promises (`dsp.h`), the code that
-keeps the promise (`dsp.c`), and a program that uses it (`meter.c`). Half
-amplitude reads −6 dB, as lesson 02 said it would.
+Half amplitude reads −6 dB, as lesson 02 said it would.
 
 ## Translation units
 

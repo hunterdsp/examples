@@ -8,7 +8,7 @@ dsp_rms (const float *buf, size_t n)
 {
   double sum = 0.0; /* accumulate in double: lesson 02 */
   for (size_t i = 0; i < n; i++)
-    sum += dsp_square (buf[i]);
+    sum += (double)dsp_square (buf[i]);
   return (float)sqrt (sum / (double)n);
 }
 

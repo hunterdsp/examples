@@ -19,7 +19,7 @@ main (void)
   static float samples[RATE]; /* static: too big to want on the stack */
 
   for (int i = 0; i < RATE; i++)
-    samples[i] = (float)sin (two_pi * 440.0 * i / RATE);
+    samples[i] = (float)sin (two_pi * 440.0 * (double)i / (double)RATE);
 
   FILE *f = fopen ("tone.f32", "wb");
   if (f == NULL)
