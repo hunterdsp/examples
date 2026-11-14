@@ -229,6 +229,7 @@ with the ones its own code uses, taken from this table by `make format`.
 | [`malloc`](https://en.cppreference.com/c/memory/malloc)               | `<stdlib.h>`  | allocate memory, contents unset                                         |
 | [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp)          | `<string.h>`  | compare two blocks of bytes                                             |
 | [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy)          | `<string.h>`  | copy bytes between blocks that don't overlap                            |
+| [`memset`](https://en.cppreference.com/c/string/byte/memset)          | `<string.h>`  | fill a block of bytes with one value                                    |
 | [`offsetof`](https://en.cppreference.com/c/types/offsetof)            | `<stddef.h>`  | a member's distance from the start of its struct (a macro)              |
 | [`perror`](https://en.cppreference.com/c/io/perror)                   | `<stdio.h>`   | print a message, and why the last call failed                           |
 | [`pow`](https://en.cppreference.com/c/numeric/math/pow)               | `<math.h>`    | x raised to the power y                                                 |
