@@ -200,6 +200,7 @@ with the ones its own code uses, taken from this table by `make format`.
 | [`assert`](https://en.cppreference.com/c/error/assert)         | `<assert.h>` | stop the program if a condition is false; removed by `-DNDEBUG` |
 | [`calloc`](https://en.cppreference.com/c/memory/calloc)        | `<stdlib.h>` | allocate memory for n elements, all bytes zero                  |
 | [`clock`](https://en.cppreference.com/c/chrono/clock)          | `<time.h>`   | processor time used by the program, in `CLOCKS_PER_SEC` units   |
+| [`cos`](https://en.cppreference.com/c/numeric/math/cos)        | `<math.h>`   | cosine of an angle in radians                                   |
 | [`exp`](https://en.cppreference.com/c/numeric/math/exp)        | `<math.h>`   | *e* raised to the power x                                       |
 | [`fabs`](https://en.cppreference.com/c/numeric/math/fabs)      | `<math.h>`   | absolute value of a `double`                                    |
 | [`fabsf`](https://en.cppreference.com/c/numeric/math/fabs)     | `<math.h>`   | absolute value of a `float`                                     |

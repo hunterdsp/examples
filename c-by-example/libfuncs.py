@@ -127,6 +127,9 @@ def main(write):
             )
         if unknown:
             continue
+        if not readme.exists():
+            errors.append(f"{lesson.name}: has no README.md")
+            continue
         text = readme.read_text()
         want = table(names, ref) if names else ""
         start = text.find("## Library functions\n")
