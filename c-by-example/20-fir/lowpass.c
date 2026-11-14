@@ -5,9 +5,10 @@
  *
  * The taps are a WINDOWED SINC: the ideal low-pass filter's impulse
  * response (a sinc), cut to 31 taps and tapered at the ends by a Hamming
- * window so the cut doesn't ring. The program then checks the filter the
- * way an engineer would: feed it an impulse, a step, and sine waves, and
- * look at what comes out.
+ * window, a raised cosine from 0.08 at the ends to 1 in the middle, so the
+ * cut doesn't ring. The program then checks the filter the way an
+ * engineer would: feed it an impulse, a step, and sine waves, and look at
+ * what comes out.
  */
 #include "fir.h"
 
@@ -75,7 +76,8 @@ main (void)
     same = same && y[k] == h[k];
   printf ("impulse response is the taps: %s\n", same ? "yes" : "no");
 
-  /* A step in: the output settles at the sum of the taps, the DC gain. */
+  /* A step in: the output settles at the sum of the taps, the DC gain
+     (the gain at 0 Hz, for a constant input). */
   float step[2 * TAPS];
   for (size_t i = 0; i < 2 * TAPS; i++)
     step[i] = 1.0f;

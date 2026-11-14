@@ -43,7 +43,7 @@ struct biquad
 typedef struct biquad biquad_t;
 
 /* By POINTER: the function updates the caller's state, and no copy of the
-   struct is made. This is how every object in Part III is passed. */
+   struct is made. This is how most objects in Part III are passed. */
 static float
 biquad_step (biquad_t *f, float x)
 {
@@ -229,9 +229,9 @@ folder to run it in.
    about 5, and slowly settles toward 8 (its DC gain, 0.8 / 0.1). With
    `a2 = 1.1` each swing is bigger than the last: the filter is *unstable*. Its
    own past outputs, fed back, grow faster than they die away, so the output
-   grows without limit, and in a real system it would soon hit the largest
-   number a `float` holds. Lesson 21 shows how to tell, from the coefficients
-   alone, which filters are safe.
+   grows without limit, and in a real system it would eventually hit the
+   largest number a `float` holds. Lesson 21 shows how to tell, from the
+   coefficients alone, which filters are safe.
 
    </details>
 

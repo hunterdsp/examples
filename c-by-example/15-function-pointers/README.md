@@ -370,9 +370,9 @@ folder to run it in.
    x - y compares 0.10 with 0.15: 0, "equal"
    ```
 
-   One click drags the mean to 1.43, seven times bigger than any other sample;
-   the median, the middle of the sorted block, ignores it. A median filter
-   removes clicks this way.
+   One click drags the mean to 1.43, more than five times the largest of the
+   other samples, and seven times the median; the median, the middle of the
+   sorted block, ignores it. A median filter removes clicks this way.
 
    `qsort` hands the comparator two `const void *`, since it doesn't know the
    element type, and [`cmp_float`](exercises/ex2-median/median.c) converts them
@@ -406,9 +406,9 @@ folder to run it in.
 
    [`find`](exercises/ex3-by-name/pick.c) searches the table with `strcmp` and
    returns the matching function, or `NULL` when there is none. `main` checks
-   for `NULL` before calling, says what the choices are, and exits with status
-
-   1. Calling the `NULL` would crash, with nothing to say which name was wrong.
+   for `NULL` before calling, and when it finds one, says what the choices are
+   and exits with status 1, rather than calling the `NULL`, which would crash
+   with nothing to say which name was wrong.
 
    </details>
 

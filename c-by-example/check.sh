@@ -21,9 +21,10 @@
 # are in the README, so the README check runs them ("The README is itself
 # a test", below); a broken-*.c there is checked like one in the lesson.
 #
-# Every example is built the way lesson 01 tells the reader to build:
-# C99, every warning an error, and AddressSanitizer + UBSan, which stop the
-# program at the first bad memory access or undefined behaviour.
+# Every example is built the way lesson 01 tells the reader to build, and
+# stricter: C99, -pedantic, every warning an error, and AddressSanitizer +
+# UBSan, with -fno-sanitize-recover=all so that UBSan stops the program at
+# its first report instead of carrying on, as it does by default.
 #
 # Usage: ./check.sh 01-hello 02-numbers ...      (CC=clang ./check.sh ...)
 
@@ -49,10 +50,18 @@ bad() {
 
 # The scratch copy the README blocks run in: every file git tracks, plus
 # new ones not yet committed, but nothing the reader's own builds left
-# behind. A `cc` on PATH stands in for the compiler under test, with the
-# flags above that a reader's command line lacks, so a README command
-# is held to the same standard as the examples.
+# behind. A `cc` on PATH stands in for the compiler under test, and adds
+# the flags above that a reader's command lacks: -pedantic -Werror, and
+# -fno-sanitize-recover=all. That is how exercise answers, which only
+# README blocks build, get the strict build too. None of them changes what
+# a correct program prints: the first two act only at compile time, and
+# the last only once UBSan has found a bug, which fails the block anyway.
+# So a block that passes here prints, under the reader's own command,
+# exactly the output shown.
 here=$(pwd)
+# A git hook in a linked worktree runs with GIT_DIR set, and ls-files then
+# lists paths from the repo root, not from here (as in the Makefile).
+unset GIT_DIR
 # `make -s test` exports MAKEFLAGS=s, which would silence a README's own
 # `make` and hide what it prints: run the blocks as a reader would.
 unset MAKEFLAGS MFLAGS MAKELEVEL

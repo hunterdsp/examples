@@ -147,9 +147,10 @@ cat lowpass.c
  *
  * The taps are a WINDOWED SINC: the ideal low-pass filter's impulse
  * response (a sinc), cut to 31 taps and tapered at the ends by a Hamming
- * window so the cut doesn't ring. The program then checks the filter the
- * way an engineer would: feed it an impulse, a step, and sine waves, and
- * look at what comes out.
+ * window, a raised cosine from 0.08 at the ends to 1 in the middle, so the
+ * cut doesn't ring. The program then checks the filter the way an
+ * engineer would: feed it an impulse, a step, and sine waves, and look at
+ * what comes out.
  */
 #include "fir.h"
 
@@ -217,7 +218,8 @@ main (void)
     same = same && y[k] == h[k];
   printf ("impulse response is the taps: %s\n", same ? "yes" : "no");
 
-  /* A step in: the output settles at the sum of the taps, the DC gain. */
+  /* A step in: the output settles at the sum of the taps, the DC gain
+     (the gain at 0 Hz, for a constant input). */
   float step[2 * TAPS];
   for (size_t i = 0; i < 2 * TAPS; i++)
     step[i] = 1.0f;
@@ -268,8 +270,9 @@ seven-hundredth of its size.
   silence before the tone.
 - **A windowed sinc.** The ideal low-pass filter's impulse response is the
   *sinc* function, `sin(x)/x`, which never ends. `design` keeps the middle 31
-  values and tapers them toward the ends with a Hamming window; cutting them
-  off abruptly instead would let through ripples of the frequencies it should
+  values and tapers them toward the ends with a *Hamming window*, a raised
+  cosine that is 1 in the middle and 0.08 at the ends; cutting them off
+  abruptly instead would let through ripples of the frequencies it should
   block.
 - **A flexible array member.** `float taps[];` as the last member of a struct
   has no size of its own: `malloc (sizeof *f + 2 * n * sizeof f->taps[0])`
@@ -286,7 +289,7 @@ seven-hundredth of its size.
   [`broken-short-history.c`](broken-short-history.c) keeps the `n - 1`
   *previous* inputs and forgets that the current one needs a slot too. The
   first time the ring reaches its last slot, it is past the end of the block,
-  and UBSan, which knows how big the block is, stops it:
+  and UBSan, which knows how big the block is, reports it:
 
   ```
   broken-short-history.c:34:32: runtime error: load of address 0x771cf4de001c with insufficient space for an object of type 'float'

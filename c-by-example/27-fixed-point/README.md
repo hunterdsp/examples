@@ -7,8 +7,9 @@ point** makes you do it: a number is an ordinary integer, and the program
 agrees, by convention, how many of its bits come after the point. In exchange,
 the arithmetic is integer arithmetic, which is exact, gives the same result on
 every machine, and on processors without floating-point hardware (many small
-DSP chips and microcontrollers) it is the only fast arithmetic there is. Audio
-codecs, hearing aids and modems are full of it.
+DSP chips and microcontrollers) it is often the fastest arithmetic the chip
+has. The reference code of speech codecs such as ITU-T's G.729 is written in
+it.
 
 The workhorse format is **Q15**: an `int16_t` holding `x × 32768`. Fifteen bits
 after the point and a sign bit cover −1 to just under +1, in steps of 1/32768.
@@ -29,8 +30,9 @@ cat q15.c
  * binary point, and a sign. It covers -1 to 0.99997, in steps of
  * 1/32768. Integer arithmetic is exact and the same on every machine,
  * and on a processor without floating-point hardware (many small DSPs
- * and microcontrollers) it is the only fast arithmetic there is. The
- * price: the programmer, not the hardware, keeps track of the scale.
+ * and microcontrollers) it is often the fastest arithmetic there is.
+ * The price: the programmer, not the hardware, keeps track of the
+ * scale.
  */
 #include <math.h>
 #include <stdint.h>
@@ -204,7 +206,8 @@ folder to run it in.
    answer, 0.4, would have fitted. An `int32_t` has room for sums up to 2 (and
    far beyond), so it carries 1.6 through, and only the final result is
    saturated. That spare room is **headroom**, and DSP processors build it into
-   their accumulators: 40 bits for 16-bit samples is typical.
+   their accumulators: Texas Instruments' C55x DSPs, for one, add 40-bit
+   accumulators to their 16-bit samples.
 
    </details>
 
@@ -230,9 +233,11 @@ folder to run it in.
 
    Six decibels for every bit. Each bit halves the size of a step, and so of
    the rounding error, and half is −6.02 dB (lesson 02). The rule of thumb "6
-   dB per bit" tells you how many bits a job needs: 8-bit audio is about 48 dB,
-   16-bit about 96, and Q23 (used in 24-bit audio processing) is below anything
-   a microphone can capture.
+   dB per bit", counting every bit, sign included, tells you how many bits a
+   job needs: 8-bit audio has about 48 dB of range, 16-bit about 96, 24-bit
+   about 144. The table sits about 12 dB below the rule at every width, because
+   its signal peaks at 0.9 × 0.3 = 0.27, 11 dB below full scale, and three
+   roundings add up to more error than one.
 
    </details>
 

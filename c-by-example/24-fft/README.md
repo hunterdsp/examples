@@ -270,15 +270,15 @@ complex multiplies: DFT 1048576, FFT 5120
 - **The plan and the buffer disagree.**
   [`broken-size-mismatch.c`](broken-size-mismatch.c) runs a 1024-point
   reordering over a buffer of 1000 samples. It swaps samples anywhere up to
-  index 1023, and the sanitizers stop it at the first one past the end:
+  index 1023, and the sanitizers report the first one past the end:
 
   ```
   broken-size-mismatch.c:26:31: runtime error: load of address 0x6e8f405e4000 with insufficient space for an object of type 'complex double'
   ```
 
   The size comes from the plan, so every buffer handed to `fft_forward` must
-  have exactly that many samples. A block of 1000 gets padded with zeros to
-  1024\.
+  have exactly that many samples. A block of 1000 is padded with zeros to make
+  1024 samples.
 
 - **Only powers of two.** This FFT halves the problem at every stage, so `n`
   must be 2, 4, 8, …, and `fft_plan_create` returns `NULL` otherwise. FFTs for

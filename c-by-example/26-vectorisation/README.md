@@ -11,8 +11,8 @@ done to every sample, that is most loops.
 You rarely write those instructions yourself. At `-O2` the compiler
 **vectorises** a loop on its own, when it can prove that doing 4 or 8
 iterations at once gives exactly the result the loop as written would give. The
-job is mostly to write loops it can prove that about, and the most important
-loop it can't is the most common one in DSP: a sum.
+job is mostly to write loops it can prove that about. One loop it can't is
+among the most common in DSP: a sum.
 
 ```bash
 cat vec.c
@@ -218,18 +218,28 @@ folder to run it in.
    cc -std=c99 -Wall -Wextra -O2 -c gain.c
    ```
 
-   gcc 15, at `-O2` and then `-O3`. The flags are gcc's, and the output differs
-   from version to version:
+   gcc 15, at `-O2`. The flags are gcc's, and the output differs from version
+   to version:
 
    <!-- no-run -->
 
    ```bash
    gcc -std=c99 -Wall -Wextra -O2 -fopt-info-vec -c gain.c
-   gcc -std=c99 -Wall -Wextra -O3 -fopt-info-vec -c gain.c
    ```
 
    ```
    gain.c:24:24: optimized: loop vectorized using 16 byte vectors
+   ```
+
+   And at `-O3`:
+
+   <!-- no-run -->
+
+   ```bash
+   gcc -std=c99 -Wall -Wextra -O3 -fopt-info-vec -c gain.c
+   ```
+
+   ```
    gain.c:14:24: optimized: loop vectorized using 16 byte vectors
    gain.c:14:24: optimized:  loop versioned for vectorization because of possible aliasing
    gain.c:14:24: optimized: loop vectorized using 8 byte vectors
@@ -302,10 +312,13 @@ folder to run it in.
    Every float sum changed, and differently with each compiler. clang
    vectorised `sum_in_order`, so it is now as fast as the lanes were, and gives
    the lanes' old answer; it also reorganised `sum_in_lanes`, which now gives a
-   third answer, more accurately and more slowly. gcc reordered `sum_in_order`
-   without speeding it up. With `-ffast-math`, the source no longer decides the
-   order of the arithmetic, so it no longer decides the answer. Only the
-   `double` total stayed put.
+   third answer, more accurately and more slowly. gcc vectorised the copy of
+   `sum_in_order` it built into `main`, which printed the new sum. But the
+   timing calls the function through a pointer, which reaches its separate
+   copy, and that one still adds one number at a time (`objdump -d` shows it):
+   a new answer, at the old speed. With `-ffast-math`, the source no longer
+   decides the order of the arithmetic, so it no longer decides the answer.
+   Only the `double` total stayed put.
 
    </details>
 

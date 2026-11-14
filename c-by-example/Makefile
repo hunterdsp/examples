@@ -21,7 +21,10 @@ MDFORMAT := uv run --frozen --only-group lint mdformat
 
 # Every C file, formatted by clang-format in ~/doppler's style: the same
 # .clang-format, copied, and the same pinned version (pyproject.toml).
-C_FILES := $(shell git ls-files -co --exclude-standard '*.c' '*.h')
+# A git hook in a linked worktree runs with GIT_DIR set, and ls-files then
+# prints paths from the repo root, not from here: unset it.
+C_FILES := $(shell env -u GIT_DIR git ls-files -co --exclude-standard \
+	'*.c' '*.h')
 # Only C, whatever C_FILES is set to on the command line: clang-format
 # would rewrite a Python file's comments as if they were C.
 C_ONLY = $(filter %.c %.h,$(C_FILES))

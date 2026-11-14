@@ -5,7 +5,7 @@
  * holds 1000 (a block size that "should be close enough"). The very
  * first step, the bit-reversed reordering, swaps samples anywhere up to
  * index 1023. This is that reordering, on its own, and the sanitizers
- * stop it at the first sample past the end.
+ * catch it at the first sample past the end.
  */
 #include <complex.h>
 #include <stdio.h>

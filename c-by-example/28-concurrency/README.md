@@ -164,7 +164,7 @@ cc -std=c99 -Wall -Wextra -O2 -pthread threads.c -o threads -lm
 ./threads time
 ```
 
-On the machine from lesson 19, which has 12 cores:
+On a machine with 12 cores:
 
 ```
 4 channels: threaded results identical: yes
@@ -199,8 +199,9 @@ four threads:  17.1 ms
 - **Freeing what a thread still uses.**
   [`broken-free-before-join.c`](broken-free-before-join.c) frees a buffer
   before joining the thread that reads it. Whether the thread had finished is a
-  matter of timing, so this bug can pass many runs; here a mutex makes the bad
-  timing certain, and AddressSanitizer catches the read:
+  matter of timing, so this bug can pass many runs; here a *mutex*, a lock that
+  only one thread can hold at a time (exercise 1), makes the bad timing
+  certain, and AddressSanitizer catches the read:
 
   ```
   ERROR: AddressSanitizer: heap-use-after-free on address 0x6cf059de0010 at pc 0x5c2cb20dd431 bp 0x6cd0577fed30 sp 0x6cd0577fed20
@@ -217,11 +218,11 @@ four threads:  17.1 ms
 - **False sharing.** Threads writing *different* variables that share a cache
   line slow each other down badly (exercise 2).
 
-- **The real-time thread.** A thread that must meet an audio deadline (lesson
-  13\) must never wait for a lock that another thread might hold for long.
-  Real-time audio code passes data between threads with lock-free queues, built
-  on C11's `<stdatomic.h>`, which is beyond C99. Exercise 3's locked queue is
-  the right tool everywhere else.
+- **The real-time thread.** A thread that must meet an audio deadline, as in
+  lesson 13, must never wait for a lock that another thread might hold for
+  long. Real-time audio code passes data between threads with lock-free queues,
+  built on C11's `<stdatomic.h>`, which is beyond C99. Exercise 3's locked
+  queue is the right tool everywhere else.
 
 ## Exercises
 
@@ -265,11 +266,11 @@ folder to run it in.
    ```
 
    `count++` is three steps: read, add, write. Two threads can both read 41 and
-   both write 42, and one count is lost; here, over half of them. Built with
-   `-O2`, the racing version happened to print 4000000: the compiler, allowed
-   to assume no other thread touches `count`, added the whole million at once.
-   A race can pass every test and still be wrong. ThreadSanitizer reports it
-   whatever the timing (trimmed):
+   both write 42, and one count is lost; here, from a third to over half of
+   them. Built with `-O2`, the racing version happened to print 4000000: the
+   compiler, allowed to assume no other thread touches `count`, added the whole
+   million at once. A race can pass every test and still be wrong.
+   ThreadSanitizer reports it whatever the timing (trimmed):
 
    <!-- no-run -->
 

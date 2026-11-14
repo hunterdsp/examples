@@ -45,6 +45,9 @@ Three ideas are in it:
 
 ## Building it
 
+For now, copy this command exactly, flags and all; the table after it says what
+each flag does.
+
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
 ./hello one two
@@ -60,12 +63,24 @@ called with 2 argument(s)
 That build command is the one used for the rest of Parts I–II. Every flag is
 there on purpose:
 
-| Flag                           | Why                                                                                                                       |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| `-std=c99`                     | The language this course teaches, and nothing the compiler adds on top                                                    |
-| `-Wall -Wextra`                | Warnings are the compiler telling you about a bug for free. Read every one                                                |
-| `-g`                           | Debug info, so errors point at line numbers instead of addresses                                                          |
-| `-fsanitize=address,undefined` | Stop the program at the *first* out-of-bounds access, use-after-free or undefined behaviour, with the line it happened on |
+| Flag                           | Why                                                                                                                 |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| `-std=c99`                     | The language this course teaches, and nothing the compiler adds on top                                              |
+| `-Wall -Wextra`                | Warnings are the compiler telling you about a bug for free. Read every one                                          |
+| `-g`                           | Debug info, so errors point at line numbers instead of addresses                                                    |
+| `-fsanitize=address,undefined` | Catch out-of-bounds accesses, use-after-free and undefined behaviour as they happen, with the line each happened on |
+
+The two sanitizers react differently. AddressSanitizer stops the program at the
+first bad memory access. UBSan reports each problem and lets the program carry
+on, so one bug can print many reports, and the program goes on with a wrong
+value; `-fno-sanitize-recover=all` makes UBSan stop at the first one too. The
+course's tests (`check.sh`) build that way, and the lessons say which of the
+two caught each bug.
+
+Why C99, and not a newer C (C11, C17, C23)? C99 is the version compilers for
+nearly every platform support, the small processors in audio and radio hardware
+included, and the later standards add little this course needs; where they do,
+such as C11's threads and atomics, the lesson says so (lesson 28).
 
 The sanitizers make the program slower and bigger, so a release build leaves
 them off (Part V). While learning, they are the difference between a crash that
@@ -85,8 +100,9 @@ called with 0 argument(s)
 0
 ```
 
-`make`, `&&` and `if` all decide what to do next from this one number, so a
-program that fails must return something other than 0.
+`make` (which runs build commands for you, lesson 08), and the shell's `&&` and
+`if`, all decide what to do next from this one number, so a program that fails
+must return something other than 0.
 
 ## Pitfalls
 
@@ -124,8 +140,9 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Make the program return 3 and check `echo $?`. Then try
-   `./hello && echo worked`.
+1. Change `hello.c`'s `return 0` to `return 3`, build it, and check `echo $?`.
+   Then try `./hello && echo worked`. (The answer's folder has a copy with that
+   one change made.)
 
    <details><summary>Output and answer</summary>
 

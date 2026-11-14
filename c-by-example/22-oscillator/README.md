@@ -151,7 +151,7 @@ float time at  3600 s: next sample is the SAME time
 
 - **A signed phase.** [`broken-signed-phase.c`](broken-signed-phase.c) keeps
   the phase in an `int32_t`. Signed overflow is undefined behaviour, not a wrap
-  (lesson 11), and UBSan stops it within 55 samples:
+  (lesson 11), and UBSan reports it at the 55th sample:
 
   ```
   broken-signed-phase.c:18:11: runtime error: signed integer overflow: 2126008836 + 39370534 cannot be represented in type 'int'
@@ -259,10 +259,10 @@ folder to run it in.
    ```
 
    An N-bit phase can only move by whole steps of `48000 / 2^N` Hz. With 16
-   bits, the step is 0.73 Hz and the note is 0.73 cents sharp, about the limit
-   a trained ear can hear; with 32 bits it is 11 *micro*hertz. That is why 32
-   bits is the usual choice: an `int`-sized number, and as precise as anyone
-   needs.
+   bits, the step is 0.73 Hz and the note is 0.73 cents sharp (a cent is a
+   hundredth of a semitone): small, but in every note; with 32 bits it is 11
+   *micro*hertz. That is why 32 bits is the usual choice: an `int`-sized
+   number, and as precise as anyone needs.
 
    </details>
 

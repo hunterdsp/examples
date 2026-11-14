@@ -2,9 +2,10 @@
 
 Run this lesson's commands in `c-by-example/03-functions/`.
 
-A sine wave is the atom of signal processing: every signal is a sum of them
-(lesson 24 proves it). This lesson builds a table of one, and in doing so
-splits a program across files, the way every C library is built.
+A sine wave is the atom of signal processing: any block of samples is a sum of
+them, and lesson 24's FFT finds which ones. This lesson builds a table of one,
+and in doing so splits a program across files, the way every C library is
+built.
 
 The header, `sine.h`, declares what `sine.c` offers:
 
@@ -195,7 +196,7 @@ every 4: twice the frequency. Push `cycles` up to 4 and every sample lands on a
 zero crossing: the table is all zeros, and the wave has vanished. Push it past
 4 and 5 cycles gives the same samples as 3 cycles, upside down: the samples can
 no longer tell which frequency they came from. That limit, half the sample
-rate, is the **Nyquist frequency**, and lesson 20 comes back to it.
+rate, is the **Nyquist frequency**, and lessons 22 and 24 meet it again.
 
 ## Why `-0.0000`?
 
@@ -210,8 +211,9 @@ right, never exactly. Plan for it.
   link, and the program would quietly pass garbage. Declare a function in
   exactly one header and include it everywhere, *including* in its own `.c`
   file, so the compiler checks the definition against the promise.
-- **`M_PI` is not standard C.** It's POSIX; under `-std=c99` it is not defined.
-  `sine.c` defines its own constant.
+- **`M_PI` is not standard C.** It comes from POSIX, the standard that
+  Unix-like systems, Linux and macOS among them, add on top of C. Under
+  `-std=c99` it is not defined, so `sine.c` defines its own constant.
 
 ## Exercises
 

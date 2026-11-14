@@ -14,95 +14,51 @@ builds new kinds out of old ones, the two ways object-oriented languages do:
 C has keywords for neither. Both are structs, embedded the right way round.
 
 The interface is lesson 16's, with `reset` optional (lesson 16's exercise 3)
-and three new kinds declared at the end:
+and two new kinds declared at the end. `diff` shows what changed, line by line:
+`<` is lesson 16's, `>` this lesson's, and `c` and `a` mark lines changed and
+added:
 
 ```bash
-cat processor.h
+diff ../16-interfaces/processor.h processor.h
 ```
 
-```c
-/* processor.h -- lesson 16's interface, with reset optional (lesson 16,
- * exercise 3), and three kinds more.
- *
- * A processor is a pointer to its operations, nothing more:
- *
- *   struct processor { const processor_ops *ops; };
- *
- * Each kind of processor (a gain, a low-pass, ...) puts a processor_t as
- * the FIRST member of its own struct and fills in one processor_ops: its
- * VTABLE, the table of functions that do the work for that kind. Code
- * that holds a processor_t * calls through the table, and never needs to
- * know which kind it has.
- */
-#ifndef PROCESSOR_H
-#define PROCESSOR_H
-
-#include <stddef.h>
-
-typedef struct processor     processor_t;
-typedef struct processor_ops processor_ops;
-
-/* What every processor can do. Each function takes the processor itself
-   first, as `self`: the data the function works on. */
-struct processor_ops
-{
-  const char *name;
-  void (*process) (processor_t *self, float *buf, size_t n);
-  void (*reset) (processor_t *self); /* may be NULL: nothing to reset */
-  void (*destroy) (processor_t *self);
-};
-
-struct processor
-{
-  const processor_ops *ops; /* one shared table per kind */
-};
-
-/* Calls through the table, so callers needn't spell out p->ops->... */
-static inline void
-processor_process (processor_t *p, float *buf, size_t n)
-{
-  p->ops->process (p, buf, n);
-}
-
-static inline void
-processor_reset (processor_t *p)
-{
-  if (p->ops->reset != NULL)
-    p->ops->reset (p);
-}
-
-static inline void
-processor_destroy (processor_t *p)
-{
-  if (p != NULL)
-    p->ops->destroy (p);
-}
-
-static inline const char *
-processor_name (const processor_t *p)
-{
-  return p->ops->name;
-}
-
-/* The kinds this lesson has. Each returns a new processor, owned by the
-   caller and freed with processor_destroy, or NULL. */
-processor_t *gain_create (float g);
-processor_t *lowpass_create (float a);
-
-/* A gain that glides from 0 to g over `samples` samples: a fade-in. */
-processor_t *ramp_create (float g, size_t samples);
-
-/* Glide p, which must be a ramp, to g over `samples` samples. Returns 0,
-   or -1 (and does nothing) if p is some other kind. */
-int ramp_set (processor_t *p, float g, size_t samples);
-
-/* A processor made of n others, run in order. The chain takes ownership
-   of the stages: destroying it destroys them. If it can't be created, it
-   destroys them anyway, so the caller never has to. */
-processor_t *chain_create (processor_t *const *stages, size_t n);
-
-#endif /* PROCESSOR_H */
 ```
+1c1,2
+< /* processor.h -- an INTERFACE: anything that processes a block of audio.
+---
+> /* processor.h -- lesson 16's interface, with reset optional (lesson 16,
+>  * exercise 3), and two kinds more.
+27c28
+<   void (*reset) (processor_t *self);
+---
+>   void (*reset) (processor_t *self); /* may be NULL: nothing to reset */
+46c47,48
+<   p->ops->reset (p);
+---
+>   if (p->ops->reset != NULL)
+>     p->ops->reset (p);
+62,63c64,65
+< /* The two kinds this lesson has. Each returns a new processor, owned by
+<    the caller and freed with processor_destroy, or NULL. */
+---
+> /* The kinds this lesson has. Each returns a new processor, owned by the
+>    caller and freed with processor_destroy, or NULL. */
+65a68,79
+> 
+> /* A gain that glides from 0 to g over `samples` samples: a fade-in. */
+> processor_t *ramp_create (float g, size_t samples);
+> 
+> /* Glide p, which must be a ramp, to g over `samples` samples. Returns 0,
+>    or -1 (and does nothing) if p is some other kind. */
+> int ramp_set (processor_t *p, float g, size_t samples);
+> 
+> /* A processor made of n others, run in order. The chain takes ownership
+>    of the stages: destroying it destroys them. If it can't be created, it
+>    destroys them anyway, so the caller never has to. */
+> processor_t *chain_create (processor_t *const *stages, size_t n);
+```
+
+The whole header is [`processor.h`](processor.h).
 
 ## Inheritance: a ramp is a gain
 
@@ -501,8 +457,9 @@ master gain doubles it, so the output climbs toward 2.0 without a jump.
 
 - **Ownership that isn't written down.** `chain_create` *takes* its stages.
   Destroy one of them yourself afterwards, and the chain frees it a second
-  time. The comment in `processor.h` is the only thing that says so: read it,
-  and write it for every function that takes or gives away ownership.
+  time. Only comments say so, in `processor.h` and `chain.c`, because the
+  compiler can't check it: read them, and write one for every function that
+  takes or gives away ownership.
 
 ## Exercises
 
@@ -527,13 +484,15 @@ folder to run it in.
    mix: 0.6000 0.6900 0.7710 0.8439 0.9095 0.9686 1.0217 1.0695
    ```
 
-   The dry half contributes 0.5 throughout; the low-pass climbs from 0.1. Both
-   processors work in place, so [`mix.c`](exercises/ex1-mix/mix.c) gives the
-   second a copy of the input in a scratch buffer. The buffer is part of the
-   `mix_t`, allocated once by `mix_create` (lesson 13), and a block longer than
-   it is processed in pieces that fit. Like a chain, a mix owns what it holds,
-   and like a chain it is just another processor: a mix can go in a chain, and
-   a chain in a mix.
+   The dry half contributes 0.5 throughout; the low-pass climbs from 0.1.
+
+   Both processors work in place, so [`mix.c`](exercises/ex1-mix/mix.c) gives
+   the second one a copy of the input, in a scratch buffer. The buffer is part
+   of the `mix_t`, allocated once by `mix_create` (lesson 13). A block longer
+   than the buffer is processed in pieces that fit.
+
+   Like a chain, a mix owns what it holds. And like a chain, it is just another
+   processor: a mix can go in a chain, and a chain in a mix.
 
    </details>
 

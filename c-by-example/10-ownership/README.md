@@ -4,20 +4,20 @@ Run this lesson's commands in `c-by-example/10-ownership/`.
 
 Lesson 09's rule was "every `malloc` gets exactly one `free`". In a program of
 three functions that is easy to keep. In a library of three hundred, with
-buffers handed from one part to another, it is the hardest thing in C, and the
-language does not help: a pointer does not say whether you are meant to free
-what it points at.
+buffers handed from one part to another, it is one of the hardest things in C,
+and the language does not help: a pointer does not say whether you are meant to
+free what it points at.
 
 So the code says it instead. Every block of heap memory has one **owner**, the
 part of the program responsible for freeing it, and every function says, in its
 name or its comment, what it does to ownership:
 
-| a function that…                       | example          | afterwards                 |
-| -------------------------------------- | ---------------- | -------------------------- |
-| **creates**: allocates and hands over  | `signal_create`  | the caller owns the result |
-| **destroys**: takes back and frees     | `signal_destroy` | nobody does; don't touch   |
-| **borrows**: uses, and leaves it alone | `signal_push`    | the caller still owns it   |
-| **releases**: hands its memory onward  | `signal_release` | the caller owns the part   |
+| a function that…                       | example          | afterwards                                      |
+| -------------------------------------- | ---------------- | ----------------------------------------------- |
+| **creates**: allocates and hands over  | `signal_create`  | the caller owns the result                      |
+| **destroys**: takes back and frees     | `signal_destroy` | the memory is gone: don't use the pointer again |
+| **borrows**: uses, and leaves it alone | `signal_push`    | the caller still owns it                        |
+| **releases**: hands its memory onward  | `signal_release` | the caller owns the part                        |
 
 Here is a buffer that grows as samples arrive, with a function for each row:
 

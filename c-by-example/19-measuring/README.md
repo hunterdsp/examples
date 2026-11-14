@@ -185,8 +185,8 @@ the plain `./bench`.)
 - **Repeat, and keep the fastest.** One call of `by_sin` takes about 40
   microseconds, too short for `clock()` to see reliably, so each timing runs it
   200 times. And each timing is taken 7 times, keeping the fastest: the first
-  runs warm the caches, and anything else the machine does can only make a run
-  slower, never faster.
+  runs warm the caches, and the fastest run is the one least disturbed by
+  whatever else the machine was doing.
 - **Divide it down.** "8.42 ns per sample" compares directly with the budget:
   at 48 kHz a sample is due every 20,800 ns.
 - **Use the result.** The program prints a sample of the output after timing. A

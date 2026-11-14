@@ -3,7 +3,7 @@
  * lowpass.h declares `struct lowpass` but never defines it, so outside
  * lowpass.c the compiler does not know the struct has a member `a`, or
  * any members at all. Setting the coefficient directly does not compile:
- * the only way in is through the functions the header declares.
+ * the way in is through the functions the header declares.
  */
 #include "lowpass.h"
 

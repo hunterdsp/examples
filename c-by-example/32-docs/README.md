@@ -110,7 +110,7 @@ cat ../sig/docs/Doxyfile.in
 ```
 # Doxyfile.in -- Doxygen's settings for sig's API documentation. CMake
 # fills in the @...@ values and writes the result into the build
-# directory (configure_file). Only settings that differ from Doxygen's
+# folder (configure_file). Only settings that differ from Doxygen's
 # defaults are here; `doxygen -g` writes a file listing every one.
 
 PROJECT_NAME           = sig
@@ -216,7 +216,7 @@ and its build.
    ```
 
    ```
-   49d48
+   54d53
    <    * @param n How many samples.
    ```
 

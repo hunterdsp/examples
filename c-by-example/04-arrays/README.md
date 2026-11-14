@@ -97,8 +97,9 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
   `sizeof in / sizeof in[0]` is total bytes over bytes per element: the element
   count. This is the idiom for "how long is this array".
 - **Passed to a function, an array arrives as the address of its first
-  element**, and its length is lost. That's why `moving_average` takes `n`.
-  Every C function that takes a buffer takes its length too.
+  element**, and its length is lost. That's why `moving_average` takes `n`. A
+  function that takes a buffer of samples takes its length too. (Strings,
+  lesson 06, mark their own end instead.)
 - **The inner loop guards its edge.** `i - k >= 0` stops the window looking
   before sample 0. Edges are where filters and indexes go wrong.
 

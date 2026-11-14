@@ -2,16 +2,7 @@
 
 ## One time set up
 
-Install [`jbx`](https://just-buildit.github.io/just-bashit/) which gets you a
-working dev machine in one command.
-
-<!-- no-run -->
-
-```bash
-. <(curl -sSL https://just-buildit.github.io/get-jb.sh)
-```
-
-Clone this repository and move into the project root
+Get the course, and move into its root folder:
 
 <!-- no-run -->
 
@@ -20,41 +11,61 @@ git clone https://github.com/hunterdsp/examples.git
 cd examples
 ```
 
-On macOS, run `xcode-select --install` first: it brings `cc` (clang), `make`
-and `lldb`.
-
-You need three things: a C compiler, `make`, and a debugger. One line installs
-them, along with a few other tools that help later on (a second compiler, a
-memory checker, CMake, Doxygen), using your system package manager:
-
-<!-- no-run -->
-
-```bash
-jbx install-deps -g dev c-by-example/bootstrap.toml
-```
-
 Each lesson is a folder under `c-by-example/`, and its commands run in that
 folder: `cd` into it before you start, as this lesson does below. An exercise
 answer runs in its own folder, under `exercises/`, and says which.
 
-Check it worked:
+Part I needs only two tools: a C compiler, `cc`, and `make`, a program that
+runs build commands for you (lesson 08 explains it). Many systems already have
+both. Check:
 
 ```bash
 cc --version
-# cc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
-# Copyright (C) 2025 Free Software Foundation, Inc.
-# ...
+make --version
+```
+
+If both print a version, you have what Part I needs. On Linux, `cc --version`
+prints something like this:
+
+```
+cc (Ubuntu 15.2.0-16ubuntu1) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+...
 ```
 
 `cc` is not a compiler of its own: it is the traditional name for *your
 system's* C compiler, so the same command works everywhere. On Linux it is
 usually GCC (the Free Software Foundation line above gives it away; your
 version may differ), and on macOS it is Apple's clang. This course uses `cc` so
-you never have to care which, and checks every example with both:
+you never have to care which, and checks every example with both.
+
+### If something is missing
+
+Install it with your system's package manager. On macOS:
+
+<!-- no-run -->
 
 ```bash
-gcc --version     # GCC by name
-clang --version   # clang by name (installed above)
+xcode-select --install
+```
+
+which brings `cc` (Apple's clang), `make` and the debugger `lldb`. On Debian or
+Ubuntu, `sudo apt install build-essential`; on Fedora,
+`sudo dnf install gcc make`.
+
+Later parts use more: a second compiler (`clang` on Linux), a debugger, a
+memory checker, CMake, Doxygen, pkg-config and Python. Every package the course
+uses is listed in [`bootstrap.toml`](../bootstrap.toml), for each package
+manager, and you can install them yourself from that list, or let
+[`jbx`](https://just-buildit.github.io/just-bashit/) read it and run your
+package manager for you. `jbx` installs with a script from the internet, so
+read the script first if you like (open its address in a browser), then:
+
+<!-- no-run -->
+
+```bash
+. <(curl -sSL https://just-buildit.github.io/get-jb.sh)
+jbx install-deps -g dev c-by-example/bootstrap.toml
 ```
 
 ## What `cc` actually does
