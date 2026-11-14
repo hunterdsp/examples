@@ -199,9 +199,12 @@ with the ones its own code uses, taken from this table by `make format`.
 | -------------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
 | [`assert`](https://en.cppreference.com/c/error/assert)         | `<assert.h>` | stop the program if a condition is false; removed by `-DNDEBUG` |
 | [`calloc`](https://en.cppreference.com/c/memory/calloc)        | `<stdlib.h>` | allocate memory for n elements, all bytes zero                  |
+| [`clock`](https://en.cppreference.com/c/chrono/clock)          | `<time.h>`   | processor time used by the program, in `CLOCKS_PER_SEC` units   |
 | [`exp`](https://en.cppreference.com/c/numeric/math/exp)        | `<math.h>`   | *e* raised to the power x                                       |
+| [`fabs`](https://en.cppreference.com/c/numeric/math/fabs)      | `<math.h>`   | absolute value of a `double`                                    |
 | [`fabsf`](https://en.cppreference.com/c/numeric/math/fabs)     | `<math.h>`   | absolute value of a `float`                                     |
 | [`fclose`](https://en.cppreference.com/c/io/fclose)            | `<stdio.h>`  | finish writing a file, and close it                             |
+| [`floor`](https://en.cppreference.com/c/numeric/math/floor)    | `<math.h>`   | largest whole number not above x                                |
 | [`fopen`](https://en.cppreference.com/c/io/fopen)              | `<stdio.h>`  | open a file                                                     |
 | [`fprintf`](https://en.cppreference.com/c/io/fprintf)          | `<stdio.h>`  | `printf` to a stream, such as `stderr`                          |
 | [`fread`](https://en.cppreference.com/c/io/fread)              | `<stdio.h>`  | read raw bytes from a file                                      |
