@@ -272,7 +272,8 @@ Floats are binary fractions, and 0.1 has no exact binary form, just as ⅓ has n
 exact decimal one. So never compare floating-point results with `==`; compare
 against a tolerance. A `float` carries about 7 significant digits (24 bits):
 past 2²⁴ = 16,777,216 it cannot even count by one. That is why a long-running
-phase accumulator or a running sum is kept in `double` (lesson 22).
+phase accumulator is kept in an integer (lesson 22) and a long sum in `double`
+(lesson 26).
 
 The last line is the suffix at work: without the `f`, `1.0` is a `double`, so
 the whole sum is done in `double`, which can still count by one there. Code
