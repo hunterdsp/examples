@@ -273,8 +273,9 @@ folder to run it in.
 
    The loop is `for (float *p = buf; p < buf + n; p++) *p *= g;`. `buf + n`
    points one past the last sample: C lets you form that address and compare
-   against it, but never read through it. An optimising compiler turns both
-   versions into the same machine code, so pick whichever reads better.
+   against it, but never read through it. Neither version is the fast one: they
+   say the same thing, an optimising compiler compiles both well, if not always
+   identically, so pick whichever reads better.
 
    </details>
 

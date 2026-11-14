@@ -252,7 +252,8 @@ built against sig 1.0.0, running sig 1.0.0
 - **Opaque types, made and freed in pairs.** `sig_lowpass` is lesson 14's
   opaque type, with lesson 10's create/destroy pair. The struct can change in
   any release without breaking a caller. The names have no `_t` ending: POSIX
-  reserves names ending in `_t` for itself, so a library shouldn't add more.
+  (lesson 03) reserves names ending in `_t` for itself, so a library shouldn't
+  add more.
 - **Say what went wrong.** Lesson 14's `lowpass_create` returned `NULL` whether
   the argument was bad or memory ran out. Here every call that can fail returns
   a `sig_status`, and the object comes back through an out-parameter,
@@ -404,7 +405,7 @@ folder to run it in.
    them. Neither library has a bug, but no program can use both, and only their
    authors can fix it, by renaming everything, which breaks every program
    already using them. A prefix from day one (`fir_filter`, `smooth_process`)
-   costs four letters per name.
+   costs a few letters per name.
 
    </details>
 

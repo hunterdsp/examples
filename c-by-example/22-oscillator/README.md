@@ -151,7 +151,7 @@ float time at  3600 s: next sample is the SAME time
 
 - **A signed phase.** [`broken-signed-phase.c`](broken-signed-phase.c) keeps
   the phase in an `int32_t`. Signed overflow is undefined behaviour, not a wrap
-  (lesson 11), and UBSan stops it within 55 samples:
+  (lesson 11), and UBSan reports it at the 55th sample:
 
   ```
   broken-signed-phase.c:18:11: runtime error: signed integer overflow: 2126008836 + 39370534 cannot be represented in type 'int'

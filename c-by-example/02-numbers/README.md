@@ -58,7 +58,8 @@ main (void)
   printf ("\nWrapping and overflow\n---------------------\n");
   printf ("uint8_t 255 + 1 = %d\n", counter);
   /* ...signed arithmetic does NOT: see broken-overflow.c. A day of audio
-     at 48 kHz needs 64 bits. */
+     at 48 kHz, 4.1 billion samples, overflows an int32_t; it just fits
+     a uint32_t, and any count that grows with time gets 64 bits. */
   int64_t per_day = (int64_t)48000 * (int64_t)86400;
   printf ("samples in a day at 48 kHz: %" PRId64 "\n", per_day);
 
@@ -221,8 +222,7 @@ Widen *before* the operation, not after. For two `int32_t`s,
 `(int64_t)a * (int64_t)b` multiplies in 64 bits, but `(int64_t)(a * b)`
 multiplies in 32, overflows, and then widens the wrong answer. Cast both
 operands, every time, even where C would convert or promote them for you: the
-casts cost nothing (they compile to the same instructions), and nobody has to
-remember which types convert.
+code then says what it does, and nobody has to remember which types convert.
 
 > [!TIP]
 > **Unsigned overflow is a free modulus.** An N-bit unsigned result is always
@@ -300,8 +300,8 @@ remembering: **−6 dB is half the amplitude, +3 dB is double the power.**
   [`broken-overflow.c`](broken-overflow.c) counts a day of audio at 48 kHz in
   an `int32_t`: 4.1 billion does not fit in 2.1 billion. For unsigned types
   that would wrap; for signed types the standard says *anything* may happen,
-  and an optimising compiler is allowed to assume it never does. UBSan stops it
-  on the spot:
+  and an optimising compiler is allowed to assume it never does. UBSan reports
+  it, with the line:
 
   ```
   broken-overflow.c:14:15: runtime error: signed integer overflow:
@@ -326,8 +326,8 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Print `INT32_MAX` and `INT64_MAX`. How many days of 48 kHz audio fit in
-   each?
+1. Print `INT32_MAX` and `INT64_MAX`. How long does a count of 48 kHz samples
+   last in each?
 
    <details><summary>Output and answer</summary>
 
@@ -348,8 +348,7 @@ folder to run it in.
    Half a day for `int32_t`: a sample counter in one overflows after 12.4
    hours, so a program that passes every test can still fail on the first long
    run. `int64_t` lasts about 6 million years. Use 64 bits for any count that
-   grows with time. (The answer prints hours and years because 0.5 days and 2
-   billion days are hard to picture.)
+   grows with time.
 
    </details>
 

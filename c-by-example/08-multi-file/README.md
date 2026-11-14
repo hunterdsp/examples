@@ -122,8 +122,8 @@ main (void)
 }
 ```
 
-Build all three with `make` (the [`Makefile`](Makefile) is below), and run the
-meter:
+Build the meter from all three files with `make` (the [`Makefile`](Makefile) is
+below), and run it:
 
 ```bash
 make && ./meter
@@ -195,14 +195,21 @@ do. Recipe lines must start with a **tab**, not spaces.
 - **Macro arguments evaluated twice.** `DSP_SQUARE(i++)` expands to
   `((i++) * (i++))`, which increments `i` twice and is undefined behaviour.
   Prefer a `static inline` function when you can: it has none of these
-  problems, and costs nothing (Part III uses them).
+  problems, and usually costs nothing (Part III uses them).
 
 - **Defining things in headers.** A header *declares*. A function or variable
   *defined* in a header is defined again in every `.c` that includes it, and
   the linker reports a duplicate. (`static inline` functions are the
   exception.)
 
-- **Spaces instead of a tab in a Makefile**: `missing separator. Stop.`
+- **Spaces instead of a tab in a Makefile.** A recipe line must start with a
+  tab. With spaces, GNU make stops at the line, here line 2:
+
+  ```
+  Makefile:2: *** missing separator.  Stop.
+  ```
+
+  Editors set to turn tabs into spaces do this; most leave Makefiles alone.
 
 ## Exercises
 
@@ -259,7 +266,7 @@ folder to run it in.
    date, in the right order. (The `sleep 1` is for older versions of `make`,
    such as the one macOS ships, which compare timestamps to the whole second:
    touched in the same second it was built, `dsp.c` would look no newer than
-   `dsp.o`. Typing by hand, you will never be that quick.)
+   `dsp.o`. Typing by hand, you probably won't be that quick.)
 
    </details>
 

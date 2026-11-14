@@ -1,10 +1,15 @@
 /**
  * @file osc.h
- * @brief A sine oscillator with an exact, drift-free frequency.
+ * @brief A sine oscillator whose phase never drifts.
  *
  * Lesson 22's oscillator: a 32-bit phase accumulator, so the phase wraps
  * at the end of every cycle by itself, and a 1024-entry sine table read
- * with linear interpolation. Its output stays within 1e-5 of sin().
+ * with linear interpolation. Integer adds are exact, so the phase gathers
+ * no rounding error, however long it runs. The frequency is the one asked
+ * for, rounded to a multiple of rate_hz / 2^32 (1.1e-5 Hz at 48 kHz),
+ * and each sample is within 1e-5 of the sine of its phase. Against an
+ * ideal sine at exactly the frequency asked for, that rounding adds an
+ * error that grows with time: up to 3.3e-5 after one second at 48 kHz.
  */
 #ifndef SIG_OSC_H
 #define SIG_OSC_H

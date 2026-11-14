@@ -14,7 +14,7 @@ typedef struct lowpass lowpass_t; /* declared, never defined here */
 A file that sees only this line may hold a `lowpass_t *`, pass it around and
 hand it back, but cannot create a `lowpass_t`, copy one, or look inside one:
 the compiler doesn't know its size or its members. That is an **opaque type**,
-and it makes the functions in the header the *only* way in.
+and it makes the functions in the header the way in.
 
 Here is a one-pole low-pass filter written that way. Each output moves the
 fraction `a` of the way from the last output toward the input, which smooths
@@ -34,7 +34,7 @@ cat lowpass.h
  * declares `struct lowpass` without defining it. A file that includes
  * this header may hold a lowpass_t * and pass it around, but cannot
  * create one, copy one, or look inside one: only lowpass.c, which has
- * the definition, can. So the functions below are the ONLY way in, and
+ * the definition, can. So the functions below are the way in, and
  * lowpass.c is free to change what the struct holds without breaking a
  * single caller.
  */
@@ -221,10 +221,10 @@ halfway after one sample, the slow one a tenth of the way.
 - **The header declares, the `.c` defines.** `struct lowpass` has its members
   listed in exactly one place, `lowpass.c`. Everywhere else it is an
   *incomplete type*: usable through a pointer, and in no other way.
-- **So it is always on the heap.** A caller can't declare a `lowpass_t`,
-  because the compiler doesn't know how many bytes to set aside. The type's own
-  code has to make it, and so the API is the create/destroy pair of lesson 10.
-  (Exercise 3 shows a way around the heap when that matters.)
+- **So the type's own code makes it.** A caller can't declare a `lowpass_t`,
+  because the compiler doesn't know how many bytes to set aside. The usual way
+  is the heap, with the create/destroy pair of lesson 10. (Exercise 3 lets the
+  caller provide the memory instead, when that matters.)
 - **Each object has its own memory.** `fast` and `slow` each remember their
   last output, `y`, between calls. That is why processing the step in two
   blocks of four gives the same eight samples as processing it in one go: the
@@ -369,8 +369,8 @@ folder to run it in.
    sets a filter up in them. `lowpass_size` rounds up to a multiple of 16, as
    lesson 13's arena did, so each filter in the block starts suitably aligned.
    There is no destroy: the filter owns nothing, and freeing the block frees
-   all four. Many real-time libraries offer exactly this pair, `_size` and
-   `_init`, beside `_create`.
+   all four. A library can offer this pair, `_size` and `_init`, beside
+   `_create`, for callers that manage their own memory.
 
    </details>
 

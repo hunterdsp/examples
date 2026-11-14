@@ -169,9 +169,12 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
   broken-ring-overflow.c:26:3: runtime error: index 8 out of bounds for type 'float[8]'
   ```
 
-  ASan would not catch this one: the bad write lands inside the struct, which
-  is all allocated memory. It is the sanitizer for *types*, not the one for
-  memory, that knows `buf` has only 8 elements.
+  ASan doesn't catch that write: it lands inside the struct, which is all
+  allocated memory. It is the sanitizer for *types*, not the one for memory,
+  that knows `buf` has only 8 elements. UBSan reports and carries on (lesson
+  01), so the writes go on over the struct's other members, and the program
+  crashes a few pushes later, far from the cause, with ASan's `SEGV`. The first
+  report is the one to read.
 
 - **A mask on a size that isn't a power of two.** `head & 5` is not `head % 6`;
   it skips slots 2 and 3 entirely, silently. Keep the size a power of two, or
@@ -179,11 +182,12 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
 
 - **Signed counters.** An `int` head overflows after 2³¹ pushes, which is
   undefined behaviour, and at 48 kHz takes only 12 hours. Counters that may
-  wrap are unsigned, always.
+  wrap should be unsigned.
 
 - **Two threads, one ring.** One thread pushing while another pops is the
   classic use, and it needs atomic operations to be correct, which C99 does not
-  have. Lesson 28 adds them.
+  have. Lesson 28 shares a queue between threads with a lock instead, and says
+  where atomics come in.
 
 ## Exercises
 

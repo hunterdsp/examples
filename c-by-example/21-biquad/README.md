@@ -287,9 +287,10 @@ direct form I agrees within 1e-6: yes
   or changed while the filter runs, may not. A biquad is stable when `|a2| < 1`
   and `|a1| < 1 + a2`.
 - **Low corners in `float`.** A corner at 20 Hz with 48 kHz sampling puts `a1`
-  within 0.003 of −2. A `float` has about seven significant digits, so its
-  rounding moves the filter noticeably. Compute coefficients in `double` and
-  run very low-frequency filters in `double` too.
+  within 0.004 of −2. A `float` has about seven significant digits, so its
+  rounding moves the filter noticeably. `biquad_lowpass` already computes in
+  `double` and only stores the result as `float`; a very low-frequency filter
+  should keep its coefficients and its state in `double` too.
 - **Very small numbers can be slow.** As a filter rings down, its state passes
   into *subnormal* floats, below about 10⁻³⁸, which some processors handle far
   more slowly than ordinary ones (exercise 3).

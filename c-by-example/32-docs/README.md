@@ -216,7 +216,7 @@ and its build.
    ```
 
    ```
-   49d48
+   54d53
    <    * @param n How many samples.
    ```
 

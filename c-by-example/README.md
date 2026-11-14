@@ -53,8 +53,8 @@ them again. `git clean -fdX .`, in a lesson's folder, deletes everything git
 ignores there.
 
 You need a C compiler and `make`, and for Part V, CMake, Doxygen, pkg-config
-and Python 3. To install them, and everything later lessons use:
-`jbx install-deps -g dev` (lesson 00).
+and Python 3. [`bootstrap.toml`](bootstrap.toml) lists every package, for each
+package manager, and lesson 00 shows how to install them.
 
 ## Contents
 
@@ -68,8 +68,7 @@ and which header holds what.
 
 **Part I · The language, small and sharp**
 
-- [01 Hello](01-hello/): the build command for the whole course, and exit
-  status
+- [01 Hello](01-hello/): the build command for Parts I and II, and exit status
 - [02 Numbers](02-numbers/): integer sizes, promotion, float precision,
   decibels
 - [03 Functions](03-functions/): a sine table, headers, pass by value, `static`

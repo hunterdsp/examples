@@ -35,9 +35,9 @@ main (int argc, char *argv[])
 
   /* main's own arguments are strings too. argv is an array of them, argc
      long: argv[0] is the program's name, argv[1] the first word typed
-     after it, and so on. Each string is itself an array of char, so argv
-     is an array of arrays, which is why it is written char *argv[]: an
-     array ([]) of strings (char *). A name from the command line, like
+     after it, and so on. Each string is an array of char, reached by the
+     address of its first char, so argv is an array of addresses, written
+     char *argv[]: an array ([]) of pointers to char (char *). A name from the command line, like
      any real file name, has a length known only when the program runs. */
   const char *name = argc > 1 ? argv[1] : tone;
 
@@ -55,7 +55,8 @@ main (int argc, char *argv[])
           need >= (int)sizeof tiny ? "yes" : "no");
 
   /* Write raw samples: no text, just the bytes of each float. "wb" opens
-     for writing in binary mode. Every call that can fail is checked.
+     for writing in binary mode. Every call that could lose data is
+     checked.
 
      fopen returns a FILE *: a pointer to a FILE, the struct <stdio.h>
      uses to track an open file (where it is up to, its buffer, whether
@@ -128,9 +129,10 @@ round trip exact: yes
   build a string in needs that extra byte.
 - **`argv` is an array of strings.** `main (int argc, char *argv[])` receives
   the command line as `argc` strings: `argv[0]` is the program's name,
-  `argv[1]` the first word after it. Each string is an array of `char`, so
-  `argv` is an array of arrays, and the declaration says so: `[]`, an array, of
-  `char *`, strings. `./files sine` makes `argv[1]` the string `"sine"`.
+  `argv[1]` the first word after it. Each string is an array of `char`, and
+  `argv` holds the address of each one's first `char`: an array of pointers, as
+  the declaration says. `[]`, an array, of `char *`, pointers to `char`.
+  `./files sine` makes `argv[1]` the string `"sine"`.
 - **`snprintf` is the safe way to build one.** It never writes past the size it
   is given, always terminates, and returns the length the *whole* result
   needed. If that is ≥ the buffer size, the result was cut short, and you can
@@ -150,10 +152,12 @@ round trip exact: yes
   binary. Raw samples are written as their bytes, with no text conversion: 4
   bytes per `float`, read back bit-for-bit (`round trip exact: yes`). This is
   the format the tools in lesson 33 pipe between each other.
-- **Every call that can fail is checked.** `fopen` returns `NULL` (and `perror`
-  prints why), `fwrite` and `fread` return how many items they managed, and
-  `fclose` can fail too, since it flushes the last bytes. A disk-full error
-  goes unnoticed if nobody looks.
+- **Every call that could lose data is checked.** `fopen` returns `NULL` (and
+  `perror` prints why), `fwrite` and `fread` return how many items they
+  managed, and `fclose` can fail too, since it flushes the last bytes. A
+  disk-full error goes unnoticed if nobody looks. The second `fclose`, of a
+  file only read, and the `remove` that tidies up aren't checked: neither can
+  lose data, and a failed `remove` only leaves a file behind.
 
 ## Bytes
 

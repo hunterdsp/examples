@@ -344,12 +344,14 @@ After the reset, the second run matches the first.
   ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x000000000000 bp 0x7ffc68679430 sp 0x7ffc68679378 T0)
   ```
 
-  clang's build is stopped one step earlier, by a check that the function
-  called has the pointer's type (there is no function at address 0). On an ARM
-  Mac, Apple's clang build stops at a trap instruction instead, and the shell
-  reports `Trace/BPT trap: 5`. Either way, nothing complained when the table
-  was written: the hole is found when it is used. Fill in every slot, or make
-  an operation optional on purpose (exercise 3).
+  clang's build crashes one step earlier. Its UBSan checks that the function
+  called has the pointer's type, by reading a marker stored just before the
+  function, and just before address 0 there is nothing to read: ASan reports a
+  `SEGV` at `0xfffffffffffffff8`, 8 bytes below 0. On an ARM Mac, Apple's clang
+  build stops at a trap instruction instead, and the shell reports
+  `Trace/BPT trap: 5`. Either way, nothing complained when the table was
+  written: the hole is found when it is used. Fill in every slot, or make an
+  operation optional on purpose (exercise 3).
 
 - **Casting to the wrong kind.** `(gain_t *)self` is only right if `self`
   really is a gain. Each kind's functions are reached only through its own

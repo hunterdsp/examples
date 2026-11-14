@@ -286,7 +286,7 @@ seven-hundredth of its size.
   [`broken-short-history.c`](broken-short-history.c) keeps the `n - 1`
   *previous* inputs and forgets that the current one needs a slot too. The
   first time the ring reaches its last slot, it is past the end of the block,
-  and UBSan, which knows how big the block is, stops it:
+  and UBSan, which knows how big the block is, reports it:
 
   ```
   broken-short-history.c:34:32: runtime error: load of address 0x771cf4de001c with insufficient space for an object of type 'float'

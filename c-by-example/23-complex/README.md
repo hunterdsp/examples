@@ -143,17 +143,21 @@ tone at 2000 Hz:  0.0000 +0.0000i   size 0: no tone here
 - **`printf` has no complex conversion.**
   [`broken-complex-printf.c`](broken-complex-printf.c) prints a
   `double complex` with `%f`, which reads one `double` where there are two.
-  `-Wall` checks formats against arguments and refuses:
+  `-Wall` checks formats against arguments and warns (gcc's words):
 
   ```
-  broken-complex-printf.c:15:17: error: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Werror=format=]
+  broken-complex-printf.c:15:17: warning: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Wformat=]
   ```
+
+  It is only a warning, so the program still builds, and prints nonsense
+  (lesson 01's exercise 3); `-Werror` would make it an error.
 
   Print the parts, `creal (z)` and `cimag (z)`.
 
-- **Not every compiler has it.** Microsoft's C compiler has never supported
-  `<complex.h>`'s types, and C11 made them optional. Code that must build
-  everywhere brings its own complex struct (exercise 2).
+- **Not every compiler has it.** Microsoft's C compiler doesn't support C99's
+  `double complex`: its `<complex.h>` has types of its own, without `+` and
+  `*`. And C11 made complex types optional. Code that must build everywhere
+  brings its own complex struct (exercise 2).
 
 - **`float complex` needs the `f` functions.** `cabs` takes a `double complex`;
   for a `float complex` it is `cabsf`, as `sqrtf` is to `sqrt`. Mixing them
