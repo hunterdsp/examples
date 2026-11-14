@@ -14,7 +14,7 @@ LESSONS ?= $(sort $(wildcard [0-9][0-9]-*))
 # Every README in the course, formatted by mdformat (settings in
 # .mdformat.toml). `make lint` fails if formatting would change any of
 # them; `make format` changes them.
-MD_FILES := README.md $(wildcard [0-9][0-9]-*/README.md)
+MD_FILES := README.md REFERENCE.md $(wildcard [0-9][0-9]-*/README.md)
 MDFORMAT := uv run --frozen --only-group lint mdformat
 
 # Every C file, formatted by clang-format in ~/doppler's style: the same
