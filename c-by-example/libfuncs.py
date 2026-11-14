@@ -13,7 +13,8 @@ lesson's table is derived, never typed.
     python libfuncs.py --write   rewrite each README's table
 
 `make lint` runs the check, `make format` the write (then mdformat, which
-pads the table; the check compares cells, so padding doesn't matter).
+re-wraps the prose and pads the table; the check compares words and cells,
+so neither matters).
 
 A call is NAME followed by `(` in a .c or .h file, after comments, strings
 and character constants are removed. It is the library's unless the
@@ -93,9 +94,8 @@ def table(names, ref):
         "",
         BEGIN,
         "",
-        "Every function this lesson's code calls from the C standard library,",
-        "linked to its definition. The [quick reference](../REFERENCE.md)",
-        "lists them all.",
+        "Every library function this lesson's code calls, linked to its",
+        "definition. The [quick reference](../REFERENCE.md) lists them all.",
         "",
         "| function | header | what it does |",
         "| --- | --- | --- |",
@@ -104,13 +104,17 @@ def table(names, ref):
     return "\n".join(lines + ["", END]) + "\n"
 
 
-def rows_of(block):
-    """The table rows of a README section, as lists of cells."""
-    return [
-        cells(line)
-        for line in block.splitlines()
-        if line.startswith("|") and not re.match(r"\|[\s|:-]+\|$", line)
-    ]
+def normal(block):
+    """A README section as mdformat-proof content: its prose as one string
+    of words (mdformat re-wraps lines) and its table rows as lists of
+    cells (mdformat pads them). Separator rows carry nothing."""
+    prose, rows = [], []
+    for line in block.splitlines():
+        if not line.startswith("|"):
+            prose += line.split()
+        elif not re.match(r"\|[\s|:-]+\|$", line):
+            rows.append(cells(line))
+    return " ".join(prose), rows
 
 
 def main(write):
@@ -134,7 +138,7 @@ def main(write):
         want = table(names, ref) if names else ""
         start = text.find("## Library functions\n")
         have = text[start:] if start >= 0 else ""
-        stale = rows_of(have) != rows_of(want) or (BEGIN in have) != bool(want)
+        stale = normal(have) != normal(want)
         if not stale:
             continue  # already right: leave mdformat's padding alone
         if write:

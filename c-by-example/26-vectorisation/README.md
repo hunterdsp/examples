@@ -361,8 +361,8 @@ folder to run it in.
 
 <!-- libfuncs: made by `make format` from REFERENCE.md -->
 
-Every function this lesson's code calls from the C standard library, linked to
-its definition. The [quick reference](../REFERENCE.md) lists them all.
+Every library function this lesson's code calls, linked to its definition. The
+[quick reference](../REFERENCE.md) lists them all.
 
 | function                                                     | header       | what it does                                                  |
 | ------------------------------------------------------------ | ------------ | ------------------------------------------------------------- |
