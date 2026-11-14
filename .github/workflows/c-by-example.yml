@@ -28,12 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: ${{ matrix.cc }} --version
-      # Lesson 32 builds sig's documentation; CMake is already installed.
+      # Lesson 32 builds sig's documentation, and lesson 34 uses
+      # pkg-config; CMake is already installed.
       - if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y doxygen
       - if: runner.os == 'macOS'
-        run: brew install doxygen
-      - run: cmake --version && doxygen --version
+        run: brew install doxygen pkgconf
+      - run: cmake --version && doxygen --version && pkg-config --version
       # make exits 0 when it has nothing to do (a target lost from the
       # Makefile but still .PHONY does exactly that), so require the
       # summary check.sh prints, not just the exit code.
