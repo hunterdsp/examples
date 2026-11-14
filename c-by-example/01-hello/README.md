@@ -238,3 +238,16 @@ folder to run it in.
    which turns every warning into an error.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                             | header      | what it does                 |
+| ---------------------------------------------------- | ----------- | ---------------------------- |
+| [`printf`](https://en.cppreference.com/c/io/fprintf) | `<stdio.h>` | formatted output to `stdout` |
+
+<!-- /libfuncs -->

@@ -453,3 +453,19 @@ folder to run it in.
    there instead.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                    | header      | what it does                             |
+| ----------------------------------------------------------- | ----------- | ---------------------------------------- |
+| [`log10`](https://en.cppreference.com/c/numeric/math/log10) | `<math.h>`  | base-10 logarithm of a `double`          |
+| [`pow`](https://en.cppreference.com/c/numeric/math/pow)     | `<math.h>`  | x raised to the power y                  |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)        | `<stdio.h>` | formatted output to `stdout`             |
+| [`puts`](https://en.cppreference.com/c/io/puts)             | `<stdio.h>` | write a string and a newline to `stdout` |
+
+<!-- /libfuncs -->

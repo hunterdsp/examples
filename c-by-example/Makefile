@@ -4,12 +4,13 @@
 #   make test CC=clang    the same, with clang
 #   make test LESSONS=05-pointers
 #   make lint             check every README (mdformat) and C file
-#                         (clang-format) is formatted
-#   make format           format them
+#                         (clang-format) is formatted, and every README
+#                         links the library functions its lesson calls
+#   make format           format them, and rewrite those links
 
 LESSONS ?= $(sort $(wildcard [0-9][0-9]-*))
 
-.PHONY: test lint lint-mdformat lint-clang-format format help
+.PHONY: test lint lint-mdformat lint-clang-format lint-libfuncs format help
 
 # Every README in the course, formatted by mdformat (settings in
 # .mdformat.toml). `make lint` fails if formatting would change any of
@@ -22,10 +23,14 @@ MDFORMAT := uv run --frozen --only-group lint mdformat
 C_FILES := $(shell git ls-files -co --exclude-standard '*.c' '*.h')
 CLANG_FORMAT := uv run --frozen --only-group lint clang-format --style=file
 
+# Each README ends with a table of the library functions its lesson's code
+# calls, made from REFERENCE.md's one table of links (libfuncs.py).
+LIBFUNCS := uv run --frozen --only-group lint python libfuncs.py
+
 test: ## Build, run and check every example in LESSONS
 	@CC="$(CC)" ./check.sh $(LESSONS)
 
-lint: lint-mdformat lint-clang-format ## Every README and C file is formatted
+lint: lint-mdformat lint-clang-format lint-libfuncs ## Every README and C file is formatted, and links its library functions
 
 lint-mdformat: ## Fail if any README is not as mdformat would write it
 	@$(MDFORMAT) --check $(MD_FILES)
@@ -33,7 +38,11 @@ lint-mdformat: ## Fail if any README is not as mdformat would write it
 lint-clang-format: ## Fail if any C file is not as clang-format would write it
 	@$(CLANG_FORMAT) --dry-run --Werror $(C_FILES)
 
+lint-libfuncs: ## Fail if a README's library function table is missing or stale
+	@$(LIBFUNCS)
+
 format: ## Format every README (mdformat) and C file (clang-format)
+	@$(LIBFUNCS) --write
 	@$(MDFORMAT) $(MD_FILES)
 	@$(CLANG_FORMAT) -i $(C_FILES)
 

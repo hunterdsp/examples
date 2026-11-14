@@ -264,3 +264,25 @@ folder to run it in.
    come from the command line.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                       | header       | what it does                                          |
+| -------------------------------------------------------------- | ------------ | ----------------------------------------------------- |
+| [`calloc`](https://en.cppreference.com/c/memory/calloc)        | `<stdlib.h>` | allocate memory for n elements, all bytes zero        |
+| [`fprintf`](https://en.cppreference.com/c/io/fprintf)          | `<stdio.h>`  | `printf` to a stream, such as `stderr`                |
+| [`free`](https://en.cppreference.com/c/memory/free)            | `<stdlib.h>` | give back memory from `malloc`, `calloc` or `realloc` |
+| [`malloc`](https://en.cppreference.com/c/memory/malloc)        | `<stdlib.h>` | allocate memory, contents unset                       |
+| [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy)   | `<string.h>` | copy bytes between blocks that don't overlap          |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)           | `<stdio.h>`  | formatted output to `stdout`                          |
+| [`sin`](https://en.cppreference.com/c/numeric/math/sin)        | `<math.h>`   | sine of an angle in radians                           |
+| [`sqrt`](https://en.cppreference.com/c/numeric/math/sqrt)      | `<math.h>`   | square root                                           |
+| [`strtod`](https://en.cppreference.com/c/string/byte/strtof)   | `<stdlib.h>` | read a `double` from a string                         |
+| [`strtoul`](https://en.cppreference.com/c/string/byte/strtoul) | `<stdlib.h>` | read an `unsigned long` from a string                 |
+
+<!-- /libfuncs -->

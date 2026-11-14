@@ -275,3 +275,16 @@ checks that each still stops where the answer says.)
    `main`, so that hole cannot be filled. Rename it back.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                        | header      | what it does                             |
+| ----------------------------------------------- | ----------- | ---------------------------------------- |
+| [`puts`](https://en.cppreference.com/c/io/puts) | `<stdio.h>` | write a string and a newline to `stdout` |
+
+<!-- /libfuncs -->

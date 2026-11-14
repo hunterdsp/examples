@@ -316,3 +316,20 @@ folder to run it in.
    same here, but a type is a decision a macro never made for you.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header      | what it does                   |
+| ------------------------------------------------------------ | ----------- | ------------------------------ |
+| [`fabsf`](https://en.cppreference.com/c/numeric/math/fabs)   | `<math.h>`  | absolute value of a `float`    |
+| [`log10f`](https://en.cppreference.com/c/numeric/math/log10) | `<math.h>`  | base-10 logarithm of a `float` |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>` | formatted output to `stdout`   |
+| [`sin`](https://en.cppreference.com/c/numeric/math/sin)      | `<math.h>`  | sine of an angle in radians    |
+| [`sqrt`](https://en.cppreference.com/c/numeric/math/sqrt)    | `<math.h>`  | square root                    |
+
+<!-- /libfuncs -->

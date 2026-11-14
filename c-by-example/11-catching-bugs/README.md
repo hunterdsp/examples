@@ -283,3 +283,20 @@ folder to run it in.
    `_Static_assert`; this course is C99, so it uses the trick.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                | header       | what it does                                                    |
+| ------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
+| [`assert`](https://en.cppreference.com/c/error/assert)  | `<assert.h>` | stop the program if a condition is false; removed by `-DNDEBUG` |
+| [`calloc`](https://en.cppreference.com/c/memory/calloc) | `<stdlib.h>` | allocate memory for n elements, all bytes zero                  |
+| [`free`](https://en.cppreference.com/c/memory/free)     | `<stdlib.h>` | give back memory from `malloc`, `calloc` or `realloc`           |
+| [`malloc`](https://en.cppreference.com/c/memory/malloc) | `<stdlib.h>` | allocate memory, contents unset                                 |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)    | `<stdio.h>`  | formatted output to `stdout`                                    |
+
+<!-- /libfuncs -->

@@ -407,3 +407,21 @@ folder to run it in.
    costs four letters per name.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header       | what it does                                          |
+| ------------------------------------------------------------ | ------------ | ----------------------------------------------------- |
+| [`exp`](https://en.cppreference.com/c/numeric/math/exp)      | `<math.h>`   | *e* raised to the power x                             |
+| [`fprintf`](https://en.cppreference.com/c/io/fprintf)        | `<stdio.h>`  | `printf` to a stream, such as `stderr`                |
+| [`free`](https://en.cppreference.com/c/memory/free)          | `<stdlib.h>` | give back memory from `malloc`, `calloc` or `realloc` |
+| [`malloc`](https://en.cppreference.com/c/memory/malloc)      | `<stdlib.h>` | allocate memory, contents unset                       |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                          |
+| [`strtol`](https://en.cppreference.com/c/string/byte/strtol) | `<stdlib.h>` | read a `long` from a string                           |
+
+<!-- /libfuncs -->

@@ -287,3 +287,20 @@ folder to run it in.
    reuse it as soon as the call returns.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header       | what it does                                          |
+| ------------------------------------------------------------ | ------------ | ----------------------------------------------------- |
+| [`free`](https://en.cppreference.com/c/memory/free)          | `<stdlib.h>` | give back memory from `malloc`, `calloc` or `realloc` |
+| [`malloc`](https://en.cppreference.com/c/memory/malloc)      | `<stdlib.h>` | allocate memory, contents unset                       |
+| [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy) | `<string.h>` | copy bytes between blocks that don't overlap          |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                          |
+| [`realloc`](https://en.cppreference.com/c/memory/realloc)    | `<stdlib.h>` | resize allocated memory, perhaps moving it            |
+
+<!-- /libfuncs -->

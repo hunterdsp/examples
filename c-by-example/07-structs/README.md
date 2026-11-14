@@ -258,3 +258,18 @@ folder to run it in.
    members first is the rule of thumb.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header       | what it does                                               |
+| ------------------------------------------------------------ | ------------ | ---------------------------------------------------------- |
+| [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp) | `<string.h>` | compare two blocks of bytes                                |
+| [`offsetof`](https://en.cppreference.com/c/types/offsetof)   | `<stddef.h>` | a member's distance from the start of its struct (a macro) |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                               |
+
+<!-- /libfuncs -->

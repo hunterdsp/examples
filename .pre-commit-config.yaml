@@ -46,3 +46,12 @@ repos:
         language: system
         pass_filenames: false
         files: ^c-by-example/.*\.[ch]$
+
+      # A new call to a library function needs a row in its lesson's
+      # table, and REFERENCE.md is where the links come from.
+      - id: libfuncs
+        name: library function links (c-by-example)
+        entry: make -s lint-libfuncs
+        language: system
+        pass_filenames: false
+        files: ^c-by-example/(.*\.[ch]|.*\.md|libfuncs\.py)$

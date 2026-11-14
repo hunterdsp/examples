@@ -188,3 +188,64 @@ means `x & (MASK == 0)`. Write `(x & MASK) == 0`.
 | `<limits.h>`   | `INT_MAX`, `LONG_MAX`, `CHAR_BIT`, …                        |
 | `<float.h>`    | `FLT_EPSILON`, `DBL_MAX`, `FLT_DIG`, …                      |
 | `<assert.h>`   | `assert`, removed by `-DNDEBUG`                             |
+
+## Library functions
+
+Every standard library function the lessons call, linked to its definition on
+[cppreference.com](https://en.cppreference.com/c). Each lesson's README ends
+with the ones its own code uses, taken from this table by `make format`.
+
+| function                                                       | header       | what it does                                                    |
+| -------------------------------------------------------------- | ------------ | --------------------------------------------------------------- |
+| [`assert`](https://en.cppreference.com/c/error/assert)         | `<assert.h>` | stop the program if a condition is false; removed by `-DNDEBUG` |
+| [`calloc`](https://en.cppreference.com/c/memory/calloc)        | `<stdlib.h>` | allocate memory for n elements, all bytes zero                  |
+| [`exp`](https://en.cppreference.com/c/numeric/math/exp)        | `<math.h>`   | *e* raised to the power x                                       |
+| [`fabsf`](https://en.cppreference.com/c/numeric/math/fabs)     | `<math.h>`   | absolute value of a `float`                                     |
+| [`fclose`](https://en.cppreference.com/c/io/fclose)            | `<stdio.h>`  | finish writing a file, and close it                             |
+| [`fopen`](https://en.cppreference.com/c/io/fopen)              | `<stdio.h>`  | open a file                                                     |
+| [`fprintf`](https://en.cppreference.com/c/io/fprintf)          | `<stdio.h>`  | `printf` to a stream, such as `stderr`                          |
+| [`fread`](https://en.cppreference.com/c/io/fread)              | `<stdio.h>`  | read raw bytes from a file                                      |
+| [`free`](https://en.cppreference.com/c/memory/free)            | `<stdlib.h>` | give back memory from `malloc`, `calloc` or `realloc`           |
+| [`fwrite`](https://en.cppreference.com/c/io/fwrite)            | `<stdio.h>`  | write raw bytes to a file                                       |
+| [`log10`](https://en.cppreference.com/c/numeric/math/log10)    | `<math.h>`   | base-10 logarithm of a `double`                                 |
+| [`log10f`](https://en.cppreference.com/c/numeric/math/log10)   | `<math.h>`   | base-10 logarithm of a `float`                                  |
+| [`malloc`](https://en.cppreference.com/c/memory/malloc)        | `<stdlib.h>` | allocate memory, contents unset                                 |
+| [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp)   | `<string.h>` | compare two blocks of bytes                                     |
+| [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy)   | `<string.h>` | copy bytes between blocks that don't overlap                    |
+| [`offsetof`](https://en.cppreference.com/c/types/offsetof)     | `<stddef.h>` | a member's distance from the start of its struct (a macro)      |
+| [`perror`](https://en.cppreference.com/c/io/perror)            | `<stdio.h>`  | print a message, and why the last call failed                   |
+| [`pow`](https://en.cppreference.com/c/numeric/math/pow)        | `<math.h>`   | x raised to the power y                                         |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)           | `<stdio.h>`  | formatted output to `stdout`                                    |
+| [`puts`](https://en.cppreference.com/c/io/puts)                | `<stdio.h>`  | write a string and a newline to `stdout`                        |
+| [`qsort`](https://en.cppreference.com/c/algorithm/qsort)       | `<stdlib.h>` | sort an array, given a function that compares two elements      |
+| [`realloc`](https://en.cppreference.com/c/memory/realloc)      | `<stdlib.h>` | resize allocated memory, perhaps moving it                      |
+| [`remove`](https://en.cppreference.com/c/io/remove)            | `<stdio.h>`  | delete a file                                                   |
+| [`sin`](https://en.cppreference.com/c/numeric/math/sin)        | `<math.h>`   | sine of an angle in radians                                     |
+| [`snprintf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | `printf` into a buffer, never past its size                     |
+| [`sqrt`](https://en.cppreference.com/c/numeric/math/sqrt)      | `<math.h>`   | square root                                                     |
+| [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)   | `<string.h>` | compare two strings                                             |
+| [`strcpy`](https://en.cppreference.com/c/string/byte/strcpy)   | `<string.h>` | copy a string, with no check of the room                        |
+| [`strlen`](https://en.cppreference.com/c/string/byte/strlen)   | `<string.h>` | a string's length, not counting its `'\0'`                      |
+| [`strtod`](https://en.cppreference.com/c/string/byte/strtof)   | `<stdlib.h>` | read a `double` from a string                                   |
+| [`strtol`](https://en.cppreference.com/c/string/byte/strtol)   | `<stdlib.h>` | read a `long` from a string                                     |
+| [`strtoul`](https://en.cppreference.com/c/string/byte/strtoul) | `<stdlib.h>` | read an `unsigned long` from a string                           |
+
+## References
+
+Where to read more. The links in the tables above are to cppreference, because
+it documents what the C *standard* promises, which is what every compiler and
+library in this course must do. A real library does more, and documents it
+itself.
+
+| reference                                                                                                   | what it is                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [cppreference: C](https://en.cppreference.com/c)                                                            | the standard library, function by function, with the C version that added each                                             |
+| [ISO C99, draft N1256](https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1256.pdf)                          | the C99 standard itself (the last free draft, with corrections): the final word on what is defined                         |
+| [The GNU C Library manual](https://www.gnu.org/software/libc/manual/)                                       | glibc, the C library on most Linux systems: the standard functions with longer explanations, plus GNU and POSIX extensions |
+| [musl](https://musl.libc.org/)                                                                              | a small, strict C library for Linux (Alpine uses it): a good test that code relies on the standard, not on glibc           |
+| [FreeBSD manual pages](https://man.freebsd.org/cgi/man.cgi)                                                 | the BSD C library, which macOS's is descended from: closest to `man 3 printf` on a Mac                                     |
+| [Microsoft C runtime](https://learn.microsoft.com/en-us/cpp/c-runtime-library/c-run-time-library-reference) | the C library on Windows, with MSVC                                                                                        |
+| [POSIX (2024)](https://pubs.opengroup.org/onlinepubs/9799919799/)                                           | the Unix standard: functions beyond C, such as `open`, `read` and threads, shared by Linux and macOS                       |
+
+On Linux and macOS, `man 3 printf` shows the manual for the library you are
+actually using.

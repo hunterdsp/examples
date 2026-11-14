@@ -129,7 +129,9 @@ round trip exact: yes
 - **`snprintf` is the safe way to build one.** It never writes past the size it
   is given, always terminates, and returns the length the *whole* result
   needed. If that is ≥ the buffer size, the result was cut short, and you can
-  tell. The `tiny` line shows it happen.
+  tell. The `tiny` line shows it happen: `tone-440.f32` is 12 characters, and
+  `tiny` is 12 bytes, so it holds 11 characters and the `'\0'`. The `2` is what
+  was cut, leaving `tone-440.f3`.
 
 ## Files
 
@@ -262,3 +264,28 @@ folder to run it in.
    shifting a negative signed value is a trap of its own.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header       | what it does                                  |
+| ------------------------------------------------------------ | ------------ | --------------------------------------------- |
+| [`fclose`](https://en.cppreference.com/c/io/fclose)          | `<stdio.h>`  | finish writing a file, and close it           |
+| [`fopen`](https://en.cppreference.com/c/io/fopen)            | `<stdio.h>`  | open a file                                   |
+| [`fprintf`](https://en.cppreference.com/c/io/fprintf)        | `<stdio.h>`  | `printf` to a stream, such as `stderr`        |
+| [`fread`](https://en.cppreference.com/c/io/fread)            | `<stdio.h>`  | read raw bytes from a file                    |
+| [`fwrite`](https://en.cppreference.com/c/io/fwrite)          | `<stdio.h>`  | write raw bytes to a file                     |
+| [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp) | `<string.h>` | compare two blocks of bytes                   |
+| [`perror`](https://en.cppreference.com/c/io/perror)          | `<stdio.h>`  | print a message, and why the last call failed |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                  |
+| [`remove`](https://en.cppreference.com/c/io/remove)          | `<stdio.h>`  | delete a file                                 |
+| [`sin`](https://en.cppreference.com/c/numeric/math/sin)      | `<math.h>`   | sine of an angle in radians                   |
+| [`snprintf`](https://en.cppreference.com/c/io/fprintf)       | `<stdio.h>`  | `printf` into a buffer, never past its size   |
+| [`strcpy`](https://en.cppreference.com/c/string/byte/strcpy) | `<string.h>` | copy a string, with no check of the room      |
+| [`strlen`](https://en.cppreference.com/c/string/byte/strlen) | `<string.h>` | a string's length, not counting its `'\0'`    |
+
+<!-- /libfuncs -->

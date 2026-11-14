@@ -301,3 +301,17 @@ folder to run it in.
    far `p + 1` steps.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header       | what it does                 |
+| ------------------------------------------------------------ | ------------ | ---------------------------- |
+| [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp) | `<string.h>` | compare two blocks of bytes  |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout` |
+
+<!-- /libfuncs -->

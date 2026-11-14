@@ -411,3 +411,20 @@ folder to run it in.
    1. Calling the `NULL` would crash, with nothing to say which name was wrong.
 
    </details>
+
+## Library functions
+
+<!-- libfuncs: made by `make format` from REFERENCE.md -->
+
+Every function this lesson's code calls from the C standard library, linked to
+its definition. The [quick reference](../REFERENCE.md) lists them all.
+
+| function                                                     | header       | what it does                                               |
+| ------------------------------------------------------------ | ------------ | ---------------------------------------------------------- |
+| [`fprintf`](https://en.cppreference.com/c/io/fprintf)        | `<stdio.h>`  | `printf` to a stream, such as `stderr`                     |
+| [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                               |
+| [`qsort`](https://en.cppreference.com/c/algorithm/qsort)     | `<stdlib.h>` | sort an array, given a function that compares two elements |
+| [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp) | `<string.h>` | compare two strings                                        |
+| [`strtod`](https://en.cppreference.com/c/string/byte/strtof) | `<stdlib.h>` | read a `double` from a string                              |
+
+<!-- /libfuncs -->
