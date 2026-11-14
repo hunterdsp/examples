@@ -1,0 +1,5 @@
+FFT and DFT agree within 1e-9: yes
+bins with anything in them, up to 24000 Hz:
+  bin  20 =  937.5 Hz: size 0.5000
+  bin  64 = 3000.0 Hz: size 0.2000
+complex multiplies: DFT 1048576, FFT 5120
