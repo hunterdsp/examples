@@ -40,7 +40,12 @@ main (int argc, char *argv[])
           need >= (int)sizeof tiny ? "yes" : "no");
 
   /* Write raw samples: no text, just the bytes of each float. "wb" opens
-     for writing in binary mode. Every call that can fail is checked. */
+     for writing in binary mode. Every call that can fail is checked.
+
+     fopen returns a FILE *: a pointer to a FILE, the struct <stdio.h>
+     uses to track an open file (where it is up to, its buffer, whether
+     an error happened). Its members are the library's business: the
+     program only passes the pointer to fwrite, fread and fclose. */
   float out[4] = { 0.0f, 0.5f, 1.0f, -1.0f };
   FILE *f      = fopen (path, "wb");
   if (f == NULL)
