@@ -221,7 +221,13 @@ for lesson in "$@"; do
 			fi
 			# shellcheck disable=SC2086  # flag lists are word-split
 			if "$real_cc" $CFLAGS -o "$work/$base" "$c" $LDLIBS >"$work/out" 2>&1; then
-				(cd "$work" && "./$base" >>"$work/out" 2>&1) &&
+				# `; exit $?` keeps the subshell from exec'ing the program,
+				# so the subshell reports an assert's SIGABRT ("Aborted"),
+				# into the log, instead of the outer shell, on the terminal.
+				(
+					cd "$work" && "./$base"
+					exit $?
+				) >>"$work/out" 2>&1 &&
 					{
 						bad "$base" "built and ran cleanly; it should fail"
 						continue

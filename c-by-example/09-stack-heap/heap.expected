@@ -1,0 +1,4 @@
+a local float[64]: 256 bytes, fixed when compiled
+0.50 s at 48000 Hz: 24000 samples, 96000 bytes on the heap
+rms 0.7071, as a sine's should be (1 / sqrt 2)
+calloc'd buffer: 0 nonzero samples

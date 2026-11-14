@@ -1,0 +1,5 @@
+pushed 1..10 into 8 slots: 8 waiting, 2 refused (full)
+pop: 1 2 3 4 5 6 7 8
+in     :  1  2  3  4  5  6  7  8  9 10
+delay 3:  0  0  0  1  2  3  4  5  6  7
+head 21, tail 18: 3 waiting, at slots 2 to 4

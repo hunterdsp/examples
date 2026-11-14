@@ -7,8 +7,8 @@
 [![clang-format](https://img.shields.io/badge/clang--format-GNU-blue)](.clang-format)
 
 > [!WARNING]
-> **UNDER CONSTRUCTION.** Parts 0 and I (lessons 00–08) are written and tested;
-> Parts II–V are still to come, and lessons may change as they do.
+> **UNDER CONSTRUCTION.** Parts 0–II (lessons 00–13) are written and tested;
+> Parts III–V are still to come, and lessons may change as they do.
 
 **Deceptively simple. Extremely powerful.**
 
@@ -52,6 +52,10 @@ use: `jbx install-deps -g dev` (lesson 00).
 
 ## Contents
 
+Keep the [quick reference](REFERENCE.md) open beside the lessons: `printf`
+conversions, data types and their sizes, escape sequences, operator precedence,
+and which header holds what.
+
 **Part 0 · Setup**
 
 - [00 Tools](00-tools/): what `cc` actually does, stage by stage
@@ -72,10 +76,18 @@ use: `jbx install-deps -g dev` (lesson 00).
 - [08 Multi-file builds](08-multi-file/): translation units, `make`, macros,
   linker errors
 
-**Part II · Memory you own** *(coming next)*
+**Part II · Memory you own**
 
-09 Stack vs heap · 10 Ownership and lifecycle · 11 Catching bugs · 12 Ring
-buffers · 13 Allocation for real time
+- [09 Stack vs heap](09-stack-heap/): `malloc`, `calloc`, `free`, and memory
+  that outlives its function
+- [10 Ownership and lifecycle](10-ownership/): create and destroy, `realloc`,
+  who frees what
+- [11 Catching bugs](11-catching-bugs/): the sanitizers, `assert`, leaks, and
+  what no tool sees
+- [12 Ring buffers](12-ring-buffers/): a queue that never ends, power-of-two
+  masks, a delay line
+- [13 Allocation for real time](13-realtime/): allocate at setup, arenas, and a
+  deadline
 
 **Part III · Objects without classes**
 

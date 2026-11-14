@@ -1,0 +1,4 @@
+setup: 1 malloc, 3 buffers carved from it (3072 of 4096 bytes)
+1000 blocks processed: 0 mallocs
+last block, 64 samples, ramps 0.5 -> 1.0: out[0] 0.5078, out[63] 1.0000
+a block of 512: refused (max 256)
