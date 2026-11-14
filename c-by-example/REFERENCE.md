@@ -197,6 +197,7 @@ with the ones its own code uses, taken from this table by `make format`.
 
 | function                                                              | header       | what it does                                                            |
 | --------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------- |
+| [`UINT32_C`](https://en.cppreference.com/c/types/integer)             | `<stdint.h>` | a constant of at least `uint32_t`'s range: `UINT32_C (1)` (a macro)     |
 | [`assert`](https://en.cppreference.com/c/error/assert)                | `<assert.h>` | stop the program if a condition is false; removed by `-DNDEBUG`         |
 | [`calloc`](https://en.cppreference.com/c/memory/calloc)               | `<stdlib.h>` | allocate memory for n elements, all bytes zero                          |
 | [`clock`](https://en.cppreference.com/c/chrono/clock)                 | `<time.h>`   | processor time used by the program, in `CLOCKS_PER_SEC` units           |
@@ -215,6 +216,7 @@ with the ones its own code uses, taken from this table by `make format`.
 | [`fwrite`](https://en.cppreference.com/c/io/fwrite)                   | `<stdio.h>`  | write raw bytes to a file                                               |
 | [`log10`](https://en.cppreference.com/c/numeric/math/log10)           | `<math.h>`   | base-10 logarithm of a `double`                                         |
 | [`log10f`](https://en.cppreference.com/c/numeric/math/log10)          | `<math.h>`   | base-10 logarithm of a `float`                                          |
+| [`log2`](https://en.cppreference.com/c/numeric/math/log2)             | `<math.h>`   | base-2 logarithm                                                        |
 | [`malloc`](https://en.cppreference.com/c/memory/malloc)               | `<stdlib.h>` | allocate memory, contents unset                                         |
 | [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp)          | `<string.h>` | compare two blocks of bytes                                             |
 | [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy)          | `<string.h>` | copy bytes between blocks that don't overlap                            |

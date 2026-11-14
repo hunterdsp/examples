@@ -1,0 +1,8 @@
+440 Hz: increment 39370534 of 2^32 per sample
+frequency played: 440.0000 Hz (steps of 1.12e-05 Hz)
+one second: largest difference from sin() below 1e-5: yes
+after one second, the phase is at 0.000005 of a cycle
+float time at     1 s: next sample is later
+float time at    60 s: next sample is later
+float time at   600 s: next sample is the SAME time
+float time at  3600 s: next sample is the SAME time
