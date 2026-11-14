@@ -223,9 +223,11 @@ with the ones its own code uses, taken from this table by `make format`.
 | [`fread`](https://en.cppreference.com/c/io/fread)                     | `<stdio.h>`   | read raw bytes from a file                                              |
 | [`free`](https://en.cppreference.com/c/memory/free)                   | `<stdlib.h>`  | give back memory from `malloc`, `calloc` or `realloc`                   |
 | [`fwrite`](https://en.cppreference.com/c/io/fwrite)                   | `<stdio.h>`   | write raw bytes to a file                                               |
+| [`ldexp`](https://en.cppreference.com/c/numeric/math/ldexp)           | `<math.h>`    | x times 2 to the power e                                                |
 | [`log10`](https://en.cppreference.com/c/numeric/math/log10)           | `<math.h>`    | base-10 logarithm of a `double`                                         |
 | [`log10f`](https://en.cppreference.com/c/numeric/math/log10)          | `<math.h>`    | base-10 logarithm of a `float`                                          |
 | [`log2`](https://en.cppreference.com/c/numeric/math/log2)             | `<math.h>`    | base-2 logarithm                                                        |
+| [`lround`](https://en.cppreference.com/c/numeric/math/round)          | `<math.h>`    | round to the nearest whole number, halves away from 0, as a `long`      |
 | [`malloc`](https://en.cppreference.com/c/memory/malloc)               | `<stdlib.h>`  | allocate memory, contents unset                                         |
 | [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp)          | `<string.h>`  | compare two blocks of bytes                                             |
 | [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy)          | `<string.h>`  | copy bytes between blocks that don't overlap                            |
@@ -238,6 +240,7 @@ with the ones its own code uses, taken from this table by `make format`.
 | [`qsort`](https://en.cppreference.com/c/algorithm/qsort)              | `<stdlib.h>`  | sort an array, given a function that compares two elements              |
 | [`realloc`](https://en.cppreference.com/c/memory/realloc)             | `<stdlib.h>`  | resize allocated memory, perhaps moving it                              |
 | [`remove`](https://en.cppreference.com/c/io/remove)                   | `<stdio.h>`   | delete a file                                                           |
+| [`round`](https://en.cppreference.com/c/numeric/math/round)           | `<math.h>`    | round to the nearest whole number, halves away from 0                   |
 | [`sin`](https://en.cppreference.com/c/numeric/math/sin)               | `<math.h>`    | sine of an angle in radians                                             |
 | [`snprintf`](https://en.cppreference.com/c/io/fprintf)                | `<stdio.h>`   | `printf` into a buffer, never past its size                             |
 | [`sqrt`](https://en.cppreference.com/c/numeric/math/sqrt)             | `<math.h>`    | square root                                                             |

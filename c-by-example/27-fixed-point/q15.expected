@@ -1,0 +1,6 @@
+0.5 is 16384, 0.25 is 8192, -1 is -32768
+1.0 saturates to 32767 = 0.99997
+0.5 * 0.25 = 0.12500
+-1 * -1 = 0.99997 (saturated: 1 doesn't fit)
+0.75 + 0.5 = 0.99997 saturated, -0.75000 wrapped
+gain in Q15: error 84 dB below the signal
