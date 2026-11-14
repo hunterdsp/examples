@@ -3,7 +3,7 @@
 Run this lesson's commands in `c-by-example/05-pointers/`.
 
 Every variable lives somewhere in memory, at an *address*. A **pointer** is a
-variable that holds an address. Two operators are all there is:
+variable that holds an address. Two operators do all the work:
 
 |                  |                                                         |
 | ---------------- | ------------------------------------------------------- |
@@ -57,8 +57,8 @@ changes `x` itself.
 You have used addresses already: lessons 03 and 04 passed arrays to functions,
 and what arrived was the address of the first element. A pointer gives that
 address a name and a type, so you can keep it, pass it, and step it along. That
-is the whole idea. Every buffer, every object in Part III and every library API
-in Part V is built on it.
+is the whole idea. Most buffers, the objects of Part III and the library of
+Part V are built on it.
 
 Here is the program:
 
@@ -199,8 +199,8 @@ sig[1] lives 4 bytes after sig[0]
 ## Pitfalls
 
 - **Following a NULL pointer.** [`broken-null.c`](broken-null.c) forgets the
-  check. Address 0 is never valid, so the program dies, and the sanitizer names
-  the line:
+  check. On the systems this course runs on, nothing is ever at address 0, so
+  the program dies, and the sanitizer names the line:
 
   ```
   broken-null.c:25:26: runtime error: load of null pointer of type 'const float'

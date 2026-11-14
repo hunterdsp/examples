@@ -218,10 +218,11 @@ a block of 512: refused (max 256)
 - **Alignment.** Each piece starts at a multiple of 16 bytes, rounded up with
   lesson 12's power-of-two trick: add 15, clear the low 4 bits. A `float` read
   from a misaligned address is slow on some machines and a crash on others, and
-  lesson 26's vector instructions want 16 or more.
+  vector instructions (lesson 26), which handle 16 bytes or more at once, can
+  be slower, or refuse, at an address that isn't a multiple of their size.
 - **The ramp is the point.** Jumping from gain 0.5 to 1.0 between two samples
-  is a step, which is heard as a click. Spreading it over a block, from 0.5078
-  up to exactly 1.0000, is not.
+  is a step, which can be heard as a click. Spreading it over a block, from
+  0.5078 up to exactly 1.0000, is not.
 
 ## Pitfalls
 

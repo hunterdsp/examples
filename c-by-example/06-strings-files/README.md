@@ -37,8 +37,9 @@ main (int argc, char *argv[])
      long: argv[0] is the program's name, argv[1] the first word typed
      after it, and so on. Each string is an array of char, reached by the
      address of its first char, so argv is an array of addresses, written
-     char *argv[]: an array ([]) of pointers to char (char *). A name from the command line, like
-     any real file name, has a length known only when the program runs. */
+     char *argv[]: an array ([]) of pointers to char (char *). A name from the
+     command line, like any real file name, has a length known only when the
+     program runs. */
   const char *name = argc > 1 ? argv[1] : tone;
 
   /* Build a file name safely. snprintf never writes more than the size it

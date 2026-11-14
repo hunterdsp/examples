@@ -401,12 +401,12 @@ folder to run it in.
    ```
 
    About 10% slower on this recent AMD processor, which handles subnormals
-   mostly in hardware. Many processors, older Intel ones in particular, take
-   tens of times longer per subnormal operation, and an effects chain gone
-   quiet could miss its deadline in exactly the moment it seemed to have
-   nothing to do. That is why audio code often sets the processor to flush
-   subnormals to zero, or adds a tiny offset to keep the state normal. Measure
-   on the processors you ship to.
+   mostly in hardware. Other processors, older x86 ones among them, have been
+   many times slower per subnormal operation, and an effects chain gone quiet
+   could miss its deadline in exactly the moment it seemed to have nothing to
+   do. That is why audio code often sets the processor to flush subnormals to
+   zero, or adds a tiny offset to keep the state normal. Measure on the
+   processors you ship to.
 
    </details>
 

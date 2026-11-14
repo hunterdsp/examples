@@ -92,7 +92,7 @@ no checker complained
 ```
 
 A *release* build turns the asserts off with `-DNDEBUG`, and drops the
-sanitizers, which make a program two to three times slower:
+sanitizers, which make a program slower and bigger:
 
 ```bash
 cc -std=c99 -Wall -Wextra -O2 -DNDEBUG checked.c -o checked
@@ -147,7 +147,7 @@ the course's flags and checks it fails for the reason given here.
 
 - **Signed overflow.** [`broken-signed-overflow.c`](broken-signed-overflow.c)
   sums 70,000 full-scale `int16_t` samples into an `int32_t`, which needs 33
-  bits (lesson 02's table):
+  bits (lesson 02's table). clang's report (gcc's names the type `'int'`):
 
   ```
   broken-signed-overflow.c:26:24: runtime error: signed integer overflow: 2147483646 + 32767 cannot be represented in type 'int32_t' (aka 'int')
@@ -175,7 +175,8 @@ the course's flags and checks it fails for the reason given here.
 - **Not every platform has every check.** LeakSanitizer runs by default on
   Linux, not with Apple's compiler on macOS; there, `leaks --atExit -- ./prog`
   does the job. Valgrind (`valgrind ./prog`, Linux) finds many of the same bugs
-  in a program built *without* sanitizers, at fifty times the run time.
+  in a program built *without* sanitizers, at many times the run time (20 to 30
+  times, says its manual).
 
 ## Exercises
 
@@ -254,7 +255,7 @@ folder to run it in.
    ```
 
    [`shift.c`](exercises/ex2-shift/shift.c) writes `(uint32_t)1 << bit`. Masks
-   and bit fields are unsigned, always. Shifting by 32 or more is still
+   and bit fields should be unsigned. Shifting by 32 or more is still
    undefined, for every type: the count must be less than the width.
 
    </details>

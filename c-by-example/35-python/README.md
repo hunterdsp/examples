@@ -2,14 +2,16 @@
 
 Run this lesson's commands in `c-by-example/35-python/`.
 
-C's last advantage is that every other language can call it. Python, Rust, Go,
-Julia, Java and JavaScript can all load a shared library and call its
-functions. They can because every system defines how a C function is called:
-where its arguments go and where its result comes back. And a C function's name
-in the library is just its name. (C++ is harder to call: its compiler adds the
-argument types to each name, so that two functions can have the same name.)
-That is why so much of the world's numerical code, NumPy's included, is C
-underneath: a C library written once serves every language.
+One more thing C does well: almost every other language can call it. Python,
+Rust, Go, Julia, Java and JavaScript can all load a shared library and call its
+functions. They can because each platform, a processor and an operating system
+together, defines how a C function is called there: where its arguments go, and
+where its result comes back. That definition is the platform's *ABI*, its
+application binary interface. And a C function's name in the library is just
+its name. (C++ is harder to call: its compiler adds the argument types to each
+name, so that two functions can have the same name.) That is why so much of the
+world's numerical code, NumPy's included, is C underneath: a C library written
+once serves every language.
 
 Python's simplest way in is `ctypes`, part of its standard library. Python
 needs no compiler and nothing built for it: `ctypes` loads the shared library

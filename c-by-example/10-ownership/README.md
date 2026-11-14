@@ -4,9 +4,9 @@ Run this lesson's commands in `c-by-example/10-ownership/`.
 
 Lesson 09's rule was "every `malloc` gets exactly one `free`". In a program of
 three functions that is easy to keep. In a library of three hundred, with
-buffers handed from one part to another, it is the hardest thing in C, and the
-language does not help: a pointer does not say whether you are meant to free
-what it points at.
+buffers handed from one part to another, it is one of the hardest things in C,
+and the language does not help: a pointer does not say whether you are meant to
+free what it points at.
 
 So the code says it instead. Every block of heap memory has one **owner**, the
 part of the program responsible for freeing it, and every function says, in its

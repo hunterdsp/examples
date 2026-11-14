@@ -9,11 +9,12 @@ on the chip holding copies of what was used recently. A program that mostly
 finds its data in the cache runs at the processor's speed. One that doesn't
 spends most of its time waiting.
 
-Two facts about caches decide almost everything:
+Two facts about caches go a long way:
 
 - Memory moves in **cache lines**, 64 bytes on most machines (128 on Apple's
-  M-series chips): 16 `float`s at once. Use all 16, and the fetch was cheap per
-  number. Use one, and it cost as much as all 16.
+  M-series chips, as `sysctl hw.cachelinesize` reports there): 16 `float`s at
+  once. Use all 16, and the fetch was cheap per number. Use one, and it cost as
+  much as all 16.
 - The processor **fetches ahead** when it can see a pattern: walking straight
   through memory, the next lines are already arriving before they are asked
   for.

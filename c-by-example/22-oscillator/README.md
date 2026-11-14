@@ -259,10 +259,10 @@ folder to run it in.
    ```
 
    An N-bit phase can only move by whole steps of `48000 / 2^N` Hz. With 16
-   bits, the step is 0.73 Hz and the note is 0.73 cents sharp, about the limit
-   a trained ear can hear; with 32 bits it is 11 *micro*hertz. That is why 32
-   bits is the usual choice: an `int`-sized number, and as precise as anyone
-   needs.
+   bits, the step is 0.73 Hz and the note is 0.73 cents sharp (a cent is a
+   hundredth of a semitone): small, but in every note; with 32 bits it is 11
+   *micro*hertz. That is why 32 bits is the usual choice: an `int`-sized
+   number, and as precise as anyone needs.
 
    </details>
 
