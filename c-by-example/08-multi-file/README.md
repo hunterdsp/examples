@@ -203,13 +203,13 @@ do. Recipe lines must start with a **tab**, not spaces.
   exception.)
 
 - **Spaces instead of a tab in a Makefile.** A recipe line must start with a
-  tab. With spaces, GNU make stops at the line, here line 2:
+  tab. Editors set to turn tabs into spaces do this, usually with 8 spaces;
+  most leave Makefiles alone. GNU Make 4.4, given a recipe on line 2 indented
+  with 8 spaces, says (other versions and indents word it differently):
 
   ```
-  Makefile:2: *** missing separator.  Stop.
+  Makefile:2: *** missing separator (did you mean TAB instead of 8 spaces?).  Stop.
   ```
-
-  Editors set to turn tabs into spaces do this; most leave Makefiles alone.
 
 ## Exercises
 

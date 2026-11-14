@@ -3,8 +3,8 @@
  * The index is the push count itself, with no `& MASK`, and nothing
  * checks for full. The first 8 pushes land in buf[0..7]; the 9th writes
  * buf[8], past the end of the array, onto whatever the struct keeps next.
- * UndefinedBehaviorSanitizer knows the array has 8 elements, and stops
- * the program at the bad index.
+ * UndefinedBehaviorSanitizer knows the array has 8 elements, and
+ * reports the bad index.
  */
 #include <stddef.h>
 #include <stdio.h>

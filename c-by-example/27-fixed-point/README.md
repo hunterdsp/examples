@@ -233,8 +233,11 @@ folder to run it in.
 
    Six decibels for every bit. Each bit halves the size of a step, and so of
    the rounding error, and half is −6.02 dB (lesson 02). The rule of thumb "6
-   dB per bit" tells you how many bits a job needs: 8-bit audio is about 48 dB,
-   16-bit about 96, and Q23, used in 24-bit audio processing, about 132.
+   dB per bit", counting every bit, sign included, tells you how many bits a
+   job needs: 8-bit audio has about 48 dB of range, 16-bit about 96, 24-bit
+   about 144. The table sits about 12 dB below the rule at every width, because
+   its signal peaks at 0.9 × 0.3 = 0.27, 11 dB below full scale, and three
+   roundings add up to more error than one.
 
    </details>
 

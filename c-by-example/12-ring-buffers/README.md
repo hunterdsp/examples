@@ -172,9 +172,9 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
   ASan doesn't catch that write: it lands inside the struct, which is all
   allocated memory. It is the sanitizer for *types*, not the one for memory,
   that knows `buf` has only 8 elements. UBSan reports and carries on (lesson
-  01), so the writes go on over the struct's other members, and the program
-  crashes a few pushes later, far from the cause, with ASan's `SEGV`. The first
-  report is the one to read.
+  01): the 9th push has written a sample over `head`, the member after `buf`,
+  and the 10th push uses that as an index, and crashes on the same line with
+  ASan's `SEGV`. When reports pile up, read the first one.
 
 - **A mask on a size that isn't a power of two.** `head & 5` is not `head % 6`;
   it skips slots 2 and 3 entirely, silently. Keep the size a power of two, or

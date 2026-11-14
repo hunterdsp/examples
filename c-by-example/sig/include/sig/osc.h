@@ -9,7 +9,7 @@
  * for, rounded to a multiple of rate_hz / 2^32 (1.1e-5 Hz at 48 kHz),
  * and each sample is within 1e-5 of the sine of its phase. Against an
  * ideal sine at exactly the frequency asked for, that rounding adds an
- * error that grows with time: up to 3.3e-5 after one second at 48 kHz.
+ * error that grows with time: up to 3.6e-5 after one second at 48 kHz.
  */
 #ifndef SIG_OSC_H
 #define SIG_OSC_H
