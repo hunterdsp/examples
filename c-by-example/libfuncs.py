@@ -34,6 +34,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent
+SIG = ROOT / "sig"
 BEGIN = "<!-- libfuncs: made by `make format` from REFERENCE.md -->"
 END = "<!-- /libfuncs -->"
 NOT_CALLS = {"if", "for", "while", "switch", "return", "sizeof", "defined"}
@@ -46,37 +47,47 @@ def strip(src):
     """Remove comments, strings and character constants from C source."""
     src = re.sub(r"/\*.*?\*/", " ", src, flags=re.S)
     src = re.sub(r"//[^\n]*", " ", src)
-#A GNU attribute, like a call : __attribute__((visibility("default"))).
+    # A GNU attribute looks like a call: __attribute__ ((visibility (...))).
     src = re.sub(r"__attribute__\s*\(\(.*?\)\)", " ", src)
     src = re.sub(r'"(\\.|[^"\\\n])*"', '""', src)
     return re.sub(r"'(\\.|[^'\\\n])*'", "''", src)
 
 
-def declared(header):
-    """The functions a header declares: NAME (...);"""
-    text = strip(header.read_text())
-    return set(re.findall(r"\b(\w+)\s*\([^;{]*\)\s*;", text))
-
-
-def calls(lesson):
-    """The names a lesson calls but does not define: the library's. sig's
-    functions, which Part V's lessons call, are the course's own, and
-    their documentation is sig's headers."""
-    texts = {
-p: strip(p.read_text())
-        for p in sorted(lesson.rglob("*"))
+def sources(folder):
+    """Every .c and .h file under folder, stripped (see strip)."""
+    return {
+        p: strip(p.read_text())
+        for p in sorted(folder.rglob("*"))
         if p.suffix in (".c", ".h")
     }
-    own = {"main"}
-    for header in (ROOT / "sig" / "include" / "sig").glob("*.h"):
-        own |= declared(header)
+
+
+def defines(texts, headers=True):
+    """The names these files define or declare themselves: a GNU-style
+    definition (the name at the start of a line), a #define with
+    arguments, a function pointer, or a declaration in a header (only
+    if headers: a header with code in it, such as sig's tests/check.h,
+    would have its calls taken for declarations)."""
+    own = set()
     for path, text in texts.items():
         own |= set(re.findall(r"^(\w+) \(", text, re.M))
         own |= set(re.findall(r"#\s*define\s+(\w+)\(", text))
         own |= set(re.findall(r"\(\s*\*\s*(\w+)\s*\)", text))
         own |= set(re.findall(r"\b\w+_fn\s+(\w+)", text))
-        if path.suffix == ".h":
-            own |= declared(path)
+        if headers and path.suffix == ".h":
+            own |= set(re.findall(r"\b(\w+)\s*\([^;{]*\)\s*;", text))
+    return own
+
+
+def calls(lesson):
+    """The names a lesson calls but does not define: the library's.
+    Whatever sig/ defines, which Part V's lessons call (its functions,
+    and its tests' CHECK), is the course's own, documented in sig."""
+    texts = sources(lesson)
+    own = {"main"} | defines(texts)
+    if lesson != SIG:
+        own |= defines(sources(SIG), headers=False)
+        own |= defines(sources(SIG / "include"))
     found = set()
     for text in texts.values():
         for m in re.finditer(r"(?<![\w.>])(\w+)\s*\(", text):
@@ -145,7 +156,7 @@ def normal(block):
 def main(write):
     ref = reference()
     errors = []
-    for lesson in [*sorted(ROOT.glob("[0-9][0-9]-*/")), ROOT / "sig"]:
+    for lesson in [*sorted(ROOT.glob("[0-9][0-9]-*/")), SIG]:
         readme = lesson / "README.md"
         names = calls(lesson)
         unknown = sorted(names - ref.keys())
@@ -160,7 +171,7 @@ def main(write):
             errors.append(f"{lesson.name}: has no README.md")
             continue
         text = readme.read_text()
-        want = table(names, ref, lesson.name == "sig") if names else ""
+        want = table(names, ref, lesson == SIG) if names else ""
         start = text.find("## Library functions\n")
         have = text[start:] if start >= 0 else ""
         stale = normal(have) != normal(want)

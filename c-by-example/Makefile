@@ -22,6 +22,9 @@ MDFORMAT := uv run --frozen --only-group lint mdformat
 # Every C file, formatted by clang-format in ~/doppler's style: the same
 # .clang-format, copied, and the same pinned version (pyproject.toml).
 C_FILES := $(shell git ls-files -co --exclude-standard '*.c' '*.h')
+# Only C, whatever C_FILES is set to on the command line: clang-format
+# would rewrite a Python file's comments as if they were C.
+C_ONLY = $(filter %.c %.h,$(C_FILES))
 CLANG_FORMAT := uv run --frozen --only-group lint clang-format --style=file
 
 # Each README ends with a table of the library functions its lesson's code
@@ -37,7 +40,7 @@ lint-mdformat: ## Fail if any README is not as mdformat would write it
 	@$(MDFORMAT) --check $(MD_FILES)
 
 lint-clang-format: ## Fail if any C file is not as clang-format would write it
-	@$(CLANG_FORMAT) --dry-run --Werror $(C_FILES)
+	@$(CLANG_FORMAT) --dry-run --Werror $(C_ONLY)
 
 lint-libfuncs: ## Fail if a README's library function table is missing or stale
 	@$(LIBFUNCS)
@@ -45,7 +48,7 @@ lint-libfuncs: ## Fail if a README's library function table is missing or stale
 format: ## Format every README (mdformat) and C file (clang-format)
 	@$(LIBFUNCS) --write
 	@$(MDFORMAT) $(MD_FILES)
-	@$(CLANG_FORMAT) -i $(C_FILES)
+	@$(CLANG_FORMAT) -i $(C_ONLY)
 
 help: ## Show this message
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | \
