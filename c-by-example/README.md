@@ -7,8 +7,7 @@
 [![clang-format](https://img.shields.io/badge/clang--format-GNU-blue)](.clang-format)
 
 > [!WARNING]
-> **UNDER CONSTRUCTION.** Parts 0–II (lessons 00–13) are written and tested;
-> Parts III–V are still to come, and lessons may change as they do.
+> **UNDER CONSTRUCTION.**
 
 **Deceptively simple. Extremely powerful.**
 
