@@ -1,11 +1,12 @@
 # What the course needs, installed by `jbx install-deps -g dev` with your
 # system's package manager. Part I needs only a compiler, make and the C
 # library's man pages (lesson 01); the debugger and Valgrind arrive for
-# Part II, CMake and Doxygen for Part V.
+# Part II, and CMake, Doxygen, pkg-config and Python 3 for Part V.
 #
-# macOS: the compiler, make and lldb come with the Xcode Command Line Tools
-# (`xcode-select --install`); Valgrind does not run on current macOS, which
-# is why the course leans on the sanitizers built into clang instead.
+# macOS: the compiler, make, lldb and Python 3 come with the Xcode Command
+# Line Tools (`xcode-select --install`); Valgrind does not run on current
+# macOS, which is why the course leans on the sanitizers built into clang
+# instead.
 
 [project]
 name    = "c-by-example"
@@ -13,15 +14,16 @@ version = "0.1.0"
 
 [dev.apt]
 packages = ["build-essential", "clang", "gdb", "valgrind", "cmake", "doxygen",
-            "manpages-dev"]
+            "pkg-config", "python3", "manpages-dev"]
 
 [dev.dnf]
 packages = ["gcc", "clang", "make", "gdb", "valgrind", "cmake", "doxygen",
-            "libasan", "libubsan", "man-db", "man-pages"]
+            "pkgconf-pkg-config", "python3", "libasan", "libubsan", "man-db",
+            "man-pages"]
 
 [dev.pacman]
 packages = ["gcc", "clang", "make", "gdb", "valgrind", "cmake", "doxygen",
-            "man-db", "man-pages"]
+            "pkgconf", "python", "man-db", "man-pages"]
 
 [dev.brew]
-packages = ["cmake", "doxygen"]
+packages = ["cmake", "doxygen", "pkgconf"]

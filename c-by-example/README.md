@@ -45,8 +45,9 @@ lesson 01, and so on. Each lesson ends with exercises. Every answer, folded
 under the exercise, names the folder in `exercises/` it runs in, and shows the
 commands to run and what they print.
 
-You need a C compiler and `make`. To install them, and everything later lessons
-use: `jbx install-deps -g dev` (lesson 00).
+You need a C compiler and `make`, and for Part V, CMake, Doxygen, pkg-config
+and Python 3. To install them, and everything later lessons use:
+`jbx install-deps -g dev` (lesson 00).
 
 ## Contents
 
@@ -120,6 +121,18 @@ and which header holds what.
 
 **Part V · Shipping it**
 
-29 Library layout · 30 CMake · 31 Testing · 32 Docs · 33 Bundled tools
-(`sig-tone | sig-filter | sig-fft`) · 34 Distribution · 35 Epilogue: the same
-library, from Python
+Part V builds and ships one library, [`sig`](sig/): Part IV's oscillator,
+biquad and FFT, with everything a library needs around them.
+
+- [29 Library layout](29-library-layout/): public headers and private source, a
+  static library by hand
+- [30 CMake](30-cmake/): targets, usage requirements, options, build types
+- [31 Testing](31-testing/): tests that check promises, CTest, and breaking the
+  code to test the tests
+- [32 Documentation](32-docs/): Doxygen, warnings as errors, examples that run
+- [33 Bundled tools](33-tools/): `sig-tone | sig-filter | sig-fft`, raw samples
+  through pipes
+- [34 Distribution](34-distribution/): shared libraries, installing, pkg-config
+  and `find_package`
+- [35 Epilogue: the same library, from Python](35-python/): `ctypes`, and where
+  next

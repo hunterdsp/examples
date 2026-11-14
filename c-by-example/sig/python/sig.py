@@ -11,8 +11,9 @@ The library is the shared build of sig (lesson 34):
     cmake -S .. -B build -DBUILD_SHARED_LIBS=ON
     cmake --build build
 
-and SIG_LIBRARY names it, e.g. build/libsig.so (Linux) or
-build/libsig.dylib (macOS).
+and SIG_LIBRARY names it: the file, or the folder it is in, where this
+module looks for the name this system gives it (libsig.so on Linux,
+libsig.dylib on macOS).
 
     >>> import sig
     >>> osc = sig.Osc(750.0, 48000.0)
@@ -22,8 +23,19 @@ build/libsig.dylib (macOS).
 
 import ctypes
 import os
+import sys
 
-_lib = ctypes.CDLL(os.environ["SIG_LIBRARY"])
+
+def _path():
+    """The shared library SIG_LIBRARY names, or names the folder of."""
+    path = os.environ["SIG_LIBRARY"]
+    if os.path.isdir(path):
+        name = "libsig.dylib" if sys.platform == "darwin" else "libsig.so"
+        path = os.path.join(path, name)
+    return path
+
+
+_lib = ctypes.CDLL(_path())
 
 _status = ctypes.c_int  # sig_status: an enum, which is an int
 _size = ctypes.c_size_t
