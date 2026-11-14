@@ -18,8 +18,12 @@ main (int argc, char *argv[])
   printf ("\"%s\": strlen %zu, sizeof %zu (the extra byte is the '\\0')\n",
           tone, strlen (tone), sizeof tone);
 
-  /* A name from the command line, like any real file name: its length is
-     only known when the program runs. */
+  /* main's own arguments are strings too. argv is an array of them, argc
+     long: argv[0] is the program's name, argv[1] the first word typed
+     after it, and so on. Each string is itself an array of char, so argv
+     is an array of arrays, which is why it is written char *argv[]: an
+     array ([]) of strings (char *). A name from the command line, like
+     any real file name, has a length known only when the program runs. */
   const char *name = argc > 1 ? argv[1] : tone;
 
   /* Build a file name safely. snprintf never writes more than the size it

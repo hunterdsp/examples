@@ -33,8 +33,12 @@ main (int argc, char *argv[])
   printf ("\"%s\": strlen %zu, sizeof %zu (the extra byte is the '\\0')\n",
           tone, strlen (tone), sizeof tone);
 
-  /* A name from the command line, like any real file name: its length is
-     only known when the program runs. */
+  /* main's own arguments are strings too. argv is an array of them, argc
+     long: argv[0] is the program's name, argv[1] the first word typed
+     after it, and so on. Each string is itself an array of char, so argv
+     is an array of arrays, which is why it is written char *argv[]: an
+     array ([]) of strings (char *). A name from the command line, like
+     any real file name, has a length known only when the program runs. */
   const char *name = argc > 1 ? argv[1] : tone;
 
   /* Build a file name safely. snprintf never writes more than the size it
@@ -117,6 +121,11 @@ round trip exact: yes
 - **The terminator counts.** `"tone"` is 4 characters and 5 bytes: `strlen`
   counts up to the `'\0'`, `sizeof` counts the whole array. Every buffer you
   build a string in needs that extra byte.
+- **`argv` is an array of strings.** `main (int argc, char *argv[])` receives
+  the command line as `argc` strings: `argv[0]` is the program's name,
+  `argv[1]` the first word after it. Each string is an array of `char`, so
+  `argv` is an array of arrays, and the declaration says so: `[]`, an array, of
+  `char *`, strings. `./files sine` makes `argv[1]` the string `"sine"`.
 - **`snprintf` is the safe way to build one.** It never writes past the size it
   is given, always terminates, and returns the length the *whole* result
   needed. If that is ≥ the buffer size, the result was cut short, and you can
