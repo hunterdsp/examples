@@ -21,9 +21,10 @@
 # are in the README, so the README check runs them ("The README is itself
 # a test", below); a broken-*.c there is checked like one in the lesson.
 #
-# Every example is built the way lesson 01 tells the reader to build:
-# C99, every warning an error, and AddressSanitizer + UBSan, which stop the
-# program at the first bad memory access or undefined behaviour.
+# Every example is built the way lesson 01 tells the reader to build, and
+# stricter: C99, -pedantic, every warning an error, and AddressSanitizer +
+# UBSan, with -fno-sanitize-recover=all so that UBSan stops the program at
+# its first report instead of carrying on, as it does by default.
 #
 # Usage: ./check.sh 01-hello 02-numbers ...      (CC=clang ./check.sh ...)
 
@@ -49,9 +50,9 @@ bad() {
 
 # The scratch copy the README blocks run in: every file git tracks, plus
 # new ones not yet committed, but nothing the reader's own builds left
-# behind. A `cc` on PATH stands in for the compiler under test, with the
-# flags above that a reader's command line lacks, so a README command
-# is held to the same standard as the examples.
+# behind. A `cc` on PATH stands in for the compiler under test and adds
+# no flags: a README command runs exactly as the reader will type it, so
+# the output shown under it is the output that command gives.
 here=$(pwd)
 # `make -s test` exports MAKEFLAGS=s, which would silence a README's own
 # `make` and hide what it prints: run the blocks as a reader would.
@@ -72,13 +73,9 @@ real_cc=$(command -v "$cc_test") || {
 	echo "no compiler: $cc_test" >&2
 	exit 2
 }
-# clang (Apple's cc included) calls a flag it did not need, such as
-# -pedantic when only assembling a .s, an error under -Werror.
-quiet=""
-"$real_cc" --version 2>/dev/null | grep -q clang && quiet=-Qunused-arguments
 cat >"$work/bin/cc" <<EOF
 #!/bin/sh
-exec $real_cc $quiet -pedantic -Werror -fno-sanitize-recover=all "\$@"
+exec $real_cc "\$@"
 EOF
 chmod +x "$work/bin/cc"
 PATH="$work/bin:$PATH"
