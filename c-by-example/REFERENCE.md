@@ -226,8 +226,10 @@ lesson's README ends with the ones its own code uses, taken from this table by
 | [`fopen`](https://en.cppreference.com/c/io/fopen)                                                              | `<stdio.h>`   | open a file                                                             |
 | [`fpclassify`](https://en.cppreference.com/c/numeric/math/fpclassify)                                          | `<math.h>`    | what kind of number: zero, subnormal, normal, infinite or NaN (a macro) |
 | [`fprintf`](https://en.cppreference.com/c/io/fprintf)                                                          | `<stdio.h>`   | `printf` to a stream, such as `stderr`                                  |
+| [`fputs`](https://en.cppreference.com/c/io/fputs)                                                              | `<stdio.h>`   | write a string to a stream, with no newline added                       |
 | [`fread`](https://en.cppreference.com/c/io/fread)                                                              | `<stdio.h>`   | read raw bytes from a file                                              |
 | [`free`](https://en.cppreference.com/c/memory/free)                                                            | `<stdlib.h>`  | give back memory from `malloc`, `calloc` or `realloc`                   |
+| [`fseek`](https://en.cppreference.com/c/io/fseek)                                                              | `<stdio.h>`   | move to a position in a file                                            |
 | [`fwrite`](https://en.cppreference.com/c/io/fwrite)                                                            | `<stdio.h>`   | write raw bytes to a file                                               |
 | [`ldexp`](https://en.cppreference.com/c/numeric/math/ldexp)                                                    | `<math.h>`    | x times 2 to the power e                                                |
 | [`log10`](https://en.cppreference.com/c/numeric/math/log10)                                                    | `<math.h>`    | base-10 logarithm of a `double`                                         |
@@ -249,6 +251,7 @@ lesson's README ends with the ones its own code uses, taken from this table by
 | [`pthread_join`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_join.html)                 | `<pthread.h>` | wait for a thread to finish (POSIX)                                     |
 | [`pthread_mutex_lock`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html)     | `<pthread.h>` | take a mutex, waiting while another thread holds it (POSIX)             |
 | [`pthread_mutex_unlock`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_unlock.html) | `<pthread.h>` | release a mutex (POSIX)                                                 |
+| [`putc`](https://en.cppreference.com/c/io/fputc)                                                               | `<stdio.h>`   | write one byte (a character) to a stream                                |
 | [`puts`](https://en.cppreference.com/c/io/puts)                                                                | `<stdio.h>`   | write a string and a newline to `stdout`                                |
 | [`qsort`](https://en.cppreference.com/c/algorithm/qsort)                                                       | `<stdlib.h>`  | sort an array, given a function that compares two elements              |
 | [`realloc`](https://en.cppreference.com/c/memory/realloc)                                                      | `<stdlib.h>`  | resize allocated memory, perhaps moving it                              |
@@ -261,6 +264,7 @@ lesson's README ends with the ones its own code uses, taken from this table by
 | [`strcpy`](https://en.cppreference.com/c/string/byte/strcpy)                                                   | `<string.h>`  | copy a string, with no check of the room                                |
 | [`strlen`](https://en.cppreference.com/c/string/byte/strlen)                                                   | `<string.h>`  | a string's length, not counting its `'\0'`                              |
 | [`strtod`](https://en.cppreference.com/c/string/byte/strtof)                                                   | `<stdlib.h>`  | read a `double` from a string                                           |
+| [`strtof`](https://en.cppreference.com/c/string/byte/strtof)                                                   | `<stdlib.h>`  | read a `float` from a string                                            |
 | [`strtol`](https://en.cppreference.com/c/string/byte/strtol)                                                   | `<stdlib.h>`  | read a `long` from a string                                             |
 | [`strtoul`](https://en.cppreference.com/c/string/byte/strtoul)                                                 | `<stdlib.h>`  | read an `unsigned long` from a string                                   |
 
