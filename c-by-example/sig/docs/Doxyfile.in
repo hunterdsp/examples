@@ -1,0 +1,27 @@
+# Doxyfile.in -- Doxygen's settings for sig's API documentation. CMake
+# fills in the @...@ values and writes the result into the build
+# directory (configure_file). Only settings that differ from Doxygen's
+# defaults are here; `doxygen -g` writes a file listing every one.
+
+PROJECT_NAME           = sig
+PROJECT_NUMBER         = @PROJECT_VERSION@
+PROJECT_BRIEF          = "A small signal-processing library"
+OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/docs
+
+# The public headers are the API; the README is the front page.
+INPUT                  = include/sig README.md
+USE_MDFILE_AS_MAINPAGE = README.md
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# Every public name must be documented, and every parameter of every
+# function: anything missing is a warning, and a warning fails the build.
+EXTRACT_ALL            = NO
+WARN_IF_UNDOCUMENTED   = YES
+WARN_NO_PARAMDOC       = YES
+WARN_AS_ERROR          = FAIL_ON_WARNINGS
+QUIET                  = YES
+
+# HTML only: no LaTeX, and no diagrams, which need Graphviz.
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+HAVE_DOT               = NO

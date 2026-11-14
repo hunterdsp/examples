@@ -1,0 +1,13 @@
+# sig.pc -- how to compile and link against sig, for pkg-config.
+# The prefix is worked out from where this file is (pcfiledir), not
+# written in, so the installed tree can be moved and still work.
+prefix=${pcfiledir}/../..
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+
+Name: sig
+Description: A small signal-processing library, from Learning C by Example
+Version: @PROJECT_VERSION@
+Cflags: -I${includedir}
+Libs: -L${libdir} -lsig
+Libs.private: -lm

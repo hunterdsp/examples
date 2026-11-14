@@ -12,6 +12,11 @@ lesson's table is derived, never typed.
                                  function REFERENCE.md doesn't list
     python libfuncs.py --write   rewrite each README's table
 
+So does the README of sig/, the library Part V builds, for the library's
+own code; its table links no further into the course, because Doxygen
+reads that README as the front page of the library's documentation, and
+fails on a link it can't follow.
+
 `make lint` runs the check, `make format` the write (then mdformat, which
 re-wraps the prose and pads the table; the check compares words and cells,
 so neither matters).
@@ -41,25 +46,37 @@ def strip(src):
     """Remove comments, strings and character constants from C source."""
     src = re.sub(r"/\*.*?\*/", " ", src, flags=re.S)
     src = re.sub(r"//[^\n]*", " ", src)
+#A GNU attribute, like a call : __attribute__((visibility("default"))).
+    src = re.sub(r"__attribute__\s*\(\(.*?\)\)", " ", src)
     src = re.sub(r'"(\\.|[^"\\\n])*"', '""', src)
     return re.sub(r"'(\\.|[^'\\\n])*'", "''", src)
 
 
+def declared(header):
+    """The functions a header declares: NAME (...);"""
+    text = strip(header.read_text())
+    return set(re.findall(r"\b(\w+)\s*\([^;{]*\)\s*;", text))
+
+
 def calls(lesson):
-    """The names a lesson calls but does not define: the library's."""
+    """The names a lesson calls but does not define: the library's. sig's
+    functions, which Part V's lessons call, are the course's own, and
+    their documentation is sig's headers."""
     texts = {
-        p: strip(p.read_text())
+p: strip(p.read_text())
         for p in sorted(lesson.rglob("*"))
         if p.suffix in (".c", ".h")
     }
     own = {"main"}
+    for header in (ROOT / "sig" / "include" / "sig").glob("*.h"):
+        own |= declared(header)
     for path, text in texts.items():
         own |= set(re.findall(r"^(\w+) \(", text, re.M))
         own |= set(re.findall(r"#\s*define\s+(\w+)\(", text))
         own |= set(re.findall(r"\(\s*\*\s*(\w+)\s*\)", text))
         own |= set(re.findall(r"\b\w+_fn\s+(\w+)", text))
         if path.suffix == ".h":
-            own |= set(re.findall(r"\b(\w+)\s*\([^;{]*\)\s*;", text))
+            own |= declared(path)
     found = set()
     for text in texts.values():
         for m in re.finditer(r"(?<![\w.>])(\w+)\s*\(", text):
@@ -87,15 +104,23 @@ def reference():
     return rows
 
 
-def table(names, ref):
+def table(names, ref, library=False):
     """The README section for these names, before mdformat pads it."""
+    intro = [
+        "Every library function this lesson's code calls, linked to its",
+        "definition. The [quick reference](../REFERENCE.md) lists them all.",
+    ]
+    if library:
+        intro = [
+            "Every C library function sig's code calls, linked to its",
+            "definition.",
+        ]
     lines = [
         "## Library functions",
         "",
         BEGIN,
         "",
-        "Every library function this lesson's code calls, linked to its",
-        "definition. The [quick reference](../REFERENCE.md) lists them all.",
+        *intro,
         "",
         "| function | header | what it does |",
         "| --- | --- | --- |",
@@ -120,7 +145,7 @@ def normal(block):
 def main(write):
     ref = reference()
     errors = []
-    for lesson in sorted(ROOT.glob("[0-9][0-9]-*/")):
+    for lesson in [*sorted(ROOT.glob("[0-9][0-9]-*/")), ROOT / "sig"]:
         readme = lesson / "README.md"
         names = calls(lesson)
         unknown = sorted(names - ref.keys())
@@ -135,7 +160,7 @@ def main(write):
             errors.append(f"{lesson.name}: has no README.md")
             continue
         text = readme.read_text()
-        want = table(names, ref) if names else ""
+        want = table(names, ref, lesson.name == "sig") if names else ""
         start = text.find("## Library functions\n")
         have = text[start:] if start >= 0 else ""
         stale = normal(have) != normal(want)

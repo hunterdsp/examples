@@ -215,10 +215,12 @@ lesson's README ends with the ones its own code uses, taken from this table by
 | [`cos`](https://en.cppreference.com/c/numeric/math/cos)                                                        | `<math.h>`    | cosine of an angle in radians                                           |
 | [`creal`](https://en.cppreference.com/c/numeric/complex/creal)                                                 | `<complex.h>` | real part of a `double complex`                                         |
 | [`crealf`](https://en.cppreference.com/c/numeric/complex/creal)                                                | `<complex.h>` | real part of a `float complex`                                          |
+| [`exit`](https://en.cppreference.com/c/program/exit)                                                           | `<stdlib.h>`  | end the program, with a status                                          |
 | [`exp`](https://en.cppreference.com/c/numeric/math/exp)                                                        | `<math.h>`    | *e* raised to the power x                                               |
 | [`fabs`](https://en.cppreference.com/c/numeric/math/fabs)                                                      | `<math.h>`    | absolute value of a `double`                                            |
 | [`fabsf`](https://en.cppreference.com/c/numeric/math/fabs)                                                     | `<math.h>`    | absolute value of a `float`                                             |
 | [`fclose`](https://en.cppreference.com/c/io/fclose)                                                            | `<stdio.h>`   | finish writing a file, and close it                                     |
+| [`ferror`](https://en.cppreference.com/c/io/ferror)                                                            | `<stdio.h>`   | did a read or write on this stream fail?                                |
 | [`floor`](https://en.cppreference.com/c/numeric/math/floor)                                                    | `<math.h>`    | largest whole number not above x                                        |
 | [`fmax`](https://en.cppreference.com/c/numeric/math/fmax)                                                      | `<math.h>`    | the larger of two numbers (and not a NaN, if one is)                    |
 | [`fopen`](https://en.cppreference.com/c/io/fopen)                                                              | `<stdio.h>`   | open a file                                                             |
@@ -235,6 +237,7 @@ lesson's README ends with the ones its own code uses, taken from this table by
 | [`malloc`](https://en.cppreference.com/c/memory/malloc)                                                        | `<stdlib.h>`  | allocate memory, contents unset                                         |
 | [`memcmp`](https://en.cppreference.com/c/string/byte/memcmp)                                                   | `<string.h>`  | compare two blocks of bytes                                             |
 | [`memcpy`](https://en.cppreference.com/c/string/byte/memcpy)                                                   | `<string.h>`  | copy bytes between blocks that don't overlap                            |
+| [`memmove`](https://en.cppreference.com/c/string/byte/memmove)                                                 | `<string.h>`  | copy bytes, where the two regions may overlap                           |
 | [`memset`](https://en.cppreference.com/c/string/byte/memset)                                                   | `<string.h>`  | fill a block of bytes with one value                                    |
 | [`offsetof`](https://en.cppreference.com/c/types/offsetof)                                                     | `<stddef.h>`  | a member's distance from the start of its struct (a macro)              |
 | [`perror`](https://en.cppreference.com/c/io/perror)                                                            | `<stdio.h>`   | print a message, and why the last call failed                           |

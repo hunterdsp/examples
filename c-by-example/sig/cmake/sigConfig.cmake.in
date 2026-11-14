@@ -1,0 +1,6 @@
+# sigConfig.cmake -- what find_package(sig) reads. It loads the targets
+# install(EXPORT) wrote, so a project can link to sig::sig.
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/sigTargets.cmake")
+check_required_components(sig)
