@@ -50,10 +50,18 @@ bad() {
 
 # The scratch copy the README blocks run in: every file git tracks, plus
 # new ones not yet committed, but nothing the reader's own builds left
-# behind. A `cc` on PATH stands in for the compiler under test and adds
-# no flags: a README command runs exactly as the reader will type it, so
-# the output shown under it is the output that command gives.
+# behind. A `cc` on PATH stands in for the compiler under test, and adds
+# the flags above that a reader's command lacks: -pedantic -Werror, and
+# -fno-sanitize-recover=all. That is how exercise answers, which only
+# README blocks build, get the strict build too. None of them changes what
+# a correct program prints: the first two act only at compile time, and
+# the last only once UBSan has found a bug, which fails the block anyway.
+# So a block that passes here prints, under the reader's own command,
+# exactly the output shown.
 here=$(pwd)
+# A git hook in a linked worktree runs with GIT_DIR set, and ls-files then
+# lists paths from the repo root, not from here (as in the Makefile).
+unset GIT_DIR
 # `make -s test` exports MAKEFLAGS=s, which would silence a README's own
 # `make` and hide what it prints: run the blocks as a reader would.
 unset MAKEFLAGS MFLAGS MAKELEVEL
@@ -73,9 +81,13 @@ real_cc=$(command -v "$cc_test") || {
 	echo "no compiler: $cc_test" >&2
 	exit 2
 }
+# clang (Apple's cc included) calls a flag it did not need, such as
+# -pedantic when only assembling a .s, an error under -Werror.
+quiet=""
+"$real_cc" --version 2>/dev/null | grep -q clang && quiet=-Qunused-arguments
 cat >"$work/bin/cc" <<EOF
 #!/bin/sh
-exec $real_cc "\$@"
+exec $real_cc $quiet -pedantic -Werror -fno-sanitize-recover=all "\$@"
 EOF
 chmod +x "$work/bin/cc"
 PATH="$work/bin:$PATH"
