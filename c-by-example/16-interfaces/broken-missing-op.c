@@ -37,11 +37,7 @@ static const processor_ops mute_ops = {
 int
 main (void)
 {
-  mute_t *m = malloc (sizeof *m);
-  if (m == NULL)
-    return 1;
-  m->base.ops = &mute_ops;
-  processor_reset (&m->base); /* calls a NULL function pointer */
-  processor_destroy (&m->base);
+  mute_t m = { { &mute_ops } };
+  processor_reset (&m.base); /* calls a NULL function pointer */
   return 0;
 }
