@@ -106,17 +106,22 @@ for lesson in "$@"; do
 	rm -rf "$work/rg" && mkdir "$work/rg"
 	awk -v dir="$work/rg" -v home="cd c-by-example/$lesson" '
 		/^[ ]*<!-- no-run -->[ ]*$/ { norun = 1; next }
+		# A fence is three or more backticks (mdformat uses more when
+		# the block itself holds three), and only a fence at least as
+		# long closes it, as in Markdown.
 		!inblk && /^[ ]*```/ {
 			ind = match($0, /[^ ]/) - 1
-			tag = substr($0, ind + 4)
-			inblk = 1; n_lines = 0; ncd = 0
+			match($0, /`+/); fence = substr($0, RSTART, RLENGTH)
+			tag = substr($0, RSTART + RLENGTH)
+			close_re = "^[ ]*" fence "`*[ ]*$"
+			inblk = 1; n_lines = 0; ncd = 0; opened = NR
 			if (tag == "bash") { kind = "bash"; where = indir }
 			else if (pending && !gap) { kind = "out" }
 			else { kind = "other" }
 			if (kind != "out") pending = 0
 			next
 		}
-		inblk && /^[ ]*```[ ]*$/ {
+		inblk && $0 ~ close_re {
 			inblk = 0
 			if (kind == "bash") {
 				if (badcd) print NR, badcd >> (dir "/badcd")
@@ -155,6 +160,8 @@ for lesson in "$@"; do
 		/^[ ]*In `exercises\// { print NR >> (dir "/badin") }
 		/^[ ]*<\/details>/ { indir = "" }
 		/[^ \t]/ { gap = 1 }
+		# A fence that never closes swallows the rest of the README.
+		END { if (inblk) print opened >> (dir "/badfence") }
 	' "$lesson/README.md"
 	lessondir=$work/root/c-by-example/$lesson
 	if [ -s "$work/rg/badcd" ]; then
@@ -168,6 +175,10 @@ for lesson in "$@"; do
 			: >"$work/out"
 			bad "README" "line $line: put \`In \`exercises/…\`:\` alone on its line"
 		done <"$work/rg/badin"
+	fi
+	if [ -s "$work/rg/badfence" ]; then
+		: >"$work/out"
+		bad "README" "the fence at line $(cat "$work/rg/badfence") never closes"
 	fi
 	if [ ! -s "$work/rg/list" ]; then
 		: >"$work/out"
