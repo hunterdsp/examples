@@ -23,11 +23,12 @@ need not be an expert in either to follow along.
 
 ## How it works
 
-Each lesson is a folder: a README that walks through the idea, examples that
-build with the one command at the top, and, where a lesson has a trap in it, a
-`broken-*.c` that falls into it on purpose so you can see what the compiler or
-a sanitizer says. Every example is built and checked by one command, on Linux
-and macOS:
+The course is five *Parts*, each a series of *lessons*, and each lesson is a
+*folder*: a README that walks through the idea, examples that build with the
+one command at the top, and, where a lesson has a trap in it, a `broken-*.c`
+that falls into it on purpose so you can see what the compiler or a sanitizer
+says. Every example is built and checked by one command, on Linux and macOS,
+using `make`, a program that runs build commands (lesson 08 explains it):
 
 ```bash
 cd c-by-example         # from the repo root, like every command here
@@ -44,6 +45,12 @@ A lesson's commands run in its folder: `cd c-by-example/01-hello` to start
 lesson 01, and so on. Each lesson ends with exercises. Every answer, folded
 under the exercise, names the folder in `exercises/` it runs in, and shows the
 commands to run and what they print.
+
+Following a lesson leaves its programs, and the `.i`, `.s` and `.o` files of
+lesson 00, in the lesson's folder (and Part V's builds in `build/` folders).
+Git ignores them, and any of them can be deleted at any time: the commands make
+them again. `git clean -fdX .`, in a lesson's folder, deletes everything git
+ignores there.
 
 You need a C compiler and `make`, and for Part V, CMake, Doxygen, pkg-config
 and Python 3. To install them, and everything later lessons use:

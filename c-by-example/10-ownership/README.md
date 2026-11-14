@@ -12,12 +12,12 @@ So the code says it instead. Every block of heap memory has one **owner**, the
 part of the program responsible for freeing it, and every function says, in its
 name or its comment, what it does to ownership:
 
-| a function that…                       | example          | afterwards                 |
-| -------------------------------------- | ---------------- | -------------------------- |
-| **creates**: allocates and hands over  | `signal_create`  | the caller owns the result |
-| **destroys**: takes back and frees     | `signal_destroy` | nobody does; don't touch   |
-| **borrows**: uses, and leaves it alone | `signal_push`    | the caller still owns it   |
-| **releases**: hands its memory onward  | `signal_release` | the caller owns the part   |
+| a function that…                       | example          | afterwards                                      |
+| -------------------------------------- | ---------------- | ----------------------------------------------- |
+| **creates**: allocates and hands over  | `signal_create`  | the caller owns the result                      |
+| **destroys**: takes back and frees     | `signal_destroy` | the memory is gone: don't use the pointer again |
+| **borrows**: uses, and leaves it alone | `signal_push`    | the caller still owns it                        |
+| **releases**: hands its memory onward  | `signal_release` | the caller owns the part                        |
 
 Here is a buffer that grows as samples arrive, with a function for each row:
 

@@ -45,6 +45,9 @@ Three ideas are in it:
 
 ## Building it
 
+For now, copy this command exactly, flags and all; the table after it says what
+each flag does.
+
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
 ./hello one two
@@ -67,6 +70,11 @@ there on purpose:
 | `-g`                           | Debug info, so errors point at line numbers instead of addresses                                                          |
 | `-fsanitize=address,undefined` | Stop the program at the *first* out-of-bounds access, use-after-free or undefined behaviour, with the line it happened on |
 
+Why C99, and not a newer C (C11, C17, C23)? C99 is the version compilers for
+nearly every platform support, the small processors in audio and radio hardware
+included, and the later standards add little this course needs; where they do,
+such as C11's threads and atomics, the lesson says so (lesson 28).
+
 The sanitizers make the program slower and bigger, so a release build leaves
 them off (Part V). While learning, they are the difference between a crash that
 says *where* and a wrong answer that says nothing.
@@ -85,8 +93,9 @@ called with 0 argument(s)
 0
 ```
 
-`make`, `&&` and `if` all decide what to do next from this one number, so a
-program that fails must return something other than 0.
+`make` (which runs build commands for you, lesson 08), and the shell's `&&` and
+`if`, all decide what to do next from this one number, so a program that fails
+must return something other than 0.
 
 ## Pitfalls
 
@@ -124,8 +133,9 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Make the program return 3 and check `echo $?`. Then try
-   `./hello && echo worked`.
+1. Change `hello.c`'s `return 0` to `return 3`, build it, and check `echo $?`.
+   Then try `./hello && echo worked`. (The answer's folder has a copy with that
+   one change made.)
 
    <details><summary>Output and answer</summary>
 

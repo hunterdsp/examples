@@ -90,8 +90,8 @@ swap (float *a, float *b)
 }
 
 /* In place: read and write the same buffer. `buf` is a pointer to the
-   first sample, and `n` is how many follow (an array arrives as exactly
-   this, lesson 04). */
+   first sample, and `n` is how many follow (passing an array to a
+   function passes the address of its first element, lesson 04). */
 static void
 gain_in_place (float *buf, size_t n, float g)
 {
@@ -102,8 +102,8 @@ gain_in_place (float *buf, size_t n, float g)
 /* Out of place, with the contract in the types:
      const float *in   -- this function will not write the input
      float *out        -- it will write the output
-     restrict          -- in and out never overlap, so the compiler may
-                          keep values in registers (lesson 26) */
+     restrict          -- in and out never overlap: a promise that only
+                          affects speed, safe to ignore until lesson 26 */
 static void
 gain (const float *restrict in, float *restrict out, size_t n, float g)
 {
@@ -188,7 +188,8 @@ sig[1] lives 4 bytes after sig[0]
 - **The types state the contract.** In `gain(const float *in, float *out, …)`,
   the `const` promises the input comes back untouched, and the compiler
   enforces it. `restrict` promises `in` and `out` don't overlap, which frees
-  the compiler to optimise (lesson 26).
+  the compiler to optimise. It changes only speed, never what the code means,
+  so you can ignore it until lesson 26 explains it.
 - **Pointer arithmetic counts elements, not bytes.** `p + 1` is the next
   `float`, 4 bytes on. Subtracting two pointers into the same array gives the
   distance in elements, which is how `find_peak`'s result becomes an index.
