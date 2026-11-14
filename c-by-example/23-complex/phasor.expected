@@ -1,0 +1,8 @@
+z = 3 + 4i:       3.0000 +4.0000i   size 5.0000, angle   53.1 deg
+conj (z):         3.0000 -4.0000i   size 5.0000, angle  -53.1 deg
+i * i:           -1.0000 +0.0000i   size 1.0000, angle  180.0 deg
+z * i:           -4.0000 +3.0000i   size 5.0000, angle  143.1 deg
+e^(i pi/2):       0.0000 +1.0000i   size 1.0000, angle   90.0 deg
+tone at 1000 Hz:  0.4330 +0.2500i   size 0.5000, angle   30.0 deg
+tone at 3000 Hz:  0.2000 +0.0000i   size 0.2000, angle    0.0 deg
+tone at 2000 Hz:  0.0000 +0.0000i   size 0: no tone here
