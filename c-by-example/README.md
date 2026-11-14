@@ -101,9 +101,22 @@ and which header holds what.
 
 **Part IV · Performance and signal processing**
 
-19 Measuring first · 20 FIR filter · 21 IIR biquad · 22 Oscillator · 23 Complex
-numbers · 24 FFT · 25 Caches and layout · 26 Vectorisation · 27 Fixed point ·
-28 Concurrency
+- [19 Measuring first](19-measuring/): timing honestly, and what the compiler
+  already did
+- [20 FIR filters](20-fir/): taps, a windowed-sinc low-pass, flexible array
+  members
+- [21 IIR filters](21-biquad/): the biquad, stability, and subnormal numbers
+- [22 Oscillators](22-oscillator/): a 32-bit phase accumulator, and why not
+  `float` time
+- [23 Complex numbers](23-complex/): `<complex.h>`, phasors, mixing
+- [24 The FFT](24-fft/): radix 2, plans, windows and leakage
+- [25 Caches and memory layout](25-caches/): rows before columns, structs of
+  arrays
+- [26 Vectorisation](26-vectorisation/): why a float sum won't vectorise, and
+  how to let it
+- [27 Fixed point](27-fixed-point/): Q15, rounding, saturation, headroom
+- [28 Concurrency](28-concurrency/): threads, races, false sharing, a blocking
+  queue
 
 **Part V · Shipping it**
 
