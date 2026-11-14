@@ -12,13 +12,12 @@
 
 **Deceptively simple. Extremely powerful.**
 
-Authors: Matthew T. Hunter, Ph.D. & Claude Code (AI Collaborator)
-
-C has a small grammar and almost no runtime, which is exactly why it is still
-what fast code is written in. This course starts from an empty file and ends
-with a C library ready for distribution, built one runnable example at a time.
-Along the way it covers the pitfalls that bite, memory you manage yourself, and
-how to build objects out of plain structs and function pointers.
+C has a small grammar and almost no runtime, which is why it is still around
+and what a lot of (fast) code is written in. This introduction to the language
+starts from an empty file and ends with a C library ready for distribution,
+built one runnable example at a time. Along the way it covers some common
+pitfalls, memory management, and how to build objects out of plain structs and
+function pointers.
 
 The examples lean toward performance algorithms and signal processing, but you
 need not be an expert in either to follow along.
