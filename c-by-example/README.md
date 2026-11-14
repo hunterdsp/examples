@@ -90,8 +90,15 @@ and which header holds what.
 
 **Part III · Objects without classes**
 
-14 Opaque types · 15 Function pointers · 16 Interfaces (vtables) · 17
-Composition and "inheritance" · 18 API design
+- [14 Opaque types](14-opaque-types/): a struct nobody else can see inside, and
+  why that is freedom
+- [15 Function pointers](15-function-pointers/): tables of functions,
+  callbacks, `void *`, `qsort`
+- [16 Interfaces (vtables)](16-interfaces/): many kinds of processor, one loop
+- [17 Composition and "inheritance"](17-composition/): a chain of chains, and a
+  ramp that is a gain
+- [18 API design](18-api-design/): prefixes, status codes, units, `const`, and
+  versions
 
 **Part IV · Performance and signal processing**
 

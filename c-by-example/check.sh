@@ -91,14 +91,15 @@ for lesson in "$@"; do
 	# The README is itself a test. Its ```bash blocks run, in order, in
 	# one shell, inside a scratch copy of the repo. A reader works in the
 	# lesson's folder, so each block runs there, except in an answer that
-	# opens `In \`exercises/exN-name/\`:`, whose blocks run in that folder
-	# up to its `</details>` (one that does not exist fails), and one whose
-	# first line is `cd c-by-example/<lesson>`, which runs from the repo
-	# root (lesson 00 teaches that `cd`). No other `cd` is allowed: the
-	# README says where a command runs, and the reader goes there. A bash
-	# block immediately followed (blank lines only) by another fenced
-	# block is a command and its output, and the output must match byte
-	# for byte. A bash block with no output block must exit 0.
+	# opens `In \`exercises/exN-name/\`:`, alone on its line, whose blocks
+	# run in that folder up to its `</details>` (one that does not exist
+	# fails), and one whose first line is `cd c-by-example/<lesson>`, which
+	# runs from the repo root (lesson 00 teaches that `cd`). No other `cd`
+	# is allowed: the README says where a command runs, and the reader
+	# goes there. A bash block immediately followed (blank lines only) by
+	# another fenced block is a command and its output, and the output
+	# must match byte for byte. A bash block with no output block must
+	# exit 0.
 	# `<!-- no-run -->` skips the next bash block: kept for setup run once
 	# (00), and commands that fail on purpose, whose message differs by
 	# compiler (a broken-*.c checks those).
@@ -149,6 +150,9 @@ for lesson in "$@"; do
 			indir = $0; sub(/^[ ]*In `/, "", indir); sub(/`:[ ]*$/, "", indir)
 			gap = 1; next
 		}
+		# A marker with more on its line is not a marker: its blocks
+		# would run in the lesson folder, and fail far from the cause.
+		/^[ ]*In `exercises\// { print NR >> (dir "/badin") }
 		/^[ ]*<\/details>/ { indir = "" }
 		/[^ \t]/ { gap = 1 }
 	' "$lesson/README.md"
@@ -158,6 +162,12 @@ for lesson in "$@"; do
 			: >"$work/out"
 			bad "README" "block at line $line has \`$cmd\`: say where it runs instead"
 		done <"$work/rg/badcd"
+	fi
+	if [ -s "$work/rg/badin" ]; then
+		while read -r line; do
+			: >"$work/out"
+			bad "README" "line $line: put \`In \`exercises/…\`:\` alone on its line"
+		done <"$work/rg/badin"
 	fi
 	if [ ! -s "$work/rg/list" ]; then
 		: >"$work/out"
