@@ -40,11 +40,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-  add_compile_options(-Wall -Wextra)
-  if(SIG_SANITIZE)
-    add_compile_options(-fsanitize=address,undefined)
-    add_link_options(-fsanitize=address,undefined)
-  endif()
+  add_compile_options(-Wall -Wextra) # for everything in this file
 endif()
 
 include(GNUInstallDirs)
@@ -66,6 +62,15 @@ target_include_directories(
   PRIVATE src)
 if(UNIX)
   target_link_libraries(sig PRIVATE m) # sin, cos, cexp: the maths library
+endif()
+# A sanitized library needs sanitized programs (lesson 29), so the flags
+# are PUBLIC: whatever links sig gets them too. Only in this build tree,
+# never in an installed sig (lesson 34).
+if(SIG_SANITIZE)
+  target_compile_options(
+    sig PUBLIC $<BUILD_INTERFACE:-fsanitize=address,undefined>)
+  target_link_options(sig PUBLIC
+                      $<BUILD_INTERFACE:-fsanitize=address,undefined>)
 endif()
 # A shared library shows only what SIG_API marks (lesson 34), and is
 # named for its version: libsig.so.1.0.0, linked as libsig.so.1.
