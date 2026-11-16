@@ -206,14 +206,30 @@ The same numbers as lesson 33's pipe, from one program.
   invisible from outside it unless marked. `SIG_API` marks the public ones
   `visibility("default")`. `sig__freq_ok` is hidden: no program can come to
   depend on it, and the loader has fewer names to look up (exercise 3).
+
 - **The prefix isn't written in.** `prefix=${pcfiledir}/../..` makes the `.pc`
   file find the rest of the install relative to itself, and `INSTALL_RPATH`
   (`$ORIGIN/../lib`, `@loader_path/../lib` on macOS) does the same for the
   installed tools. The tree can be moved and keeps working (exercise 2).
+
 - **The sanitizers stay home.** `SIG_SANITIZE` adds its flags inside
   `$<BUILD_INTERFACE:…>`, so they apply in `sig`'s own build tree and are left
-  out of the installed `sigTargets.cmake`. A user of the installed library
-  doesn't inherit them.
+  out of the installed `sigTargets.cmake`: a user of the installed library
+  doesn't inherit them. The library itself can't leave them behind, though:
+  compiled with them, it needs the sanitizers' runtime, and a program built
+  without them fails to link (clang) or to start (gcc, whose runtime must load
+  first). So `sig`'s `CMakeLists.txt` refuses to install a `SIG_SANITIZE` build
+  at all, before it copies anything:
+
+  ```bash
+  cmake -S ../sig -B build-asan -DSIG_SANITIZE=ON > /dev/null
+  cmake --install build-asan --prefix staging 2>&1 | grep -o 'This build has SIG_SANITIZE=ON'
+  ```
+
+  ```
+  This build has SIG_SANITIZE=ON
+  ```
+
 - **Versions are promises.** Semantic versioning: a fix is 1.0.1; a new
   function, which breaks nothing, 1.1.0; removing or changing anything a
   program can depend on, 2.0.0, with a new soname, `libsig.so.2`. Opaque types
