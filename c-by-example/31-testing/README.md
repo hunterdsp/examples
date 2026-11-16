@@ -210,11 +210,14 @@ test_biquad: 12 of 12 checks passed
   list someone saved. It checks what a low-pass filter *is*: flat well below
   the corner, 3 dB down (0.7071) at it, and far down an octave and more above.
   Any correct biquad passes, on any machine; a wrong one fails.
-- **Tolerances.** No check asks for an exact float. Two compilers, or one
-  compiler at two optimisation levels, may round differently (lesson 26), and a
-  test that wants the last bit fails on a machine where the code is right. Each
-  tolerance is much bigger than rounding and much smaller than any real
-  mistake.
+- **Tolerances.** No check compares the library's output with a number written
+  down to the last bit. Two compilers, or one compiler at two optimisation
+  levels, may round differently (lesson 26), and a test that wants the last bit
+  fails on a machine where the code is right. Each tolerance is much bigger
+  than rounding and much smaller than any real mistake. The few exact checks
+  compare the library with itself, run twice by the same code on the same
+  machine (after a reset, or in place and not, exercise 3), or ask for the
+  oscillator's first sample, sin 0, which is exactly 0.
 - **The error paths too.** The first checks make filters that must be refused:
   a 0 Hz corner, a `q` of 0, a type that isn't one. They check the status *and*
   that `*out` was set to `NULL`, which `sig_biquad_create` promises, by

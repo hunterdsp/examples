@@ -133,8 +133,7 @@ tone at 2000 Hz:  0.0000 +0.0000i   size 0: no tone here
   exactly that frequency stops turning and adds up to its size and starting
   angle: 0.5 and 30°, as it was made. The 3 kHz tone keeps turning, so its
   products cancel out over whole cycles, and the 2 kHz measurement finds
-  nothing at all. Each tone is found on its own, though all three are in one
-  signal.
+  nothing at all. Each tone is found on its own, though both are in one signal.
 - **The measurement is the DFT.** Doing this for every frequency at once is the
   *discrete Fourier transform*, and lesson 24 makes it fast.
 
@@ -149,8 +148,11 @@ tone at 2000 Hz:  0.0000 +0.0000i   size 0: no tone here
   broken-complex-printf.c:15:17: warning: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Wformat=]
   ```
 
-  It is only a warning, so the program still builds, and prints nonsense
-  (lesson 01's exercise 3); `-Werror` would make it an error.
+  It is only a warning, so the program still builds, and prints `z = 3.000000`,
+  with gcc and clang alike: on x86-64 a `double complex` argument travels as
+  two `double`s, and `%f` reads the first. The 4i is lost without a word, and
+  on a machine that passes it differently the output is anything (lesson 01's
+  exercise 3). `-Werror` would make the warning an error.
 
   Print the parts, `creal (z)` and `cimag (z)`.
 

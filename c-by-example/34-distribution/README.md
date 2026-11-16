@@ -223,10 +223,11 @@ The same numbers as lesson 33's pipe, from one program.
 ## Pitfalls
 
 - **The loader can't find it.** The linker found `libsig.so` because `-L` said
-  where. The loader, when the program runs, doesn't read `-L`, and looks only
-  in the system's folders and the folders recorded in the program as its
-  *rpath*. Without `-Wl,-rpath,…` (`-Wl,` passes the rest to the linker), Linux
-  says:
+  where. The loader, when the program runs, doesn't read `-L`. It looks in the
+  folders recorded in the program as its *rpath*, the folders named in
+  `LD_LIBRARY_PATH`, and the system's folders (on Linux, those listed in
+  `/etc/ld.so.conf`, which `ldconfig` keeps in a cache). Without `-Wl,-rpath,…`
+  (`-Wl,` passes the rest to the linker), Linux says:
 
   <!-- no-run -->
 
@@ -240,9 +241,9 @@ The same numbers as lesson 33's pipe, from one program.
   ```
 
   An install into a system folder, like `/usr/local/lib`, needs no rpath.
-  `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` on macOS) also tells the loader where
-  to look, for one command, and is fine for trying something, but a program
-  that only runs with it set is broken.
+  `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` on macOS) can be set for one command,
+  and is fine for trying something, but a program that only runs with it set is
+  broken.
 
 - **A prefix written in at configure time.** A `.pc` file with
   `prefix=/usr/local` in it, when `cmake --install --prefix` put the library
