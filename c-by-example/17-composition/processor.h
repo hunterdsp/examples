@@ -77,5 +77,4 @@ int ramp_set (processor_t *p, float g, size_t samples);
    of the stages: destroying it destroys them. If it can't be created, it
    destroys them anyway, so the caller never has to. */
 processor_t *chain_create (processor_t *const *stages, size_t n);
-
 #endif /* PROCESSOR_H */

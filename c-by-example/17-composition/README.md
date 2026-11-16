@@ -43,8 +43,7 @@ diff ../16-interfaces/processor.h processor.h
 ---
 > /* The kinds this lesson has. Each returns a new processor, owned by the
 >    caller and freed with processor_destroy, or NULL. */
-65a68,79
-> 
+66a69,79
 > /* A gain that glides from 0 to g over `samples` samples: a fade-in. */
 > processor_t *ramp_create (float g, size_t samples);
 > 
