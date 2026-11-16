@@ -3,9 +3,9 @@
 Run this lesson's commands in `c-by-example/03-functions/`.
 
 A sine wave is the atom of signal processing: any block of samples is a sum of
-them, and lesson 24's FFT finds which ones. This lesson builds a table of one,
-and in doing so splits a program across files, the way every C library is
-built.
+them, and lesson 24's fast Fourier transform (FFT) finds which ones. This
+lesson builds a table of one, and in doing so splits a program across files,
+the way every C library is built.
 
 The header, `sine.h`, declares what `sine.c` offers:
 
@@ -178,12 +178,12 @@ without either seeing the other's code.
 - **Arrays are different.** `sine_table(one, 8, 1.0)` fills the caller's array.
   An array argument is passed as the address of its first element, so the
   function writes straight into it.
-- **`static` means two things, depending on where it is.** At file scope it
-  makes a name private to its file: `made` in `sine.c` is invisible to every
-  other file, and only `sine_tables_made()` can read it. The same goes for
-  functions: `try_to_double` and `print_table` are `static`, so no other file
-  can call them. This is the first step toward the objects of Part III. Inside
-  a function, `static` changes how long a variable lives instead: in
+- **`static` at file scope makes a name private to its file.** `made` in
+  `sine.c` is invisible to every other file, and only `sine_tables_made()` can
+  read it. The same goes for functions: `try_to_double` and `print_table` are
+  `static`, so no other file can call them. This is the first step toward the
+  objects of Part III.
+- **`static` inside a function changes how long a variable lives.** In
   `count_calls`, `kept` is made once and keeps counting across calls, while the
   plain local `fresh` is made anew each time and is always 1.
 - **`const` is a promise not to write.** `print_table` takes
@@ -195,14 +195,15 @@ The `2 cycles` row fits two sine periods into the same 8 samples, so it repeats
 every 4: twice the frequency. Push `cycles` up to 4 and every sample lands on a
 zero crossing: the table is all zeros, and the wave has vanished. Push it past
 4 and 5 cycles gives the same samples as 3 cycles, upside down: the samples can
-no longer tell which frequency they came from. That limit, half the sample
-rate, is the **Nyquist frequency**, and lessons 22 and 24 meet it again.
+no longer tell which frequency they came from. That limit, half a cycle per
+sample (half the sample rate), is the **Nyquist frequency**, and lessons 22 and
+24 meet it again.
 
 ## Why `-0.0000`?
 
 sin(2π) should be 0, but 2π has no exact binary form (lesson 02), so the result
-is −2.4×10⁻¹⁶, and `%.4f` keeps its sign. Floating-point results are *nearly*
-right, never exactly. Plan for it.
+is −2.4×10⁻¹⁶, and `%.4f` keeps its sign. Floating-point results are often
+*nearly* right rather than exact. Plan for it.
 
 ## Pitfalls
 
@@ -267,8 +268,8 @@ folder to run it in.
    It works: `table.c` reads the count directly. But it can also *write* it,
    and so can every other file in the program, so the count is only as right as
    the least careful of them. Even `sine_tables_made()` now reports −5. With
-   `static`, only `sine.c` can change `made`, and a wrong count can only be
-   `sine.c`'s fault.
+   `static`, only `sine.c` can change `made`, and a wrong count points straight
+   at `sine.c`.
 
    </details>
 

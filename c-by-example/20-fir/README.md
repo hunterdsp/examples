@@ -4,9 +4,10 @@ Run this lesson's commands in `c-by-example/20-fir/`.
 
 A **filter** changes how much of each frequency gets through. A low-pass filter
 lets the low ones pass and holds back the high ones: it takes the hiss off a
-recording, or keeps a signal below half the sample rate before it is resampled.
+recording, or keeps a signal below half the sample rate before it is resampled
+(converted to another sample rate).
 
-The simplest filter to build is the **finite impulse response** (FIR) filter.
+A simple filter to start with is the **finite impulse response** (FIR) filter.
 Each output is a weighted sum of the latest input and the ones just before it:
 
 ```
@@ -261,7 +262,7 @@ seven-hundredth of its size.
 - **The impulse response *is* the taps.** Feed in a single 1 followed by zeros,
   and out come `h[0]`, `h[1]`, … in turn. That is where the name comes from:
   the response to an impulse is finite, `n` samples long, and then exactly
-  zero. It is also the first test any FIR filter should pass.
+  zero. It is also a good first test for any FIR filter.
 - **The step response settles at the sum of the taps**, the filter's gain at 0
   Hz. `design` divides by that sum, so a constant comes through unchanged.
 - **Measure the frequency response by playing tones.** A sine through a filter
@@ -280,8 +281,9 @@ seven-hundredth of its size.
   allocation, one `free`, and the samples sit right next to the struct that
   uses them.
 - **The cost is `n` multiply-adds per sample.** 31 taps at 48 kHz is 1.5
-  million a second, which is nothing; but a sharper filter needs more taps
-  (exercise 3), and a smarter inner loop starts to matter (exercise 2).
+  million a second, little for a modern processor; but a sharper filter needs
+  more taps (exercise 3), and a smarter inner loop starts to matter (exercise
+  2).
 
 ## Pitfalls
 
@@ -338,8 +340,10 @@ folder to run it in.
    one cycle, which averages to zero; at 12 kHz, exactly two. But 9 kHz, in
    between, gets through at a fifth of its size. A moving average is good at
    smoothing and bad at separating frequencies, which is what designed taps are
-   for. `-I ../..` tells the compiler to look for `fir.h` two folders up, so
-   the exercise uses the lesson's own filter.
+   for.
+
+   `-I ../..` tells the compiler to look for `fir.h` two folders up, so the
+   exercise uses the lesson's own filter.
 
    </details>
 

@@ -4,13 +4,14 @@ Run this lesson's commands in `c-by-example/31-testing/`.
 
 Every lesson in this course is tested: `make test` builds each example, runs
 it, and compares what it prints with what its README says. That works for a
-course. A library needs tests of its own that travel with it: run by anyone who
-builds it, on their machine and their compiler, every time, and that check what
+course. A library needs tests of its own that travel with it, run by anyone who
+builds it, on their machine and with their compiler. And they should check what
 the library *promises*, not what it happened to print once.
 
 `sig`'s tests need no framework. A test is a program that checks things and
 exits with status 0 if they all held, and anything else if not; that exit
-status is all CMake's test runner looks at. A dozen lines help it report well:
+status is all CMake's test runner looks at. A small header, `check.h`, helps it
+report well:
 
 ```bash
 cat ../sig/tests/check.h
@@ -209,7 +210,7 @@ test_biquad: 12 of 12 checks passed
 - **Promises, not printouts.** `test_biquad` doesn't compare samples with a
   list someone saved. It checks what a low-pass filter *is*: flat well below
   the corner, 3 dB down (0.7071) at it, and far down an octave and more above.
-  Any correct biquad passes, on any machine; a wrong one fails.
+  Any correct biquad passes, on any machine, and most wrong ones fail.
 - **Tolerances.** No check compares the library's output with a number written
   down to the last bit. Two compilers, or one compiler at two optimisation
   levels, may round differently (lesson 26), and a test that wants the last bit
@@ -222,7 +223,7 @@ test_biquad: 12 of 12 checks passed
   a 0 Hz corner, a `q` of 0, a type that isn't one. They check the status *and*
   that `*out` was set to `NULL`, which `sig_biquad_create` promises, by
   starting `f` at an address that isn't `NULL`. Code that handles errors is the
-  code that runs least, so it is where bugs live.
+  code that runs least, so bugs hide there.
 - **Every failure, not just the first.** `CHECK` records a failure and carries
   on, so one run lists everything that broke, with the file, the line and the
   condition, all from the preprocessor: `__FILE__`, `__LINE__` and `#cond`,
@@ -234,13 +235,13 @@ test_biquad: 12 of 12 checks passed
 
 ## Pitfalls
 
-- **A test that can't fail.** A test that passes proves something only if it
-  would fail when the code is wrong. The way to find out is to break the code
+- **A test that can't fail.** A test that passes shows something only if it
+  would fail when the code is wrong. One way to find out is to break the code
   on purpose and watch it (exercise 1). A test that never failed has never been
   shown to work.
 
 - **`assert` in tests.** `assert` disappears when `NDEBUG` is defined, and
-  every release build defines it (lesson 30, exercise 3). Tests written with
+  CMake's release builds define it (lesson 30, exercise 3). Tests written with
   `assert` check nothing in exactly the build that ships (exercise 2). That is
   why `check.h` is its own macro.
 

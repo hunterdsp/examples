@@ -129,12 +129,12 @@ round trip exact: yes
   counts up to the `'\0'`, `sizeof` counts the whole array. Every buffer you
   build a string in needs that extra byte.
 - **`argv` is an array of strings.** `main (int argc, char *argv[])` receives
-  the command line as `argc` strings: `argv[0]` is the program's name,
-  `argv[1]` the first word after it. Each string is an array of `char`, and
+  the command line as `argc` strings: `argv[0]` is the name the program was run
+  by, `argv[1]` the first word after it. Each string is an array of `char`, and
   `argv` holds the address of each one's first `char`: an array of pointers, as
   the declaration says. `[]`, an array, of `char *`, pointers to `char`.
   `./files sine` makes `argv[1]` the string `"sine"`.
-- **`snprintf` is the safe way to build one.** It never writes past the size it
+- **`snprintf` is a safe way to build one.** It never writes past the size it
   is given, always terminates, and returns the length the *whole* result
   needed. If that is ≥ the buffer size, the result was cut short, and you can
   tell. The `tiny` line shows it happen: `tone-440.f32` is 12 characters, and
@@ -176,9 +176,9 @@ from those needs its bytes swapped.
   `'\0'`, however far away it is, so it writes past the end of the array: the
   buffer overflow behind decades of security holes. Two layers can catch it:
   AddressSanitizer (`stack-buffer-overflow`), and, on distributions that build
-  with `_FORTIFY_SOURCE` such as Ubuntu, the C library itself
-  (`*** buffer overflow detected ***`). Don't rely on either in production: use
-  `snprintf`, which is told the size.
+  with `_FORTIFY_SOURCE` (extra checks in the C library's copying functions),
+  such as Ubuntu, the C library itself (`*** buffer overflow detected ***`).
+  Don't rely on either in production: use `snprintf`, which is told the size.
 - **Forgetting the `'\0'`.** A `char[4]` holding `"tone"` has no room for it,
   and every string function will read past the end looking for one.
 - **Text mode vs binary mode.** On Windows, `"w"` translates `\n` to `\r\n`,

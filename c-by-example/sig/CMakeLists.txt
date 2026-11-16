@@ -122,8 +122,9 @@ endif()
 # Not from a SIG_SANITIZE build. BUILD_INTERFACE keeps the flags out of
 # what users inherit, but the library itself was compiled with them: it
 # needs the sanitizers' runtime, so a program built without them fails
-# to link (clang) or to start (gcc, whose runtime must load first). This rule comes
-# first, so nothing is copied before it stops the install.
+# to link (clang) or to start (gcc, whose runtime must load first).
+# This rule comes first, so nothing is copied before it stops the
+# install.
 if(SIG_SANITIZE)
   install(
     CODE "message(FATAL_ERROR \"This build has SIG_SANITIZE=ON, and its \"

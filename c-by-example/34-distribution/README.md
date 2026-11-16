@@ -20,7 +20,7 @@ program, and a fixed library fixes them all without relinking. The price is
 that the library must be there, and must still match.
 
 `BUILD_SHARED_LIBS=ON` makes `add_library` build a shared library, and
-`Release` makes it an optimised build, as one meant for others should be:
+`Release` makes it an optimised build, as one shipped to others usually is:
 
 ```bash
 cmake -S ../sig -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
@@ -80,7 +80,7 @@ Only `include/sig/` was installed, not `src/`: `internal.h` stays private
 other projects to read: `pkgconfig/sig.pc` and `cmake/sig/`. Some Linux
 systems, Fedora among them, use `lib64` instead of `lib`.
 
-The installed tools work, from anywhere:
+The installed tools work from any folder:
 
 ```bash
 staging/bin/sig-tone 1 750 | staging/bin/sig-fft
@@ -94,7 +94,7 @@ staging/bin/sig-tone 1 750 | staging/bin/sig-fft
 
 **pkg-config** answers one question for a build: what flags does this library
 need? It reads `.pc` files, and `PKG_CONFIG_PATH` adds folders for it to look
-in. `sig`'s, made by CMake from `../sig/sig.pc.in`:
+in. Here is `sig`'s, which CMake made from `../sig/sig.pc.in`:
 
 ```bash
 cat staging/lib/pkgconfig/sig.pc
@@ -183,8 +183,8 @@ main (void)
 }
 ```
 
-`$( … )` puts pkg-config's answer into the command line. `-Wl,-rpath,…` is
-explained below:
+`$( … )`, the shell's command substitution, puts pkg-config's answer into the
+command line. `-Wl,-rpath,…` is explained below:
 
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined analyse.c $(PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig) -Wl,-rpath,"$PWD/staging/lib" -o analyse
@@ -234,7 +234,7 @@ The same numbers as lesson 33's pipe, from one program.
   function, which breaks nothing, 1.1.0; removing or changing anything a
   program can depend on, 2.0.0, with a new soname, `libsig.so.2`. Opaque types
   (lesson 14) help: `sig_osc` can change size without breaking anyone, because
-  no program knows its size. A public struct can't.
+  no program knows its size. A public struct can't change size that way.
 
 ## Pitfalls
 
@@ -267,9 +267,9 @@ The same numbers as lesson 33's pipe, from one program.
   `pcfiledir`.
 
 - **Changing a public enum.** Reordering `SIG_LOWPASS` and `SIG_HIGHPASS`
-  compiles cleanly everywhere, and silently swaps the two filters in every
-  program built against the old header and run with the new library. Values in
-  a public header never change within a major version; new ones go at the end.
+  compiles cleanly, and silently swaps the two filters in every program built
+  against the old header and run with the new library. Values in a public
+  header must not change within a major version; new ones go at the end.
 
 ## Exercises
 
@@ -341,8 +341,8 @@ folder to run it in.
    ```
 
    `sigConfigVersion.cmake` was written with `COMPATIBILITY SameMajorVersion`:
-   1.0.0 satisfies a request for 1.0 or any 1.x below it, and nothing from
-   another major version, in either direction. The same rule as the soname.
+   1.0.0 satisfies a request for 1.0, and nothing from another major version,
+   in either direction. The same rule as the soname.
 
    </details>
 
@@ -369,7 +369,7 @@ folder to run it in.
    Both work, because neither has a path written in. The tools find `libsig` at
    `$ORIGIN/../lib`, where `$ORIGIN` is the folder the program is in, and
    `sig.pc` finds the headers relative to itself. A relocatable install can be
-   packaged as an archive and unpacked anywhere, which is how most binary
+   packaged as an archive and unpacked anywhere, which is how many binary
    packages, Python wheels included (lesson 35), carry a C library.
 
    </details>
@@ -395,8 +395,8 @@ folder to run it in.
    ```
 
    `sig__freq_ok` is in the library, and `osc.c` and `biquad.c` call it, but
-   hidden: inside the library it is an ordinary function, and outside it
-   doesn't exist. In lesson 29's static `libsig.a` it was visible to every
+   hidden: inside the library it is an ordinary function, and outside it can't
+   be found by name. In lesson 29's static `libsig.a` it was visible to every
    program, because an archive is just object files, and visibility is a
    property of shared libraries. With GNU binutils, `nm -D` lists what a shared
    library exports: the 13 `SIG_API` functions, and nothing else.

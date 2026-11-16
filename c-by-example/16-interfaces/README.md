@@ -7,10 +7,10 @@ run time with function pointers. Together they give an **interface**: many
 kinds of object, each doing the same jobs in its own way, all used through one
 type.
 
-An audio effects chain is the classic case. A gain, a low-pass filter and a
-delay work very differently, but each one *processes a block*, can be *reset*,
-and must be *destroyed*. Code that runs the chain wants to do those three
-things to each stage without caring which kind it is.
+An audio effects chain is a good example. A gain, a low-pass filter and a delay
+work very differently, but each one *processes a block*, can be *reset*, and
+must be *destroyed*. Code that runs the chain wants to do those three things to
+each stage without caring which kind it is.
 
 The trick is a table of function pointers, one per kind, called a **vtable** (a
 "virtual function table", the name C++ uses for the same thing). Every object
@@ -331,7 +331,8 @@ After the reset, the second run matches the first.
 - **Each kind is hidden in its `.c`.** `gain_t` and `lowpass_t` are defined in
   their own files; the header offers only `gain_create` and `lowpass_create`,
   which return the interface type. Adding a kind is a new `.c` and one line in
-  the header. The chain doesn't change (exercise 1).
+  the header. The code that runs the chain doesn't change, only its list of
+  stages (exercise 1).
 
 ## Pitfalls
 
@@ -347,16 +348,20 @@ After the reset, the second run matches the first.
   clang's build crashes one step earlier. Its UBSan checks that the function
   called has the pointer's type, by reading a marker stored just before the
   function, and just before address 0 there is nothing to read: ASan reports a
-  `SEGV` at `0xfffffffffffffff8`, 8 bytes below 0. On an ARM Mac, Apple's clang
-  build stops at a trap instruction instead, and the shell reports
-  `Trace/BPT trap: 5`. Either way, nothing complained when the table was
-  written: the hole is found when it is used. Fill in every slot, or make an
-  operation optional on purpose (exercise 3).
+  `SEGV` at `0xfffffffffffffff8`, 8 bytes below 0.
+
+  On an ARM Mac, Apple's clang build stops at a trap instruction instead, and
+  the shell reports `Trace/BPT trap: 5`.
+
+  Either way, nothing complained when the table was written: the hole is found
+  when it is used. Fill in every slot, or make an operation optional on purpose
+  (exercise 3).
 
 - **Casting to the wrong kind.** `(gain_t *)self` is only right if `self`
   really is a gain. Each kind's functions are reached only through its own
   table, so they are only ever handed their own kind, as long as nothing else
-  calls them directly. Keep them `static`, as here, and nothing can.
+  calls them directly. Keep them `static`, as here, and nothing outside their
+  file can.
 
 - **Freeing through the interface.** `processor_destroy` calls the kind's own
   `destroy`, because only the kind knows what it owns. A plain `free` of a
@@ -426,8 +431,9 @@ folder to run it in.
    [`tables.c`](exercises/ex2-shared-ops/tables.c) compares a struct carrying
    its own name and three function pointers: 32 bytes in every object, and more
    with every operation the interface grows. The table is also `const`, in
-   read-only memory, so a stray write can't change what a gain does; and
-   comparing `ops` tells you two objects are the same kind.
+   read-only memory, so a stray write to it stops the program instead of
+   changing what every gain does; and comparing `ops` tells you two objects are
+   the same kind.
 
    </details>
 

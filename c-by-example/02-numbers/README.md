@@ -192,7 +192,8 @@ Integer division
 ```
 
 Integer division throws the remainder away, rounding toward zero. Make one side
-a floating-point number (`2.0`) and you get the real quotient.
+a floating-point number (`2.0`) and you get the full quotient, fraction and
+all.
 
 ```
 Integer promotion
@@ -269,11 +270,11 @@ Floating point
 ```
 
 Floats are binary fractions, and 0.1 has no exact binary form, just as ⅓ has no
-exact decimal one. So never compare floating-point results with `==`; compare
-against a tolerance. A `float` carries about 7 significant digits (24 bits):
-past 2²⁴ = 16,777,216 it cannot even count by one. That is why a long-running
-phase accumulator is kept in an integer (lesson 22) and a long sum in `double`
-(lesson 26).
+exact decimal one. So don't compare floating-point results with `==` unless you
+know they are exact; compare against a tolerance. A `float` carries about 7
+significant digits (24 bits): past 2²⁴ = 16,777,216 it cannot even count by
+one. That is why a long-running phase accumulator is kept in an integer (lesson
+22\) and a long sum in `double` (lesson 26).
 
 The last line is the suffix at work: without the `f`, `1.0` is a `double`, so
 the whole sum is done in `double`, which can still count by one there. Code
@@ -292,7 +293,8 @@ double the power = 3.0103 dB
 
 Ears and radios both work on ratios, so signal levels are measured in decibels:
 20·log₁₀ of an amplitude ratio, or 10·log₁₀ of a power ratio. Two numbers worth
-remembering: **−6 dB is half the amplitude, +3 dB is double the power.**
+remembering: **−6 dB is about half the amplitude, +3 dB about double the
+power.**
 
 ## Pitfalls
 
@@ -394,13 +396,13 @@ folder to run it in.
    double sum of 0.1 : 1000.000000
    ```
 
-   Neither, at first. The `float` sum is off by a tenth: each addition rounds
-   to about 7 digits, and ten thousand roundings pile up. The `double` sum of
-   the same `0.1f` is off too, but by much less, and only because `0.1f` itself
-   is not 0.1: it is the nearest `float`, slightly above it, and the `double`
-   adds that up faithfully. Sum the `double` `0.1` and the error drops below
-   the sixth decimal place. Accumulate in `double`, from `double` inputs,
-   whenever a sum runs long.
+   Neither of the first two. The `float` sum is off by a tenth: each addition
+   rounds to about 7 digits, and ten thousand roundings pile up. The `double`
+   sum of the same `0.1f` is off too, but by much less, and only because `0.1f`
+   itself is not 0.1: it is the nearest `float`, slightly above it, and the
+   `double` adds that up faithfully. Sum the `double` `0.1` and the error drops
+   below the sixth decimal place. When a sum runs long, accumulate in `double`,
+   from `double` inputs where you can.
 
    </details>
 

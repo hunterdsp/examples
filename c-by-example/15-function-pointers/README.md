@@ -8,7 +8,7 @@ That is a **function pointer**, and it is how C code says "do *this*", where
 *this* is chosen at run time: which filter, which comparison, what to call when
 a block of audio arrives.
 
-The syntax is the hardest part, so start with a name for the type:
+The syntax is the tricky part, so start with a name for the type:
 
 ```c
 typedef float (*shaper_fn) (float x);
@@ -156,12 +156,12 @@ doesn't fit.
 
 ## Passing state along: `void *`
 
-`apply` needs nothing but the function. Most callbacks need somewhere to keep
-what they find, and the code calling them can't know what that is. So it takes
-a `void *`, and passes it to the callback untouched. A `void *` is an address
-with no type attached: any object pointer converts to one and back, without a
-cast. (`malloc` returns one, which is why its result can be stored straight
-into a `float *`.)
+`apply` needs nothing but the function. Many callbacks (functions handed to
+other code, to be called back) need somewhere to keep what they find, and the
+code calling them can't know what that is. So it takes a `void *`, and passes
+it to the callback untouched. A `void *` is an address with no type attached:
+any object pointer converts to one and back, without a cast. (`malloc` returns
+one, which is why its result can be stored straight into a `float *`.)
 
 ```bash
 cat blocks.c
@@ -309,8 +309,8 @@ caller's pointer is a `peak_log` and the other's a `clip_count`.
   a small function with the right signature that calls `half` instead.
 
 - **Calling `NULL`.** A function pointer that was never set, or a lookup that
-  found nothing, is `NULL`, and calling it crashes. Check before calling, as
-  exercise 3 does.
+  found nothing, is `NULL`, and calling it is undefined behaviour, which
+  usually crashes. Check before calling, as exercise 3 does.
 
 - **The `void *` lies if you let it.** Pass a `clip_count *` to `log_peak` and
   the compiler can't object: both go through `void *`. The callback reads the
@@ -350,7 +350,7 @@ folder to run it in.
 
    </details>
 
-2. The standard library's `qsort` sorts an array of anything, given a function
+2. The standard library's `qsort` sorts an array of any type, given a function
    that compares two elements. Use it to find the median of a block with a
    click in it. Why is the median the better measure here, and why not write
    the comparison as `return x - y;`?
@@ -372,7 +372,7 @@ folder to run it in.
 
    One click drags the mean to 1.43, more than five times the largest of the
    other samples, and seven times the median; the median, the middle of the
-   sorted block, ignores it. A median filter removes clicks this way.
+   sorted block, barely moves. A median filter can remove clicks this way.
 
    `qsort` hands the comparator two `const void *`, since it doesn't know the
    element type, and [`cmp_float`](exercises/ex2-median/median.c) converts them
@@ -405,10 +405,9 @@ folder to run it in.
    ```
 
    [`find`](exercises/ex3-by-name/pick.c) searches the table with `strcmp` and
-   returns the matching function, or `NULL` when there is none. `main` checks
-   for `NULL` before calling, and when it finds one, says what the choices are
-   and exits with status 1, rather than calling the `NULL`, which would crash
-   with nothing to say which name was wrong.
+   returns the matching function, or `NULL` when there is none. If `find`
+   returns `NULL`, `main` lists the choices and exits with status 1. Calling
+   the `NULL` would crash, with nothing to say which name was wrong.
 
    </details>
 

@@ -37,7 +37,7 @@ Copyright (C) 2025 Free Software Foundation, Inc.
 system's* C compiler, so the same command works everywhere. On Linux it is
 usually GCC (the Free Software Foundation line above gives it away; your
 version may differ), and on macOS it is Apple's clang. This course uses `cc` so
-you never have to care which, and checks every example with both.
+you need not care which one you have, and checks every example with both.
 
 ### If something is missing
 
@@ -111,8 +111,8 @@ cc stages.c -o stages && ./stages
 
 That one command is four programs in a row, each reading the file the one
 before it wrote. Run them one at a time and you get every file in between,
-which you can open and read. Knowing which stage is complaining is half of
-fixing any build error.
+which you can open and read. Knowing which stage is complaining goes a long way
+toward fixing a build error.
 
 ```
 stages.c  --preprocess-->  stages.i  --compile-->  stages.s

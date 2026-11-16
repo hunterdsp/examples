@@ -150,7 +150,7 @@ linker sees both. Two consequences:
 - **Headers are how translation units agree.** Each `.c` that uses `dsp_rms`
   includes `dsp.h`, so each compiles its calls against the same declaration.
 - **Change one file, recompile one file.** In a library of hundreds of files,
-  that is the difference between a one-second and a ten-minute build.
+  that can be the difference between a quick rebuild and a slow one.
 
 ## `make`
 
@@ -264,8 +264,8 @@ folder to run it in.
    `make` recompiles `dsp.c` alone and relinks; `meter.o` is still up to date.
    That is the whole of `make`: compare timestamps, rebuild what is out of
    date, in the right order. (The `sleep 1` is for older versions of `make`,
-   such as the one macOS ships, which compare timestamps to the whole second:
-   touched in the same second it was built, `dsp.c` would look no newer than
+   such as the one macOS ships, which compare timestamps to the whole second.
+   Touched in the same second it was built, `dsp.c` would look no newer than
    `dsp.o`. Typing by hand, you probably won't be that quick.)
 
    </details>
@@ -292,7 +292,7 @@ folder to run it in.
    the same. A sine spends most of its time below its peak, so its rms is lower
    by √2, which is 3.01 dB. [`dsp_crest_db`](exercises/ex2-crest/dsp.c) is one
    line, built from the three functions already there. Crest factor says how
-   much headroom a signal needs above its average level.
+   much headroom a signal needs: room above its average level for its peaks.
 
    </details>
 
@@ -317,10 +317,11 @@ folder to run it in.
    The same numbers, and `dsp_square(1 + 2)` is 9 with no parentheses needed: a
    function's argument is a value, evaluated once, not text pasted in. It is
    `static inline` *in the header*, so each `.c` that includes it gets its own
-   copy, which the compiler folds into the caller, as fast as the macro, and
-   the linker sees no duplicates. One thing did change: the macro squared a
-   `double` in `dsp_rms`, and `dsp_square` takes a `float`. The output is the
-   same here, but a type is a decision a macro never made for you.
+   copy, which the compiler, when optimising, usually folds into the caller, as
+   fast as the macro, and the linker sees no duplicates. One thing did change:
+   the macro squared a `double` in `dsp_rms`, and `dsp_square` takes a `float`.
+   The output is the same here, but a type is a decision a macro never made for
+   you.
 
    </details>
 

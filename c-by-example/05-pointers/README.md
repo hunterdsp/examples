@@ -3,7 +3,7 @@
 Run this lesson's commands in `c-by-example/05-pointers/`.
 
 Every variable lives somewhere in memory, at an *address*. A **pointer** is a
-variable that holds an address. Two operators do all the work:
+variable that holds an address. Two operators do most of the work:
 
 |                  |                                                         |
 | ---------------- | ------------------------------------------------------- |
@@ -188,8 +188,8 @@ sig[1] lives 4 bytes after sig[0]
 - **The types state the contract.** In `gain(const float *in, float *out, …)`,
   the `const` promises the input comes back untouched, and the compiler
   enforces it. `restrict` promises `in` and `out` don't overlap, which frees
-  the compiler to optimise. It changes only speed, never what the code means,
-  so you can ignore it until lesson 26 explains it.
+  the compiler to optimise. When the promise holds, it changes only speed, not
+  what the code means, so you can ignore it until lesson 26 explains it.
 - **Pointer arithmetic counts elements, not bytes.** `p + 1` is the next
   `float`, 4 bytes on. Subtracting two pointers into the same array gives the
   distance in elements, which is how `find_peak`'s result becomes an index.
@@ -199,8 +199,8 @@ sig[1] lives 4 bytes after sig[0]
 ## Pitfalls
 
 - **Following a NULL pointer.** [`broken-null.c`](broken-null.c) forgets the
-  check. On the systems this course runs on, nothing is ever at address 0, so
-  the program dies, and the sanitizer names the line:
+  check. On the systems this course runs on, nothing can be read at address 0,
+  so the program dies, and the sanitizer names the line:
 
   ```
   broken-null.c:25:26: runtime error: load of null pointer of type 'const float'
@@ -209,8 +209,8 @@ sig[1] lives 4 bytes after sig[0]
   Without the sanitizers it is a plain `Segmentation fault`, with no line
   number at all.
 
-  If a function can return `NULL`, every caller checks. If it never returns
-  `NULL`, say so in its documentation, so nobody wastes a check.
+  If a function can return `NULL`, its callers must check. If it never returns
+  `NULL`, say so in its documentation, so callers can skip the check.
 
 - **Writing through `const`.** [`broken-const.c`](broken-const.c) "tidies up"
   its input. The build stops (gcc: "assignment of read-only location"; clang:

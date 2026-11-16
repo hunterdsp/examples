@@ -7,13 +7,14 @@ program. Code that other people's programs use is shipped differently, as a
 **library**: compiled once, with a header that says what it offers, and linked
 into programs its author never sees.
 
-Part V turns Part IV's oscillator, biquad and FFT into one, called `sig`,
-following lesson 18's rules, and then ships it: a build (lesson 30), tests
-(31), documentation (32), command-line tools (33), an install that other
+Part V turns Part IV's oscillator, biquad and FFT into one library, called
+`sig`, following lesson 18's rules. Then it ships it: a build (lesson 30),
+tests (31), documentation (32), command-line tools (33), an install that other
 projects can find (34), and a Python interface (35). The library lives in
 [`c-by-example/sig/`](../sig/), and each of these lessons works on it from its
-own folder, as `../sig`. (`LC_ALL=C` makes `ls` sort by byte value, capitals
-first, as it does on macOS; Linux's usual setting ignores case.)
+own folder, as `../sig`. (`LC_ALL=C`, a locale setting, makes `ls` sort by byte
+value, capitals first, as it does on macOS; Linux's usual setting ignores
+case.)
 
 ```bash
 LC_ALL=C ls ../sig ../sig/include/sig ../sig/src
@@ -170,9 +171,9 @@ it.
 A program includes the headers as `<sig/osc.h>`, not `"osc.h"`, and the
 compiler is told where `include/` is with `-I`. The `sig/` folder is a
 namespace for header names, the way the `sig_` prefix is for function names:
-lesson 24 had an `fft.h`, and so do half the signal-processing libraries in the
-world. Two libraries that both install an `fft.h` into the same place can't
-both be used, but `sig/fft.h` and `fftw3.h` can.
+lesson 24 had an `fft.h`, and so do many other signal-processing libraries. Two
+libraries that both install an `fft.h` into the same place can't both be used,
+but `sig/fft.h` and `fftw3.h` can.
 
 Angle brackets mean "search the `-I` folders and the system's", which is right
 for a library's headers: the program doesn't say where they are, the build
@@ -267,7 +268,7 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../sig/include tone
 
 - **Errors come back as values.** 30000 Hz can't be played at 48000 samples per
   second, since it is over half the rate (lesson 22), and `sig_osc_create` says
-  so with a status, not by printing, or exiting.
+  so with a status, not by printing or exiting.
 
 - **What's in the archive.** `nm` lists the functions each object file defines
   (`T`) and needs from elsewhere (`U`). With GNU binutils on Linux (macOS's
@@ -322,7 +323,7 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../sig/include tone
   matching pair (lesson 34).
 
 - **The order of `-l`.** The GNU linker reads its inputs left to right, and
-  takes from an archive only the functions that something before it needed
+  takes from an archive only the object files that something before it needed
   (exercise 3).
 
 ## Exercises
@@ -336,8 +337,8 @@ and the library built in it.
    <details><summary>Output and answer</summary>
 
    For each header, `printf` writes a one-line C file that includes it, and
-   `cc` compiles it from its standard input (`-x c -` says the input is C, and
-   comes from `-`, standard input), only checking it: `-fsyntax-only` writes
+   `cc` compiles it from its standard input: `-x c` says the input is C, and
+   `-` means standard input. `-fsyntax-only` only checks it, and writes
    nothing.
 
    ```bash
@@ -387,8 +388,8 @@ and the library built in it.
    files that define something the program needs. `tone` calls
    `sig_osc_create`, so `osc.o` comes in, and `osc.o` calls `sig__freq_ok`, so
    `common.o` comes in, whole, `sig_version` with it, though nothing calls it.
-   The unit is the object file, not the function, which is why C's own library
-   is built from hundreds of small files.
+   The unit is the object file, not the function, which is one reason C's own
+   library is built from hundreds of small files.
 
    </details>
 
@@ -416,7 +417,7 @@ and the library built in it.
    files that use them, and a library after the libraries it uses: `-lsig -lm`,
    since `sig` uses `sin`. macOS's linker searches every archive for every name
    and accepts either order, so a build written on a Mac can fail on Linux. In
-   the right order, it works everywhere:
+   the right order, it works on both:
 
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../sig/include tone.c -L . -lsig -lm -o tone

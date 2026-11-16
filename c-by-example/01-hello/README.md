@@ -36,7 +36,8 @@ main (int argc, char *argv[])
 Three ideas are in it:
 
 - **`main` is where it starts.** `argc` counts the words on the command line,
-  and `argv` holds them, `argv[0]` being the program's own name.
+  and `argv` holds them, `argv[0]` usually being the name the program was run
+  by.
 - **`printf` formats text.** `%d` is an `int`, `%s` a string. The type after
   `%` must match the argument; `-Wall`, below, checks that for you.
 - **`return 0` means success.** The shell sees the number, as you will see once
@@ -65,25 +66,27 @@ there on purpose:
 | Flag                           | Why                                                                                                                 |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
 | `-std=c99`                     | The language this course teaches, and nothing the compiler adds on top                                              |
-| `-Wall -Wextra`                | Warnings are the compiler telling you about a bug for free. Read every one                                          |
+| `-Wall -Wextra`                | Warnings are the compiler pointing at likely bugs, for free. Read every one                                         |
 | `-g`                           | Debug info, so errors point at line numbers instead of addresses                                                    |
 | `-fsanitize=address,undefined` | Catch out-of-bounds accesses, use-after-free and undefined behaviour as they happen, with the line each happened on |
 
 The two sanitizers react differently. AddressSanitizer stops the program at the
 first bad memory access. UBSan reports each problem and lets the program carry
 on, so one bug can print many reports, and the program goes on with a wrong
-value; `-fno-sanitize-recover=all` makes UBSan stop at the first one too. The
+value. `-fno-sanitize-recover=all` makes UBSan stop at the first one too. The
 course's tests (`check.sh`) build that way, and the lessons say which of the
 two caught each bug.
 
-Why C99, and not a newer C (C11, C17, C23)? C99 is the version compilers for
-nearly every platform support, the small processors in audio and radio hardware
-included, and the later standards add little this course needs; where they do,
-such as C11's threads and atomics, the lesson says so (lesson 28).
+Why C99, and not a newer C (C11, C17, C23)? C99 is the version that compilers
+for nearly every platform support, the small processors in audio and radio
+hardware included, and the later standards add little this course needs; where
+they do, such as C11's threads and atomics (for running parts of a program at
+once, and sharing data between them), the lesson says so (lesson 28).
 
-The sanitizers make the program slower and bigger, so a release build leaves
-them off (Part V). While learning, they are the difference between a crash that
-says *where* and a wrong answer that says nothing.
+The sanitizers make the program slower and bigger, so a release build, the one
+shipped to users, leaves them off (Part V). While learning, they are the
+difference between a crash that says *where* and a wrong answer that says
+nothing.
 
 ## Exit status
 
@@ -101,7 +104,7 @@ called with 0 argument(s)
 
 `make` (which runs build commands for you, lesson 08), and the shell's `&&` and
 `if`, all decide what to do next from this one number, so a program that fails
-must return something other than 0.
+should return something other than 0.
 
 ## Pitfalls
 
@@ -118,8 +121,8 @@ must return something other than 0.
   `man 3 printf` prints the usage guide.
 
 > [!TIP]
-> **Reading a man page.** Every C library function has a manual page, and it is
-> the quickest answer to "what do I include, and how do I call it?"
+> **Reading a man page.** C library functions have manual pages, and one is
+> often the quickest answer to "what do I include, and how do I call it?"
 >
 > - **The section number matters.** Section 1 is shell commands, 2 system
 >   calls, 3 C library functions. `man printf` finds the shell's `printf`
@@ -127,9 +130,9 @@ must return something other than 0.
 > - **Read the top.** `SYNOPSIS` gives the `#include` line and the function's
 >   declaration; `LIBRARY` gives the link flag, if one is needed (`man 3 sqrt`
 >   says `-lm`, which lesson 02 uses).
-> - **Move around** with the vi keys: space and `b` page down and up, `/word`
->   searches, `n` jumps to the next match, and `:q` (or just `q`) returns to
->   the terminal prompt.
+> - **Move around** with the keys of the editor `vi`: space and `b` page down
+>   and up, `/word` searches, `n` jumps to the next match, and `:q` (or just
+>   `q`) returns to the terminal prompt.
 > - **Don't know the name?** `man -k printf` lists every page whose name or
 >   summary mentions it.
 
@@ -183,8 +186,7 @@ folder to run it in.
    worked
    ```
 
-   That one number is how every script and Makefile decides whether to carry
-   on.
+   That one number is how scripts and Makefiles decide whether to carry on.
 
    </details>
 

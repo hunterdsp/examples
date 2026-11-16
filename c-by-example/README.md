@@ -11,22 +11,22 @@
 
 **Deceptively simple. Extremely powerful.**
 
-C has a small grammar and almost no runtime, which is why it is still around
-and what a lot of (fast) code is written in. This introduction to the language
-starts from an empty file and ends with a C library ready for distribution,
-built one runnable example at a time. Along the way it covers some common
-pitfalls, memory management, and how to build objects out of plain structs and
-function pointers.
+C has a small grammar and almost no runtime. That is a large part of why it is
+still around, and why so much fast code is written in it. This introduction to
+the language starts from an empty file and ends with a C library ready for
+distribution, built one runnable example at a time. Along the way it covers
+some common pitfalls, memory management, and how to build objects out of plain
+structs and function pointers.
 
 The examples lean toward performance algorithms and signal processing, but you
 need not be an expert in either to follow along.
 
 ## How it works
 
-The course is five *Parts*, each a series of *lessons*, and each lesson is a
+The course is five *Parts*, each a series of *lessons*. Each lesson is a
 *folder*: a README that walks through the idea, examples that build with the
 one command at the top, and, where a lesson has a trap in it, a `broken-*.c`
-that falls into it on purpose so you can see what the compiler or a sanitizer
+that falls into it on purpose, so you can see what the compiler or a sanitizer
 says. Every example is built and checked by one command, on Linux and macOS,
 using `make`, a program that runs build commands (lesson 08 explains it):
 
@@ -37,7 +37,7 @@ make test CC=clang      # and again with clang
 ```
 
 `make test` checks that each example prints exactly what its lesson says, and
-that each broken one still fails, and for the reason given. It runs the
+that each broken one still fails, for the reason given. It also runs the
 commands in every README, exercise answers included, and checks they print what
 the README shows.
 

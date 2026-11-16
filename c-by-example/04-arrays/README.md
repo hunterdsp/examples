@@ -2,11 +2,11 @@
 
 Run this lesson's commands in `c-by-example/04-arrays/`.
 
-A signal in a program is an array of samples. The **moving average** is the
-simplest filter there is: each output is the mean of the last 4 inputs. Feed it
-a sudden step and it answers with a ramp. It smooths, which is what a
-*low-pass* filter does: slow changes pass, fast ones are blunted. Lesson 20's
-FIR filter is this same loop with a weight on each tap.
+A signal in a program is an array of samples. The **moving average** is one of
+the simplest filters: each output is the mean of the last 4 inputs. Feed it a
+sudden step and it answers with a ramp. It smooths, which is what a *low-pass*
+filter does: slow changes pass, fast ones are blunted. Lesson 20's FIR filter
+is this same loop, with a different weight on each input.
 
 Here is the program:
 
@@ -101,7 +101,8 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
   function that takes a buffer of samples takes its length too. (Strings,
   lesson 06, mark their own end instead.)
 - **The inner loop guards its edge.** `i - k >= 0` stops the window looking
-  before sample 0. Edges are where filters and indexes go wrong.
+  before sample 0. Edges are a common place for filters and indexes to go
+  wrong.
 
 ## Pitfalls
 
@@ -118,8 +119,8 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
   ```
 
   Without a sanitizer this usually *works*, corrupting a neighbouring variable
-  instead. That is the worst kind of bug: the program carries on with a wrong
-  answer. For N elements, loop `i < N`.
+  instead. That is a hard kind of bug to find: the program carries on with a
+  wrong answer. For N elements, loop `i < N`.
 
 - **`sizeof` on an array parameter.** In [`broken-sizeof.c`](broken-sizeof.c),
   `float buf[8]` as a *parameter* receives only the address of the first
@@ -158,8 +159,8 @@ folder to run it in.
    never gets there: it peaks at 0.750, 6 ones out of 8. (The uneven start,
    0.250 then 0.400, is the edge: the first outputs average fewer than 8
    samples.) A wider window smooths more, but answers more slowly, and blunts
-   short events until they barely show. Every filter trades smoothing against
-   delay.
+   short events until they barely show. Filters like this one trade smoothing
+   against delay.
 
    </details>
 
@@ -182,8 +183,8 @@ folder to run it in.
    ```
 
    Silence, once the window is full: any 4 neighbours hold two +1s and two −1s,
-   which cancel. Alternating samples are the highest frequency a signal can
-   have, and the filter removes it completely, while the step above, a low
+   which cancel. Alternating samples are the highest frequency samples can
+   show, and the filter removes it completely, while the step above, a low
    frequency, came through. Low frequencies pass, high ones are cut: a low-pass
    filter.
 
@@ -211,10 +212,10 @@ folder to run it in.
    Re-adding costs `WINDOW` additions per sample, the running sum two, whatever
    the window: at a window of 1000, that is 500 times less work. One caution:
    with floating-point samples, what the running sum adds and later subtracts
-   can differ in the last bit, so over millions of samples it drifts. Real code
-   keeps the sum in `double`, or re-adds the window now and then. These samples
-   are 0 and 1, which `float` holds exactly, so the two versions agree to the
-   bit.
+   can differ in the last bit, so over millions of samples it can drift. Code
+   that runs for a long time often keeps the sum in `double`, or re-adds the
+   window now and then. These samples are 0 and 1, which `float` holds exactly,
+   so the two versions agree to the bit.
 
    </details>
 

@@ -5,7 +5,7 @@
  *
  *   y[i] = b0 x[i] + b1 x[i-1] + b2 x[i-2] - a1 y[i-1] - a2 y[i-2]
  *
- * Five coefficients do what an FIR filter needs dozens of taps for.
+ * Five coefficients can do what an FIR filter needs dozens of taps for.
  * The struct is public, as in lesson 07: it is small, holds no pointers,
  * and a caller can keep one on the stack or in an array, with no malloc.
  */

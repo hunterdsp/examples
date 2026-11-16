@@ -2,19 +2,20 @@
 
 Run this lesson's commands in `c-by-example/27-fixed-point/`.
 
-Floating point keeps track of where the binary point is for you. **Fixed
-point** makes you do it: a number is an ordinary integer, and the program
-agrees, by convention, how many of its bits come after the point. In exchange,
-the arithmetic is integer arithmetic, which is exact, gives the same result on
-every machine, and on processors without floating-point hardware (many small
-DSP chips and microcontrollers) it is often the fastest arithmetic the chip
-has. The reference code of speech codecs such as ITU-T's G.729 is written in
-it.
+Floating point keeps track of where the binary point (a decimal point, in base
+2\) is for you. **Fixed point** makes you do it: a number is an ordinary
+integer, and the program agrees, by convention, how many of its bits come after
+the point. In exchange, the arithmetic is integer arithmetic, which is exact as
+long as it fits, gives the same result on every machine this course runs on,
+and on processors without floating-point hardware (many small DSP chips and
+microcontrollers) it is often the fastest arithmetic the chip has. The
+reference code of speech codecs such as ITU-T's G.729 is written in it.
 
 The workhorse format is **Q15**: an `int16_t` holding `x × 32768`. Fifteen bits
 after the point and a sign bit cover −1 to just under +1, in steps of 1/32768.
-Getting it right comes down to three habits: round instead of truncating,
-saturate instead of wrapping, and keep intermediate results wide.
+Getting it right comes down mostly to three habits, each explained below: round
+instead of truncating, saturate instead of wrapping, and keep intermediate
+results wide.
 
 ```bash
 cat q15.c
@@ -132,9 +133,9 @@ gain in Q15: error 84 dB below the signal
 
 ## What it shows
 
-- **The scale is a convention.** `16384` means 0.5 because everyone agreed to
-  divide by 32768. Nothing in the type says so: the comments and the function
-  names carry it.
+- **The scale is a convention.** `16384` means 0.5 because the program agrees
+  to divide by 32768. Nothing in the type says so: the comments and the
+  function names carry it.
 - **+1 doesn't fit.** A 16-bit signed integer goes from −32768 to +32767, so
   Q15 covers −1 exactly but stops one step short of +1. Converting 1.0, or
   multiplying −1 by −1, saturates to 0.99997.
@@ -146,8 +147,8 @@ gain in Q15: error 84 dB below the signal
 - **Saturate, don't wrap.** 0.75 + 0.5 doesn't fit. Wrapped, as integer
   overflow does, it becomes −0.75: a full-scale jump to the other extreme,
   heard as a loud crack. Saturated, it stays at the largest value, heard as
-  mild distortion. DSP processors saturate in hardware for exactly this reason.
-- **84 dB of quality.** Q15 rounding adds noise about 84 dB below a loud
+  mild distortion. Many DSP processors saturate in hardware, for this reason.
+- **Noise 84 dB down.** Q15 rounding adds noise about 84 dB below a loud
   signal: comparable to a CD, which is also 16 bits. Exercise 2 shows where
   that number comes from.
 
@@ -161,18 +162,18 @@ gain in Q15: error 84 dB below the signal
   broken-shift-negative.c:16:17: runtime error: left shift of negative value -16384
   ```
 
-  Fixed-point code reaches for shifts all the time. For signed values, multiply
-  or divide by the power of two, and let the compiler choose the instruction;
-  it will pick the shift when it is safe.
+  Fixed-point code reaches for shifts often. For signed values, multiply or
+  divide by the power of two, and let the compiler choose the instruction; it
+  will pick the shift when it is safe.
 
 - **Shifting a negative number right** is only *implementation-defined*: it
   gives some answer, and the compiler's documentation says which. Every
   compiler this course uses shifts in copies of the sign bit, which divides by
   2 rounding down, and `q15_mul` relies on it, with a comment saying so.
 
-- **Narrow intermediate results.** Sums of Q15 numbers easily pass 1 on the way
-  to an answer that doesn't. Keep them in 32 bits and saturate once, at the end
-  (exercise 1).
+- **Narrow intermediate results.** A running sum of Q15 numbers can pass 1 on
+  the way, even when the final answer stays below it. Keep them in 32 bits and
+  saturate once, at the end (exercise 1).
 
 - **The `int16_t` product.** `a * b` with two `int16_t`s is computed as `int`
   (lesson 02's promotion), which happens to be 32 bits here. Writing the casts
@@ -202,12 +203,13 @@ folder to run it in.
    ```
 
    The true sum is 1.6, which Q15 can't hold, so the saturating Q15 sum stops
-   at 0.99997, and a quarter of it is 0.25: wrong by a third, though the final
-   answer, 0.4, would have fitted. An `int32_t` has room for sums up to 2 (and
-   far beyond), so it carries 1.6 through, and only the final result is
-   saturated. That spare room is **headroom**, and DSP processors build it into
-   their accumulators: Texas Instruments' C55x DSPs, for one, add 40-bit
-   accumulators to their 16-bit samples.
+   at 0.99997, and a quarter of it is 0.25: wrong by more than a third, though
+   the final answer, 0.4, would have fitted. An `int32_t` has room for sums up
+   to 2 (and far beyond), so it carries 1.6 through, and only the final result
+   is saturated. That spare room is **headroom**, and many DSP processors build
+   it into their accumulators, the registers that hold running sums: Texas
+   Instruments' C55x DSPs, for one, add 40-bit accumulators to their 16-bit
+   samples.
 
    </details>
 
@@ -233,14 +235,15 @@ folder to run it in.
 
    Six decibels for every bit. Each bit halves the size of a step, and so of
    the rounding error, and half is −6.02 dB (lesson 02). The rule of thumb "6
-   dB per bit", counting every bit, sign included, tells you how many bits a
-   job needs: 8-bit audio has about 48 dB of range, 16-bit about 96, 24-bit
-   about 144. The table sits about 12 dB below the rule at every width. Most of
-   that is the signal: one rounding of a sine that fills the full scale is 1.76
-   dB better than the rule, but this one peaks at 0.9 × 0.3 = 0.27, 11.4 dB
-   below full scale, which leaves it 9.6 dB below. The last 2.6 dB is the other
-   roundings, mostly of the gain: 0.3 itself is rounded, so every result is
-   scaled slightly wrong, by about as much as the result's own rounding.
+   dB per bit", counting every bit, sign included, gives a first estimate of
+   how many bits a job needs: 8-bit audio has about 48 dB of range, 16-bit
+   about 96, 24-bit about 144. The table sits about 12 dB below the rule at
+   every width. Most of that is the signal: one rounding of a sine that fills
+   the full scale is 1.76 dB better than the rule, but this one peaks at 0.9 ×
+   0.3 = 0.27, 11.4 dB below full scale, which leaves it 9.6 dB below. The last
+   2.6 dB is the other roundings, mostly of the gain: 0.3 itself is rounded, so
+   every result is scaled slightly wrong, by about as much as the result's own
+   rounding.
 
    </details>
 
@@ -264,8 +267,8 @@ folder to run it in.
    Dropping bits always rounds down, so the error is always negative, half a
    step on average: a constant offset, a DC bias, added to every sample. A
    filter that feeds its output back (lesson 21) adds that bias again on every
-   pass, and it builds up. Rounding errs both ways equally, and the average is
-   zero. It costs one addition.
+   pass, and it can build up. Rounding errs both ways, and its average is close
+   to zero. It costs one addition.
 
    </details>
 

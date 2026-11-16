@@ -3,7 +3,8 @@
 Run this lesson's commands in `c-by-example/17-composition/`.
 
 Lesson 16's interface lets one loop run many kinds of processor. This lesson
-builds new kinds out of old ones, the two ways object-oriented languages do:
+builds new kinds out of old ones, the two main ways object-oriented languages
+do:
 
 - **Composition**: a new kind that *has* processors inside it. A chain is a
   processor whose job is to run other processors.
@@ -11,7 +12,7 @@ builds new kinds out of old ones, the two ways object-oriented languages do:
   gain whose level glides to a new value instead of jumping: the way lesson
   13's gain stage changed level without a click.
 
-C has keywords for neither. Both are structs, embedded the right way round.
+C has keywords for neither, but plain structs can do both.
 
 The interface is lesson 16's, with `reset` optional (lesson 16's exercise 3)
 and two new kinds declared at the end. `diff` shows what changed, line by line:
@@ -440,7 +441,7 @@ master gain doubles it, so the output climbs toward 2.0 without a jump.
 - **Treating a parent as a child.**
   [`broken-wrong-kind.c`](broken-wrong-kind.c) casts a plain gain to a ramp and
   sets its target. A ramp is a gain with more after it, and a gain has nothing
-  after it: the write lands past the end of its block.
+  after it: the write lands past the end of the gain's memory.
 
   ```
   broken-wrong-kind.c:49:25: runtime error: store to address 0x74bc597e0020 with insufficient space for an object of type 'float'
@@ -451,8 +452,8 @@ master gain doubles it, so the output climbs toward 2.0 without a jump.
 
 - **Deep hierarchies.** A ramp is a gain; a "stereo ramp" could be a ramp; and
   three levels down, a change at the top recompiles and can break everything
-  below it. Composition doesn't have that problem: prefer it, and inherit only
-  to reuse a parent's code, as the ramp reuses `gain_process`.
+  below it. Composition avoids most of that: prefer it, and inherit only to
+  reuse a parent's code, as the ramp reuses `gain_process`.
 
 - **Ownership that isn't written down.** `chain_create` *takes* its stages.
   Destroy one of them yourself afterwards, and the chain frees it a second
@@ -534,9 +535,9 @@ folder to run it in.
    ```
 
    So the ramp needs a `destroy` of its own. With `container_of`, a struct can
-   embed a base anywhere, even several, which is how the Linux kernel builds
-   its objects. Putting it first is still the simplest choice, and where it
-   fits, the cast is enough.
+   embed a base anywhere, even several, a pattern the Linux kernel uses widely.
+   Putting it first is still the simplest choice, and where it fits, the cast
+   is enough.
 
    </details>
 
@@ -560,8 +561,8 @@ folder to run it in.
    A [`fade`](exercises/ex3-fade/fade.c) *has* a processor rather than *being*
    one: it runs whatever it holds, then scales the output from 1/4 up to 1 over
    the first four samples. It includes only `processor.h` and works on a gain,
-   a chain, or another fade. That is composition's advantage, and why it is the
-   usual first choice: the ramp reuses a gain's code, but the fade works with
+   a chain, or another fade. That is composition's advantage, and why it is a
+   good first choice: the ramp reuses a gain's code, but the fade works with
    kinds that haven't been written yet.
 
    </details>

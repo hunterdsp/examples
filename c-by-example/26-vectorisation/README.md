@@ -6,7 +6,7 @@ Every processor this course runs on has **vector** instructions, which do the
 same operation on several numbers at once: SSE and AVX on x86, NEON on ARM. One
 instruction adds 4 pairs of floats, or 8, or 16. A loop that uses them can run
 several times faster, and in signal processing, where the same arithmetic is
-done to every sample, that is most loops.
+done to every sample, that describes many loops.
 
 You rarely write those instructions yourself. At `-O2` the compiler
 **vectorises** a loop on its own, when it can prove that doing 4 or 8
@@ -155,9 +155,9 @@ in lanes:  0.068 ms
 - **Order changes a float sum.** A million copies of `0.1f` add up to 104,857.6
   (the `double` total, which is as good as exact here). Added in order into one
   `float`, the answer is 1% high; in eight lanes, 0.1% low. Each addition
-  rounds to 24 bits, and how much it loses depends on how big the running total
-  already is: one total of 100,000 loses more on each `+ 0.1` than eight totals
-  of 13,000.
+  rounds to a `float`'s 24 bits of precision, and how much it loses depends on
+  how big the running total already is: one total of 100,000 loses more on each
+  `+ 0.1` than eight totals of 13,000.
 - **So the compiler keeps your order.** Vectorising `sum_in_order` would mean
   adding in lanes, which changes the answer, so the compiler doesn't, and every
   addition waits for the one before it.
@@ -169,8 +169,8 @@ in lanes:  0.068 ms
   write consecutive elements (lesson 25's struct of arrays) and don't depend on
   the previous iteration's result. The eight lanes are independent of each
   other; one running total is not.
-- **The remainder.** `n` needn't be a multiple of 8, so a short loop finishes
-  the last `n % 8` samples one at a time.
+- **The remainder.** `n` needn't be a multiple of 8, so a leftover loop
+  finishes the last `n % 8` samples one at a time.
 
 ## Pitfalls
 
@@ -185,8 +185,9 @@ in lanes:  0.068 ms
 - **`-ffast-math`.** This flag lets the compiler reorder floating-point
   arithmetic as if it were exact, which vectorises sums, and changes their
   answers in ways that differ from compiler to compiler (exercise 2). It also
-  assumes there are no NaNs or infinities, so checks for them may be removed.
-  Use it knowingly, on code where you have measured both speed and accuracy.
+  assumes there are no NaNs (not-a-number, what `0.0 / 0.0` gives) or
+  infinities, so checks for them may be removed. Use it knowingly, on code
+  where you have measured both speed and accuracy.
 
 - **The baseline instruction set.** By default, compilers for x86-64 use only
   the vector instructions every x86-64 processor has (SSE2: 4 floats at a
@@ -313,16 +314,16 @@ folder to run it in.
    in lanes:  0.147 ms
    ```
 
-   Every float sum changed, and differently with each compiler. clang
-   vectorised `sum_in_order`, so it is now as fast as the lanes were, and gives
-   the lanes' old answer; it also reorganised `sum_in_lanes`, which now gives a
-   third answer, more accurately and more slowly. gcc vectorised the copy of
-   `sum_in_order` it built into `main`, which printed the new sum. But the
-   timing calls the function through a pointer, which reaches its separate
-   copy, and that one still adds one number at a time (`objdump -d` shows it):
-   a new answer, at the old speed. With `-ffast-math`, the source no longer
-   decides the order of the arithmetic, so it no longer decides the answer.
-   Only the `double` total stayed put.
+   The in-order sum changed with both compilers, and differently; clang changed
+   the lanes' sum too. clang vectorised `sum_in_order`, so it is now as fast as
+   the lanes were, and gives the lanes' old answer. It also reorganised
+   `sum_in_lanes`, which now gives a third answer, more accurately and more
+   slowly. gcc vectorised the copy of `sum_in_order` it built into `main`,
+   which printed the new sum. But the timing calls the function through a
+   pointer, which reaches its separate copy, and that one still adds one number
+   at a time (`objdump -d` shows it): a new answer, at the old speed. With
+   `-ffast-math`, the source no longer decides the order of the arithmetic, so
+   it no longer decides the answer. Only the `double` total stayed put.
 
    </details>
 
@@ -364,13 +365,13 @@ folder to run it in.
    double lanes:  0.367 ms
    ```
 
-   The `double` lanes get the exact total; the `float` lanes are off by 0.1%.
-   It cost 5 times the time with gcc and twice with clang (0.130 ms): a 16-byte
-   SSE register holds 4 floats but only 2 doubles, and converting each float
-   adds work. For audio, a `float` sum is usually accurate enough; for long
-   sums, statistics, or anything where 0.1% matters, accumulate in `double` and
-   keep the samples in `float`. Lesson 02 said the same thing, before there was
-   a measurement to back it.
+   The `double` lanes get the total to every digit shown; the `float` lanes are
+   off by 0.1%. It cost 5 times the time with gcc and twice with clang (0.130
+   ms): a 16-byte SSE vector register holds 4 floats but only 2 doubles, and
+   converting each float adds work. For audio, a `float` sum is usually
+   accurate enough; for long sums, statistics, or anything where 0.1% matters,
+   accumulate in `double` and keep the samples in `float`. Lesson 02 gave the
+   same advice, before there was a measurement to back it.
 
    </details>
 

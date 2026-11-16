@@ -4,8 +4,8 @@ Run this lesson's commands in `c-by-example/14-opaque-types/`.
 
 Part III builds objects out of plain C: data, the functions that work on it,
 and a wall between the two and everyone else. C has no `class` and no
-`private`, but it has something that does the same job: a struct the compiler
-knows *exists*, without knowing what is *in* it.
+`private`, but it has something that does much of the same job: a struct the
+compiler knows *exists*, without knowing what is *in* it.
 
 ```c
 typedef struct lowpass lowpass_t; /* declared, never defined here */
@@ -228,14 +228,14 @@ halfway after one sample, the slow one a tenth of the way.
 - **Each object has its own memory.** `fast` and `slow` each remember their
   last output, `y`, between calls. That is why processing the step in two
   blocks of four gives the same eight samples as processing it in one go: the
-  state carries across. Audio arrives in blocks, so this is the property that
-  makes a filter usable at all.
-- **The wall protects the invariant.** `lowpass_create` refuses an `a` outside
-  `0 < a <= 1`, and since nothing outside `lowpass.c` can set `a`, every filter
-  that exists has a good one. With the struct in the header, any caller could
-  write `f->a = 7.0f` and the filter would blow up. The comparison is written
-  `!(a > 0.0f && a <= 1.0f)` so that a NaN, for which every comparison is
-  false, is refused too.
+  state carries across. Audio arrives in blocks, so a filter that works on
+  audio needs this property.
+- **The wall protects an invariant**, a rule that holds for every filter: here,
+  `0 < a <= 1`. `lowpass_create` refuses an `a` outside it, and since nothing
+  outside `lowpass.c` can set `a`, every filter that exists has a good one.
+  With the struct in the header, any caller could write `f->a = 7.0f` and the
+  filter would blow up. The comparison is written `!(a > 0.0f && a <= 1.0f)` so
+  that a NaN, for which every comparison is false, is refused too.
 - **The implementation is free to change.** Keep `y` in a `double`, add a
   member, reorder them: callers include the same header and compile the same
   way, because they never knew. Exercise 2 links one compiled `smooth.o` with
@@ -251,20 +251,20 @@ halfway after one sample, the slow one a tenth of the way.
   broken-reach-inside.c:16:4: error: invalid use of incomplete typedef ‘lowpass_t’ {aka ‘struct lowpass’}
   ```
 
-  That error is the point of an opaque type: it is not a wall you are meant to
-  climb. If callers need to change `a`, the header gets a `lowpass_set_a` that
-  checks the value.
+  That error is the point of an opaque type: the wall is there on purpose. If
+  callers need to change `a`, the header gets a `lowpass_set_a` that checks the
+  value.
 
 - **Defining the struct in two places.** Copying `struct lowpass { … }` into a
-  caller to get at its members compiles, and is a time bomb: the day
-  `lowpass.c` changes its struct, the copy is silently wrong, and nothing warns
-  you. One definition, in one file.
+  caller to get at its members compiles, and is a trap: the day `lowpass.c`
+  changes its struct, the copy is silently wrong, and nothing warns you. One
+  definition, in one file.
 
 - **Every call is a function call.** The compiler can't inline
-  `lowpass_process` into `smooth.c`, compiled separately (short of link-time
-  optimisation). Hide the struct, and give the functions whole blocks to work
-  on, as `lowpass_process` does, never one sample at a time: one call per 256
-  samples costs nothing.
+  `lowpass_process` into `smooth.c`, compiled separately (unless link-time
+  optimisation, which optimises across files, is on). Hide the struct, and give
+  the functions whole blocks to work on, as `lowpass_process` does, never one
+  sample at a time: one call per 256 samples costs almost nothing.
 
 ## Exercises
 

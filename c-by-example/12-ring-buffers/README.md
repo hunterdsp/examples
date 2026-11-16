@@ -5,7 +5,8 @@ Run this lesson's commands in `c-by-example/12-ring-buffers/`.
 Audio arrives in blocks while the program is busy with the last one. A filter
 needs the last N inputs. A delay effect plays back what came in half a second
 ago. Each needs a queue of samples that never ends, in memory that must not
-grow. Lesson 10's growing buffer would grow forever.
+grow. Lesson 10's growing buffer would keep growing for as long as the stream
+runs.
 
 A **ring buffer** is a fixed array used as that queue. Writes go in at the
 *head* and reads come out at the *tail*, and when either reaches the end of the
@@ -154,7 +155,7 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
 - **A delay line is a ring, primed.** Fill it with 3 zeros, then push each
   input and pop the oldest: everything comes out 3 samples late. Slots 2 to 4
   at the end hold 8, 9 and 10, still waiting their turn. Lesson 20's FIR filter
-  keeps its inputs this way.
+  (a weighted sum of recent inputs) keeps its inputs this way.
 - **Full and empty are answers, not errors.** `ring_push` refuses when full,
   and the caller decides: drop the sample, or wait. Audio code usually drops,
   and counts what it dropped.
@@ -171,11 +172,13 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
   ```
 
   ASan doesn't catch that write: it lands inside the struct, which is all
-  allocated memory. It is the sanitizer for *types*, not the one for memory,
-  that knows `buf` has only 8 elements. UBSan reports and carries on (lesson
-  01): the 9th push has written a sample over `head`, the member after `buf`,
-  and the 10th push uses that as an index, and crashes on the same line with
-  ASan's `SEGV`. When reports pile up, read the first one.
+  allocated memory. UBSan catches it because it knows `buf`'s type, an array of
+  8 elements; ASan knows only which memory is allocated.
+
+  UBSan reports and carries on (lesson 01): the 9th push has written a sample
+  over `head`, the member after `buf`, and the 10th push uses that as an index,
+  and crashes on the same line with ASan's `SEGV`. When reports pile up, read
+  the first one.
 
 - **A mask on a size that isn't a power of two.** `head & 5` is not `head % 6`;
   it skips slots 2 and 3 entirely, silently. Keep the size a power of two, or
@@ -249,8 +252,8 @@ folder to run it in.
    256: lesson 02's "free modulus". So `w + 1` stored back goes from 255 to 0,
    and `w - k` reaches back past slot 0 to 255, with no `if` and no mask. 300
    writes went round once and on to slot 44. It works for exactly 256 slots, no
-   other size, which is why it is a classic for byte-sized histories and lookup
-   tables.
+   other size, which is why it is a common trick for byte-sized histories and
+   lookup tables.
 
    </details>
 
@@ -273,8 +276,8 @@ folder to run it in.
    The same as lesson 04's `out`. Each step reads the oldest sample from the
    slot the newest is about to take, so the sum loses exactly what leaves the
    window. Two additions per sample, whatever the window, and no look-back loop
-   with its edge guard: the ring starts full of zeros, so the edge is just
-   silence. Every block-based filter in Part IV keeps its history like this.
+   with its edge guard: the ring starts full of zeros, so the edge is silence.
+   The filters in Part IV start their history at zero the same way.
 
    </details>
 

@@ -11,7 +11,7 @@ application binary interface. And a C function's name in the library is just
 its name. (C++ is harder to call: its compiler adds the argument types to each
 name, so that two functions can have the same name.) That is why so much of the
 world's numerical code, NumPy's included, is C underneath: a C library written
-once serves every language.
+once can serve all of those languages.
 
 Python's simplest way in is `ctypes`, part of its standard library. Python
 needs no compiler and nothing built for it: `ctypes` loads the shared library
@@ -260,8 +260,8 @@ sig 1.0.0, from Python
  6000.00 Hz  0.028
 ```
 
-The numbers of lesson 33's pipe and lesson 34's program, because it is the same
-compiled code doing the work.
+The numbers match lesson 33's pipe and lesson 34's program, because the same
+compiled code does the work.
 
 ## What it shows
 
@@ -299,7 +299,7 @@ compiled code doing the work.
 - **Crossing the boundary costs.** Every call converts its arguments, and a
   Python list of floats is copied into a C array and back. Call with large
   blocks, as `spectrum.py` does, not once per sample. Libraries that care about
-  speed pass NumPy arrays, whose numbers are already a C array, without
+  speed usually pass NumPy arrays, whose numbers are already a C array, without
   copying.
 
 - **A crash is a crash.** C called from Python can still write out of bounds,
@@ -328,8 +328,8 @@ and its build.
    An `int`: `ctypes` assumed the function returns one, and gave back the low
    32 bits of the string's 64-bit address, as a number. No error, no warning,
    and reading a string from that number would crash. A missing or wrong
-   declaration is the most common `ctypes` bug, which is why `sig.py` declares
-   every function once, at the top, from the header.
+   declaration is a common `ctypes` bug, which is why `sig.py` declares every
+   function once, at the top, from the header.
 
    </details>
 
@@ -378,8 +378,8 @@ and its build.
 
    `doctest` runs every `>>>` line in a module's docstrings and compares what
    it prints with the line below: lesson 32's runnable examples, built into
-   Python. The wrapper's documentation is tested by the same command that reads
-   it.
+   Python. `doctest` reads the wrapper's documentation and runs its examples,
+   so the documentation is tested too.
 
    </details>
 
@@ -387,7 +387,7 @@ and its build.
 
 That is the course: from an empty `main` to a library with a build, tests,
 documentation, tools, an install, and a second language. The ideas carry over
-to any C library you will meet, and the best next step is to read some.
+to any C library you will meet, and a good next step is to read some.
 [KissFFT](https://github.com/mborgerding/kissfft) is an FFT small enough to
 read in an afternoon. [FFTW](https://www.fftw.org/) is the FFT many others are
 measured against, with its plans (lesson 24) taken much further.

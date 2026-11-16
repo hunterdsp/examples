@@ -9,8 +9,8 @@ themselves: what each checker catches, and what none of them do.
 C does not check what you do with memory. Read past the end of an array, use a
 block after `free`, overflow an `int`: the language calls all of these
 *undefined behaviour*, and a compiled program usually carries on, wrong. The
-four checkers in the course's build command turn those silent wrong answers
-into a stop at the line that caused them:
+four checkers in the course's build command turn many of those silent wrong
+answers into a message naming the line that caused them:
 
 | checker                                | turned on by              | catches                                                               |
 | -------------------------------------- | ------------------------- | --------------------------------------------------------------------- |
@@ -168,9 +168,9 @@ the course's flags and checks it fails for the reason given here.
   compiler does (gcc: "'sum' is used uninitialized"; clang: "variable 'sum' is
   uninitialized when used here").
 
-- **The checkers see only what runs.** A bug on a path no run takes stays
-  hidden, sanitizers or not. And none of them work on code built without them:
-  a library compiled elsewhere is not checked inside.
+- **The sanitizers see only what runs.** A bug on a path no run takes stays
+  hidden, asserts included. And they can't check inside code built without
+  them: a library compiled elsewhere is not checked inside.
 
 - **Not every platform has every check.** LeakSanitizer runs by default on
   Linux, not with Apple's compiler on macOS; there, `leaks --atExit -- ./prog`

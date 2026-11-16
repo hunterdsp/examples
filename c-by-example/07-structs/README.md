@@ -3,8 +3,9 @@
 Run this lesson's commands in `c-by-example/07-structs/`.
 
 A **biquad** filter, the workhorse of audio equalisers and lesson 21, needs
-five coefficients and two numbers of memory. Seven loose `float`s passed to
-every call is seven chances to swap two. A `struct` bundles them, by name.
+five *coefficients*, the numbers that set its response, and two numbers of
+memory. Seven loose `float`s passed to every call is seven chances to swap two.
+A `struct` bundles them, by name.
 
 Here is the program:
 
@@ -141,19 +142,19 @@ offsetof(struct padded, value) = 8
 ## The step response
 
 Feed a filter a constant 1 and watch it settle: `0.200 0.680 1.032 1.077 …`. It
-overshoots past 1, rings, and settles back to 1, its DC gain. The overshoot
-comes from the feedback coefficients `a1` and `a2`: the filter feeds its own
-past outputs back in. Lesson 21 shows how to choose them, and what happens when
-feedback is too strong.
+overshoots past 1, rings, and settles back to 1, its *DC gain*: its gain for a
+constant input. The overshoot comes from the feedback coefficients `a1` and
+`a2`: the filter feeds its own past outputs back in. Lesson 21 shows how to
+choose them, and what happens when feedback is too strong.
 
 ## Padding
 
-`struct padded` holds 10 bytes of data in 24. The CPU wants a `double` at an
+`struct padded` holds 10 bytes of data in 24. Many CPUs want a `double` at an
 address that is a multiple of 8, so the compiler inserts 7 bytes after `tag`
 (`offsetof(…, value)` is 8, not 1) and 7 more after `flag`, so that in an array
 the *next* struct's `double` is aligned too. Put the largest members first and
 the gaps disappear: `struct packed` is 16. When you have a million of them
-(lesson 25), that's a third of your memory and cache.
+(lesson 25), that saves a third of the memory and cache.
 
 ## Pitfalls
 

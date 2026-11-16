@@ -2,12 +2,12 @@
 
 Run this lesson's commands in `c-by-example/32-docs/`.
 
-A library's user reads its documentation, not its source. Lesson 18 put the
-promises in the header's comments, because the header is the one file every
+Most of a library's users read its documentation, not its source. Lesson 18 put
+the promises in the header's comments, because the header is the one file every
 user has. **Doxygen** reads those comments and makes a website of them: a page
 per header, an entry per function, with its parameters, what it returns, and
-links between them. It is the usual tool for C and C++ APIs, and the comments
-it reads stay plain comments to the compiler and to anyone reading the header.
+links between them. It is a common tool for C and C++ APIs, and the comments it
+reads stay plain comments to the compiler and to anyone reading the header.
 
 Doxygen reads only comments marked for it, which start `/**`. `sig`'s biquad
 header:
@@ -183,9 +183,9 @@ Open `build/docs/html/index.html` in a browser, and follow the *Files* tab to
 ## Pitfalls
 
 - **Comments that repeat the code.** "`@param n` the n" passes every check and
-  helps no one. Say what the code can't: units (Hz, not radians), ranges, who
-  owns what, what happens to `*out` on failure, whether two buffers may
-  overlap.
+  tells a reader nothing new. Say what the code can't: units (Hz, not radians),
+  ranges, who owns what, what happens to `*out` on failure, whether two buffers
+  may overlap.
 
 - **Documentation that drifted.** Doxygen checks that a description exists, not
   that it is still true. An example that compiles and runs can't drift
@@ -249,7 +249,7 @@ and its build.
 
    A missing description fails the build, the same way a failing test does, so
    it can be a check in CI. Every rule worth keeping needs one: a rule that
-   nothing enforces is broken the first time someone is in a hurry.
+   nothing enforces tends to be broken the first time someone is in a hurry.
 
    </details>
 
