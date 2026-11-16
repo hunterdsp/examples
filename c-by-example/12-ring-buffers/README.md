@@ -163,10 +163,11 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
 
 - **Forgetting to wrap.** [`broken-ring-overflow.c`](broken-ring-overflow.c)
   indexes with the raw count. The 9th push writes `buf[8]`, past the array,
-  onto the struct's next member. UBSan knows the array's length:
+  onto the struct's next member. UBSan knows the array's length (gcc's message;
+  clang's points at column 3, and writes `float[8]`):
 
   ```
-  broken-ring-overflow.c:26:3: runtime error: index 8 out of bounds for type 'float[8]'
+  broken-ring-overflow.c:26:9: runtime error: index 8 out of bounds for type 'float [8]'
   ```
 
   ASan doesn't catch that write: it lands inside the struct, which is all

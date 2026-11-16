@@ -195,7 +195,7 @@ do. Recipe lines must start with a **tab**, not spaces.
 - **Macro arguments evaluated twice.** `DSP_SQUARE(i++)` expands to
   `((i++) * (i++))`, which increments `i` twice and is undefined behaviour.
   Prefer a `static inline` function when you can: it has none of these
-  problems, and usually costs nothing (Part III uses them).
+  problems, and usually costs little (Part III uses them).
 
 - **Defining things in headers.** A header *declares*. A function or variable
   *defined* in a header is defined again in every `.c` that includes it, and

@@ -175,7 +175,7 @@ the course's flags and checks it fails for the reason given here.
 - **Not every platform has every check.** LeakSanitizer runs by default on
   Linux, not with Apple's compiler on macOS; there, `leaks --atExit -- ./prog`
   does the job. Valgrind (`valgrind ./prog`, Linux) finds many of the same bugs
-  in a program built *without* sanitizers, at many times the run time (20 to 30
+  in a program built *without* sanitizers, at many times the run time (10 to 50
   times, says its manual).
 
 ## Exercises

@@ -11,10 +11,11 @@ how a filter's response is measured, and the first step of most audio
 compression.
 
 Done directly, the DFT costs `n × n` complex multiplies: a million for 1024
-samples. The **fast Fourier transform** (FFT) finds exactly the same numbers in
-about `n/2 × log₂ n`: 5120. It splits the transform into two half-size ones
-(the even samples and the odd), splits those again, all the way down to pairs,
-and combines the halves on the way back up with a step called a **butterfly**.
+samples. The **fast Fourier transform** (FFT) finds the same numbers, to within
+rounding, in about `n/2 × log₂ n`: 5120. It splits the transform into two
+half-size ones (the even samples and the odd), splits those again, all the way
+down to pairs, and combines the halves on the way back up with a step called a
+**butterfly**.
 
 The interface follows lesson 13: a *plan* does everything that depends only on
 `n`, once, and the transform itself never allocates.

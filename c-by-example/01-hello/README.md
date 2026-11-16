@@ -2,8 +2,7 @@
 
 Run this lesson's commands in `c-by-example/01-hello/`.
 
-A first program, and the build command used for the rest of the course. Here it
-is:
+A first program, and the build command the course starts from. Here it is:
 
 ```bash
 cat hello.c

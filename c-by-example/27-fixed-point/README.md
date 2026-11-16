@@ -235,9 +235,12 @@ folder to run it in.
    the rounding error, and half is −6.02 dB (lesson 02). The rule of thumb "6
    dB per bit", counting every bit, sign included, tells you how many bits a
    job needs: 8-bit audio has about 48 dB of range, 16-bit about 96, 24-bit
-   about 144. The table sits about 12 dB below the rule at every width, because
-   its signal peaks at 0.9 × 0.3 = 0.27, 11 dB below full scale, and three
-   roundings add up to more error than one.
+   about 144. The table sits about 12 dB below the rule at every width. Most of
+   that is the signal: one rounding of a sine that fills the full scale is 1.76
+   dB better than the rule, but this one peaks at 0.9 × 0.3 = 0.27, 11.4 dB
+   below full scale, which leaves it 9.6 dB below. The last 2.6 dB is the other
+   roundings, mostly of the gain: 0.3 itself is rounded, so every result is
+   scaled slightly wrong, by about as much as the result's own rounding.
 
    </details>
 
