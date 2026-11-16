@@ -257,7 +257,11 @@ folder to run it in.
 
    ```
    gain.c:14:3: remark: vectorized loop (vectorization width: 4, interleaved count: 2) [-Rpass=loop-vectorize]
+      14 |   for (size_t i = 0; i < n; i++)
+         |   ^
    gain.c:24:3: remark: vectorized loop (vectorization width: 4, interleaved count: 2) [-Rpass=loop-vectorize]
+      24 |   for (size_t i = 0; i < n; i++)
+         |   ^
    ```
 
    At `-O2`, gcc vectorises only `gain_restrict` (line 24). For `gain`, `out`

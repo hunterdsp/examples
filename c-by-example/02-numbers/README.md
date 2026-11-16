@@ -432,7 +432,8 @@ folder to run it in.
    widened first. The phase is back at 0: eight eighths of a cycle is one whole
    cycle, and the wrap did the modulo.
 
-   Widening after the multiply instead:
+   Widening after the multiply instead (gcc's message; clang's names the type
+   `int32_t`):
 
    <!-- no-run -->
 
@@ -442,15 +443,14 @@ folder to run it in.
    ```
 
    ```
-   broken-late.c:17:27: runtime error: signed integer overflow: 100000 * 100000 cannot be represented in type 'int'
+   broken-late.c:18:27: runtime error: signed integer overflow: 100000 * 100000 cannot be represented in type 'int'
    1410065408
    ```
 
    The multiply happened in 32 bits and overflowed before the cast was reached,
    so the `int64_t` holds a wrong answer: 10¹⁰ modulo 2³², read as a signed
    number. UBSan reports it and, under this build command, lets the program
-   carry on; `check.sh` builds with `-fno-sanitize-recover`, which stops it
-   there instead.
+   carry on, so the wrong answer is printed too.
 
    </details>
 
