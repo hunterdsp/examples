@@ -216,6 +216,8 @@ and its build.
 
    `sed '/…/d'` deletes the matching line:
 
+   <!-- expect-fail -->
+
    ```bash
    mkdir -p build/sabotage
    sed '/@param n How many samples\./d' ../sig/include/sig/osc.h > build/sabotage/osc.h

@@ -396,7 +396,8 @@ folder to run it in.
 
    ```bash
    for lib in staging/lib/libsig.so staging/lib/libsig.dylib; do
-     [ -e "$lib" ] && python3 -c "import ctypes, sys; lib = ctypes.CDLL(sys.argv[1]); print('sig_version:', hasattr(lib, 'sig_version')); print('sig__freq_ok:', hasattr(lib, 'sig__freq_ok'))" "$lib"
+     [ -e "$lib" ] || continue
+     python3 -c "import ctypes, sys; lib = ctypes.CDLL(sys.argv[1]); print('sig_version:', hasattr(lib, 'sig_version')); print('sig__freq_ok:', hasattr(lib, 'sig__freq_ok'))" "$lib"
    done
    ```
 

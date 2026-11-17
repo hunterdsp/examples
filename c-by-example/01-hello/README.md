@@ -159,6 +159,11 @@ folder to run it in.
 
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined hello.c -o hello
+   ```
+
+   <!-- expect-fail -->
+
+   ```bash
    ./hello; echo $?
    ```
 
@@ -169,6 +174,8 @@ folder to run it in.
    ```
 
    `echo $?` prints the status the program returned: 3. Now `&&`:
+
+   <!-- expect-fail -->
 
    ```bash
    ./hello && echo worked

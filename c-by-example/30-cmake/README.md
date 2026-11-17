@@ -382,6 +382,8 @@ folder to run it in.
    cmake -S ../sig -B build-release -DCMAKE_BUILD_TYPE=Release
    ```
 
+   <!-- expect-fail -->
+
    ```bash
    grep -c -- '-O' build/compile_commands.json
    grep -c -- '-O3 -DNDEBUG' build-release/compile_commands.json

@@ -275,6 +275,8 @@ folder to run it in.
    `biquad.c` into the build folder, so `sig` itself is left alone, and `diff`
    shows what changed:
 
+   <!-- expect-fail -->
+
    ```bash
    mkdir -p build/sabotage
    sed 's|(1.0 - c) / 2.0 :|(1.0 - c) / 4.0 :|' ../sig/src/biquad.c > build/sabotage/biquad.c
@@ -293,6 +295,11 @@ folder to run it in.
 
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../sig/include -I ../sig/src ../sig/tests/test_biquad.c build/sabotage/biquad.c ../sig/src/osc.c ../sig/src/common.c -o build/sabotage/test_biquad -lm
+   ```
+
+   <!-- expect-fail -->
+
+   ```bash
    build/sabotage/test_biquad
    ```
 

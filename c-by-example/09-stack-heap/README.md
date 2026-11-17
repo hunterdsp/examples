@@ -204,6 +204,8 @@ folder to run it in.
    calloc'd buffer: 0 nonzero samples
    ```
 
+   <!-- expect-fail -->
+
    ```bash
    ./heap 0
    ```

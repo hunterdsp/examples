@@ -164,6 +164,8 @@ keyboard, and goes to the terminal even when standard output is piped. The
 **exit status** tells a script what happened: 0 for success, 1 for a failure,
 and 2, by convention, for a command line it didn't understand:
 
+<!-- expect-fail -->
+
 ```bash
 build/sig-tone 1 30000
 echo "exit status $?"

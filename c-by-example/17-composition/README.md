@@ -27,6 +27,8 @@ and two new kinds declared at the end. `diff` shows what changed, line by line:
 `<` is lesson 16's, `>` this lesson's, and `c` and `a` mark lines changed and
 added:
 
+<!-- expect-fail -->
+
 ```bash
 diff ../16-interfaces/processor.h processor.h
 ```

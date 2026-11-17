@@ -401,6 +401,11 @@ folder to run it in.
 
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined pick.c -o pick
+   ```
+
+   <!-- expect-fail -->
+
+   ```bash
    ./pick soft 0.5
    ./pick fold 1.5
    ./pick fuzz 0.5

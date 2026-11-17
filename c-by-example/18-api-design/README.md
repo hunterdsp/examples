@@ -349,6 +349,11 @@ folder to run it in.
 
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -DSIG_BUILD_MAJOR=2 compat.c sig.c -o compat -lm
+   ```
+
+   <!-- expect-fail -->
+
+   ```bash
    ./compat
    ```
 

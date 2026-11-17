@@ -25,7 +25,8 @@
 # stricter: C99, -pedantic, every warning an error, and AddressSanitizer +
 # UBSan, with -fno-sanitize-recover=all so that UBSan stops the program at
 # its first report instead of carrying on, as it does by default. README
-# blocks run twice: once as the reader types them, and once strict.
+# blocks run twice: once as the reader types them, for their output, and
+# once strict, for their exit status.
 #
 # Usage: ./check.sh 01-hello 02-numbers ...      (CC=clang ./check.sh ...)
 
@@ -54,15 +55,14 @@ bad() {
 # own builds left behind. In each, a `cc` on PATH stands in for the
 # compiler under test.
 #
-#   plain    adds nothing: the reader's command, whose output must be
-#            exactly the output shown.
-#   strict   adds -pedantic -Werror -fno-sanitize-recover=all. That is
-#            how exercise answers, which only README blocks build, get
-#            the strict build too. A block must do here what it did in
-#            the plain pass, unless the output shown is a diagnostic
-#            (a warning, or a sanitizer's report), which the strict
-#            flags change on purpose: an error instead of a warning,
-#            or a stop instead of carrying on.
+#   plain    adds nothing: the reader's command, whose stdout and
+#            stderr must be exactly the output shown.
+#   strict   adds -pedantic -Werror -fno-sanitize-recover=all, runs
+#            each block under set -e, and checks only the exit status:
+#            0, unless the README marks the block `<!-- expect-fail -->`
+#            (one of its commands fails on purpose), and then not 0. That is how
+#            exercise answers, which only README blocks build, get the
+#            strict build too, and a marker can't outlive its failure.
 here=$(pwd)
 # A git hook in a linked worktree runs with GIT_DIR set, and ls-files then
 # lists paths from the repo root, not from here (as in the Makefile).
@@ -112,7 +112,7 @@ path0=$PATH
 run_blocks() {
 	PATH="$work/$1-bin:$path0"
 	export PATH
-	while read -r k line from; do
+	while read -r k line from _; do
 		case $from in
 		/) cd "$work/$1" ;;
 		*) cd "$work/$1/c-by-example/$2/$from" 2>/dev/null ;;
@@ -120,21 +120,26 @@ run_blocks() {
 			echo missing >"$work/rg/$k.$1-status"
 			continue
 		}
-		# shellcheck disable=SC1090  # the block is generated
-		. "$work/rg/$k.sh" >"$work/rg/$k.$1" 2>&1
+		# The plain pass runs the block as a reader's shell would. The
+		# strict pass runs it under set -e, in a subshell, so that any
+		# command failing fails the block, not only its last one: a
+		# build that fails strict, followed by `echo $?`, would
+		# otherwise exit 0.
+		if [ "$1" = strict ]; then
+			# shellcheck disable=SC1090  # the block is generated
+			(
+				set -e
+				. "$work/rg/$k.sh"
+			) >"$work/rg/$k.$1" 2>&1
+		else
+			# shellcheck disable=SC1090
+			. "$work/rg/$k.sh" >"$work/rg/$k.$1" 2>&1
+		fi
 		echo $? >"$work/rg/$k.$1-status"
 	done <"$work/rg/list"
 	PATH=$path0
 	cd "$here" || exit 2
 }
-
-# What a diagnostic looks like in shown output, as a whole line's start, so
-# a program's own "error: ..." is not one: gcc's and clang's warnings and
-# errors and UBSan's reports (FILE:LINE[:COL]: ...), ASan's and LSan's
-# (==PID==ERROR: ...Sanitizer), and TSan's (WARNING: ThreadSanitizer).
-diagnostic='^[^ :]+:[0-9]+(:[0-9]+)?: (warning|error|runtime error)'
-diagnostic="$diagnostic|^==[0-9]+==ERROR: [A-Za-z]+Sanitizer"
-diagnostic="$diagnostic|^WARNING: ThreadSanitizer"
 
 for lesson in "$@"; do
 	lesson=${lesson%/}
@@ -151,13 +156,17 @@ for lesson in "$@"; do
 	# goes there. A bash block immediately followed (blank lines only) by
 	# another fenced block is a command and its output, and the output
 	# must match byte for byte. A bash block with no output block must
-	# exit 0.
+	# exit 0, as must every block built strict, except one marked
+	# `<!-- expect-fail -->` (alone on its line, before the block): it
+	# fails on purpose, and built strict it must fail. A marked block may
+	# not run `cc`, since it would accept a failed build too.
 	# `<!-- no-run -->` skips the next bash block: kept for setup run once
 	# (00), and commands that fail on purpose, whose message differs by
 	# compiler (a broken-*.c checks those).
 	rm -rf "$work/rg" && mkdir "$work/rg"
 	awk -v dir="$work/rg" -v home="cd c-by-example/$lesson" '
 		/^[ ]*<!-- no-run -->[ ]*$/ { norun = 1; next }
+		/^[ ]*<!-- expect-fail -->[ ]*$/ { xfail = 1; next }
 		# A fence is three or more backticks (mdformat uses more when
 		# the block itself holds three), and only a fence at least as
 		# long closes it, as in Markdown.
@@ -182,10 +191,10 @@ for lesson in "$@"; do
 					k++
 					printf "%s", body > (dir "/" k ".sh"); close(dir "/" k ".sh")
 					from = first == home ? "/" : where == "" ? "." : where
-					print k, NR, from >> (dir "/list")
+					print k, NR, from, xfail + 0 >> (dir "/list")
 					pending = 1; gap = 0
 				} else { pending = 0 }
-				norun = 0
+				norun = 0; xfail = 0
 			} else if (kind == "out") {
 				printf "%s", body > (dir "/" k ".exp"); close(dir "/" k ".exp")
 				pending = 0
@@ -197,6 +206,11 @@ for lesson in "$@"; do
 			line = $0
 			sub("^ {0," ind "}", "", line)
 			if (n_lines++ == 0) first = line
+			# A marked block accepts any failure, a failed strict build
+			# too, so it may not build: the build goes in a block of
+			# its own, which must pass.
+			if (kind == "bash" && xfail && !norun && line ~ /^cc /)
+				print NR >> (dir "/badxfail")
 			if (line ~ /^cd([ ;]|$)/ && kind == "bash" &&
 			    !(n_lines == 1 && line == home) && line != "cd examples")
 				badcd = line
@@ -227,6 +241,12 @@ for lesson in "$@"; do
 			bad "README" "line $line: put \`In \`exercises/…\`:\` alone on its line"
 		done <"$work/rg/badin"
 	fi
+	if [ -s "$work/rg/badxfail" ]; then
+		while read -r line; do
+			: >"$work/out"
+			bad "README" "line $line builds inside an expect-fail block: give the build its own block"
+		done <"$work/rg/badxfail"
+	fi
 	if [ -s "$work/rg/badfence" ]; then
 		: >"$work/out"
 		bad "README" "the fence at line $(cat "$work/rg/badfence") never closes"
@@ -238,7 +258,7 @@ for lesson in "$@"; do
 		run_blocks plain "$lesson"
 		run_blocks strict "$lesson"
 		checked=0
-		while read -r k line from; do
+		while read -r k line from xfail; do
 			status=$(cat "$work/rg/$k.plain-status")
 			if [ "$status" = missing ]; then
 				: >"$work/out"
@@ -255,24 +275,21 @@ for lesson in "$@"; do
 					tr '`' "'" <"$work/rg/$k.plain" |
 						diff "$work/rg/$k.want" - >"$work/out"
 					bad "README" "block at line $line: output differs"
-				elif grep -Eq "$diagnostic" "$work/rg/$k.exp"; then
-					ok "README block at line $line"
-				elif ! tr '`' "'" <"$work/rg/$k.strict" | cmp -s - "$work/rg/$k.want"; then
-					tr '`' "'" <"$work/rg/$k.strict" |
-						diff "$work/rg/$k.want" - >"$work/out"
-					bad "README" "block at line $line: output differs when built strict"
-				elif [ "$strict" != "$status" ]; then
-					cp "$work/rg/$k.strict" "$work/out"
-					bad "README" "block at line $line exited $strict when built strict, $status plain"
-				else
-					ok "README block at line $line"
+					continue
 				fi
-			elif [ "$status" -ne 0 ]; then
+			elif [ "$status" -ne 0 ] && [ "$xfail" = 0 ]; then
 				cp "$work/rg/$k.plain" "$work/out"
 				bad "README" "block at line $line exited $status"
-			elif [ "$strict" != 0 ]; then
+				continue
+			fi
+			if [ "$xfail" = 1 ] && [ "$strict" = 0 ]; then
+				cp "$work/rg/$k.strict" "$work/out"
+				bad "README" "block at line $line is marked expect-fail, but built strict it exits 0"
+			elif [ "$xfail" = 0 ] && [ "$strict" != 0 ]; then
 				cp "$work/rg/$k.strict" "$work/out"
 				bad "README" "block at line $line exited $strict when built strict"
+			else
+				ok "README block at line $line"
 			fi
 		done <"$work/rg/list"
 		[ "$checked" -gt 0 ] || {
