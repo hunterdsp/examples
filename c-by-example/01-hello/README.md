@@ -16,7 +16,7 @@ cat hello.c
 ```
 
 ```c
-/* hello.c -- a first program, and the build command used from here on.
+/* hello.c -- a first program, and the build command for Parts I and II.
  *
  *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
  *       hello.c -o hello && ./hello

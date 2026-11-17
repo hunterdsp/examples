@@ -246,11 +246,14 @@ The same numbers as lesson 33's pipe, from one program.
 ## Pitfalls
 
 - **The loader can't find it.** The linker found `libsig.so` because `-L` said
-  where. The loader, when the program runs, doesn't read `-L`. It looks in the
-  folders recorded in the program as its *rpath*, the folders named in
-  `LD_LIBRARY_PATH`, and the system's folders (on Linux, those listed in
-  `/etc/ld.so.conf`, which `ldconfig` keeps in a cache). Without `-Wl,-rpath,…`
-  (`-Wl,` passes the rest to the linker), Linux says:
+  where. The loader, when the program runs, doesn't read `-L`. On Linux it
+  looks, in order, in the folders named in `LD_LIBRARY_PATH`; the folders
+  recorded in the program as its *rpath* (which `-Wl,-rpath` stores as
+  `RUNPATH`; the older `RPATH`, from `-Wl,--disable-new-dtags`, comes before
+  `LD_LIBRARY_PATH`); and the system's folders: those listed in
+  `/etc/ld.so.conf`, which `ldconfig` keeps in a cache, then `/lib` and
+  `/usr/lib`. Without `-Wl,-rpath,…` (`-Wl,` passes the rest to the linker),
+  Linux says:
 
   <!-- no-run -->
 

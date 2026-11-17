@@ -152,7 +152,7 @@ tone at 2000 Hz:  0.0000 +0.0000i   size 0: no tone here
   `-Wall` checks formats against arguments and warns (gcc's words):
 
   ```
-  broken-complex-printf.c:15:17: warning: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Wformat=]
+  broken-complex-printf.c:16:17: warning: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Wformat=]
   ```
 
   It is only a warning, so the program still builds, and prints `z = 3.000000`,
