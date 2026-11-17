@@ -1,6 +1,7 @@
 # Learning C by Example
 
 [![CI](https://github.com/hunterdsp/examples/actions/workflows/c-by-example.yml/badge.svg)](https://github.com/hunterdsp/examples/actions/workflows/c-by-example.yml)
+[![Read it as a website](https://img.shields.io/badge/read-as%20a%20website-indigo?logo=materialformkdocs&logoColor=white)](https://hunterdsp.github.io/examples/)
 [![Under construction](https://img.shields.io/badge/status-under%20construction-orange)](#learning-c-by-example)
 [![C99](https://img.shields.io/badge/C-99-informational?logo=c&logoColor=white)](https://en.cppreference.com/w/c/99)
 [![Linux | macOS](https://img.shields.io/badge/platforms-Linux%20%7C%20macOS-informational?logo=linux&logoColor=white)](../.github/workflows/c-by-example.yml)
