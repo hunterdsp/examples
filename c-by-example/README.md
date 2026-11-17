@@ -9,14 +9,19 @@
 > [!WARNING]
 > **UNDER CONSTRUCTION.**
 
-**Deceptively simple. Extremely powerful.**
+**The usual reason not to use C is the best reason to learn it.**
 
-C has a small grammar and almost no runtime. That is a large part of why it is
-still around, and why so much fast code is written in it. This introduction to
-the language starts from an empty file and ends with a C library ready for
-distribution, built one runnable example at a time. Along the way it covers
-some common pitfalls, memory management, and how to build objects out of plain
-structs and function pointers.
+C hides almost nothing. You decide where every byte lives and when it is given
+back, and nothing checks that an index is inside its array. That is why C has a
+name for being hard, and it is also what it teaches: C makes you think about
+how the machine actually works, and that carries over to every language you use
+afterwards. It has a small grammar and almost no runtime, which is why so much
+fast code, many other languages' own interpreters among it, is written in it.
+
+This introduction to the language starts from an empty file and ends with a C
+library ready for distribution, built one runnable example at a time. Along the
+way it covers some common pitfalls, memory management, and how to build objects
+out of plain structs and function pointers.
 
 The examples lean toward performance algorithms and signal processing, but you
 need not be an expert in either to follow along.

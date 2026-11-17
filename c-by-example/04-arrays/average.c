@@ -1,4 +1,4 @@
-/* average.c -- a moving average: the simplest filter there is.
+/* average.c -- a moving average: simple and extremely useful.
  *
  *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
  *       average.c -o average && ./average
