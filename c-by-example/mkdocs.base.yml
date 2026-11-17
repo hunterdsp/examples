@@ -1,0 +1,73 @@
+# The course website's settings, read by zensical (make docs).
+#
+# Not used as it is: site.py copies it to build/site/mkdocs.yml and adds
+# the sidebar (nav:), made from README.md's Contents. So paths here are
+# relative to build/site/, where the pages (docs/) are written too.
+
+site_name: Learning C by Example
+site_description: >-
+  C from an empty file to a shipped library, one runnable, tested example at
+  a time, with signal processing along the way.
+site_url: https://hunterdsp.github.io/examples/
+repo_url: https://github.com/hunterdsp/examples
+repo_name: hunterdsp/examples
+edit_uri: edit/main/c-by-example/
+docs_dir: docs
+site_dir: html
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - content.code.copy
+    - content.code.select
+    - navigation.footer       # back and next, at the foot of every page
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.path
+    - navigation.sections     # the Parts, as headings in the sidebar
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to system preference
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition            # the > [!TIP] boxes, converted by site.py
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.details      # the folded answers: site.py writes ??? blocks
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
