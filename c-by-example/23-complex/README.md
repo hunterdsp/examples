@@ -223,8 +223,10 @@ folder to run it in.
    [`cplx.c`](exercises/ex2-struct/cplx.c) needs three functions: `cmul` (from
    `i·i = −1`), `cadd`, and `cpolar` (Euler's formula). The arithmetic is the
    same, only spelled out, and the results agree to 12 decimal places. It is
-   more to write, and it builds on compilers without `<complex.h>`, MSVC among
-   them, which is one reason many portable libraries take this route.
+   more to write, and the three helpers build on compilers without C99's
+   complex types, MSVC among them, which is one reason many portable libraries
+   take this route. (The `<complex.h>` half of `cplx.c` is only there to check
+   them, so the file as a whole still needs those types.)
 
    </details>
 

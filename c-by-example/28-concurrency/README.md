@@ -221,10 +221,13 @@ four threads:  17.1 ms
 
 - **The real-time thread.** A thread that must meet an audio deadline, as in
   lesson 13, should never wait for a lock that another thread might hold for
-  long. Real-time audio code usually passes data between threads with
-  *lock-free* queues, which never make a thread wait, built on C11's
-  `<stdatomic.h>`, which is beyond C99. Exercise 3's locked queue is a good
-  tool everywhere else.
+  long. Real-time audio code usually passes data between threads with a queue
+  that has one writer and one reader, built on atomic operations (C11's
+  `<stdatomic.h>`, which is beyond C99): each push or pop takes a bounded
+  number of steps and never blocks. Being *lock-free* alone doesn't promise
+  that: in a lock-free structure, one thread's operation can keep retrying
+  while the others make progress. Exercise 3's locked queue is a good tool
+  everywhere else.
 
 ## Exercises
 

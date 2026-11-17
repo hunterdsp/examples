@@ -102,8 +102,9 @@ gain_in_place (float *buf, size_t n, float g)
 /* Out of place, with the contract in the types:
      const float *in   -- this function will not write the input
      float *out        -- it will write the output
-     restrict          -- in and out never overlap: a promise that only
-                          affects speed, safe to ignore until lesson 26 */
+     restrict          -- in and out never overlap. Breaking the promise
+                          is undefined behaviour: for in-place work, call
+                          gain_in_place. Lesson 26 explains the rest. */
 static void
 gain (const float *restrict in, float *restrict out, size_t n, float g)
 {
@@ -188,8 +189,10 @@ sig[1] lives 4 bytes after sig[0]
 - **The types state the contract.** In `gain(const float *in, float *out, …)`,
   the `const` promises the input comes back untouched, and the compiler
   enforces it. `restrict` promises `in` and `out` don't overlap, which frees
-  the compiler to optimise. When the promise holds, it changes only speed, not
-  what the code means, so you can ignore it until lesson 26 explains it.
+  the compiler to optimise. The caller must keep that promise: passing the same
+  buffer as both is undefined behaviour, which is why in-place work has its own
+  function, `gain_in_place`. Why the promise makes code faster can wait until
+  lesson 26.
 - **Pointer arithmetic counts elements, not bytes.** `p + 1` is the next
   `float`, 4 bytes on. Subtracting two pointers into the same array gives the
   distance in elements, which is how `find_peak`'s result becomes an index.
