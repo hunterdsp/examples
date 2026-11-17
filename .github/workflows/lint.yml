@@ -1,9 +1,10 @@
 name: lint
 
 # Every gate in the repo, run as `make lint` runs it locally: shellcheck and
-# shfmt on every shell script, scripts/README.md's hash table against the
-# scripts, and c-by-example's formatting (mdformat, clang-format). Tools
-# are pinned in the uv.lock files, so CI and a laptop run the same ones.
+# shfmt on every shell script, American spelling (codespell) in every
+# file, scripts/README.md's hash table against the scripts, and
+# c-by-example's formatting (mdformat, clang-format). Tools are pinned
+# in the uv.lock files, so CI and a laptop run the same ones.
 
 on:
   push:

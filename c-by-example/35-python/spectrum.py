@@ -1,4 +1,4 @@
-"""spectrum.py -- lesson 34's analyse.c, in Python, with the same library.
+"""spectrum.py -- lesson 34's analyze.c, in Python, with the same library.
 
 Two tones, a low-pass filter, and the amplitude spectrum of the last 4096
 samples: the same calls to the same compiled code, so the same numbers.

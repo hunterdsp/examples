@@ -4,7 +4,7 @@
  *   cc -std=c99 -Wall -Wextra -O2 pow.c -o pow -lm && ./pow time
  *
  * pow is a general function, for any power, so squaring with it looks
- * wasteful. Measure it, at both optimisation levels, before rewriting.
+ * wasteful. Measure it, at both optimization levels, before rewriting.
  */
 #include <math.h>
 #include <stdio.h>

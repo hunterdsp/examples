@@ -3,7 +3,7 @@
  *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
  *       numbers.c -o numbers -lm && ./numbers
  *
- * -lm links the maths library (log10, pow); on Linux it is separate.
+ * -lm links the math library (log10, pow); on Linux it is separate.
  */
 #include <inttypes.h> /* PRId64: the printf format for int64_t */
 #include <math.h>

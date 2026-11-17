@@ -125,7 +125,7 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined average.c -o average
       #0 0x5c73315d0d1a in fill …/04-arrays/broken-off-by-one.c:13:12
   ```
 
-  Without a sanitizer this usually *works*, corrupting a neighbouring variable
+  Without a sanitizer this usually *works*, corrupting a neighboring variable
   instead. That is a hard kind of bug to find: the program carries on with a
   wrong answer. For N elements, loop `i < N`.
 
@@ -189,7 +189,7 @@ folder to run it in.
     out:  1.0  0.0  0.3  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
    ```
 
-   Silence, once the window is full: any 4 neighbours hold two +1s and two −1s,
+   Silence, once the window is full: any 4 neighbors hold two +1s and two −1s,
    which cancel. Alternating samples are the highest frequency samples can
    show, and the filter removes it completely, while the step above, a low
    frequency, came through. Low frequencies pass, high ones are cut: a low-pass

@@ -25,6 +25,13 @@ repos:
         pass_filenames: false
         files: \.sh$
 
+      # American spelling, in any file and any file name.
+      - id: spelling
+        name: American spelling (codespell)
+        entry: make -s lint-spelling
+        language: system
+        pass_filenames: false
+
       # A changed script changes its hash, so its row must change with it.
       - id: script-hashes
         name: scripts/README.md hash table
@@ -57,7 +64,7 @@ repos:
         files: ^c-by-example/(.*\.[ch]|.*\.md|libfuncs\.py)$
 
       # A lesson added, renamed or moved in README.md's Contents moves its
-      # neighbours' back/next links (nav.py writes them).
+      # neighbors' back/next links (nav.py writes them).
       - id: nav
         name: back/next links (c-by-example)
         entry: make -s lint-nav

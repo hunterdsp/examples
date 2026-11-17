@@ -14,7 +14,7 @@ Lesson 23 measured one frequency in a signal by multiplying it by a phasor and
 adding up. Doing that for every frequency at once is the **discrete Fourier
 transform** (DFT): `n` samples in, `n` complex numbers out, one per frequency
 *bin*. Bin `k` says how much of the frequency `k` cycles per `n` samples is
-present, and at what angle. It is how a spectrum analyser draws its picture,
+present, and at what angle. It is how a spectrum analyzer draws its picture,
 how a filter's response is measured, and often a first step in audio
 compression.
 
@@ -348,7 +348,7 @@ folder to run it in.
    n =  256: FFT matches DFT: yes
    ```
 
-   Built with optimisation on, for timing:
+   Built with optimization on, for timing:
 
    ```bash
    cc -std=c99 -Wall -Wextra -O2 -I ../.. speed.c ../../fft.c -o speed -lm
@@ -406,7 +406,7 @@ folder to run it in.
    1000 Hz still show −31 to −33 dB. The Hann window brings both ends of the
    block smoothly to 0, so there is no jump: 40 dB less leakage 500 Hz away.
    The price is a wider peak, since bins 20 and 22 now hold more of the tone.
-   Spectrum analysers window their blocks for this reason.
+   Spectrum analyzers window their blocks for this reason.
 
    </details>
 

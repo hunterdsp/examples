@@ -34,7 +34,7 @@ gain_in_place (float *buf, size_t n, float g)
      const float *in   -- this function will not write the input
      float *out        -- it will write the output
      restrict          -- in and out never overlap. Breaking the promise
-                          is undefined behaviour: for in-place work, call
+                          is undefined behavior: for in-place work, call
                           gain_in_place. Lesson 26 explains the rest. */
 static void
 gain (const float *restrict in, float *restrict out, size_t n, float g)

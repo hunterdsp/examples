@@ -3,7 +3,7 @@
  * A local variable holds whatever its memory held before (lesson 07), so
  * `sum` starts at garbage, and so does the result. The sanitizers in this
  * course don't check this, but the compiler does: -Wall warns that `sum`
- * is used uninitialised, and -Werror makes that stop the build.
+ * is used uninitialized, and -Werror makes that stop the build.
  */
 #include <stdio.h>
 

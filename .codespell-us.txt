@@ -1,0 +1,9 @@
+neighbours'->neighbors'
+normalise->normalize
+normalised->normalized
+quantisation->quantization
+quantise->quantize
+quantised->quantized
+renormalise->renormalize
+renormalised->renormalized
+vectoriser->vectorizer

@@ -219,10 +219,10 @@ four threads:  17.1 ms
   handed until it is joined.
 
 - **Data races.** Two threads touching the same memory, at least one of them
-  writing, with nothing ordering them, is a *data race*, and undefined
-  behaviour (exercise 1). ThreadSanitizer, `-fsanitize=thread`, finds the ones
-  that happen while it watches. It can't be combined with AddressSanitizer, so
-  it is a separate build.
+  writing, with nothing ordering them, is a *data race*, and undefined behavior
+  (exercise 1). ThreadSanitizer, `-fsanitize=thread`, finds the ones that
+  happen while it watches. It can't be combined with AddressSanitizer, so it is
+  a separate build.
 
 - **False sharing.** Threads writing *different* variables that share a cache
   line slow each other down badly (exercise 2).
@@ -388,7 +388,7 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`malloc`](https://en.cppreference.com/c/memory/malloc)                                                        | `<stdlib.h>`  | allocate memory, contents unset                             |
 | [`printf`](https://en.cppreference.com/c/io/fprintf)                                                           | `<stdio.h>`   | formatted output to `stdout`                                |
 | [`pthread_cond_signal`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_signal.html)   | `<pthread.h>` | wake one thread sleeping on a condition variable (POSIX)    |
-| [`pthread_cond_wait`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_wait.html)       | `<pthread.h>` | release a mutex and sleep until signalled (POSIX)           |
+| [`pthread_cond_wait`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_wait.html)       | `<pthread.h>` | release a mutex and sleep until signaled (POSIX)            |
 | [`pthread_create`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_create.html)             | `<pthread.h>` | start a thread running a function (POSIX)                   |
 | [`pthread_join`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_join.html)                 | `<pthread.h>` | wait for a thread to finish (POSIX)                         |
 | [`pthread_mutex_lock`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html)     | `<pthread.h>` | take a mutex, waiting while another thread holds it (POSIX) |

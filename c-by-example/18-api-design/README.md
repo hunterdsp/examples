@@ -316,7 +316,7 @@ built against sig 1.0.0, running sig 1.0.0
   defines is part of the API, including helper macros meant only for the
   implementation. `SIG_STR` is in `sig.c`, not `sig.h`, for that reason.
 
-- **Changing behaviour without changing the version.** A function that used to
+- **Changing behavior without changing the version.** A function that used to
   accept a cutoff of 0 and now refuses it has broken its callers as surely as a
   renamed one. If a caller could notice, it is a change to the API.
 
@@ -394,9 +394,9 @@ folder to run it in.
    never reads that position again.
 
    `restrict` (C99) is a promise from the *caller* that two pointers never
-   reach the same memory, which lets the compiler optimise more freely. With
+   reach the same memory, which lets the compiler optimize more freely. With
    `restrict` on `in` and `out`, in place would break that promise, and the
-   behaviour would be undefined. Allowing in place is convenient for callers;
+   behavior would be undefined. Allowing in place is convenient for callers;
    `restrict` can make the loop faster. Either is a fine API, but it has to be
    one or the other, and the header has to say which.
 

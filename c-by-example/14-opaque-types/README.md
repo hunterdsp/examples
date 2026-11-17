@@ -270,7 +270,7 @@ halfway after one sample, the slow one a tenth of the way.
 
 - **Every call is a function call.** The compiler can't inline
   `lowpass_process` into `smooth.c`, compiled separately (unless link-time
-  optimisation, which optimises across files, is on). Hide the struct, and give
+  optimization, which optimizes across files, is on). Hide the struct, and give
   the functions whole blocks to work on, as `lowpass_process` does, never one
   sample at a time: one call per 256 samples costs almost nothing.
 

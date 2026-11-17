@@ -111,7 +111,7 @@ gain_in_place (float *buf, size_t n, float g)
      const float *in   -- this function will not write the input
      float *out        -- it will write the output
      restrict          -- in and out never overlap. Breaking the promise
-                          is undefined behaviour: for in-place work, call
+                          is undefined behavior: for in-place work, call
                           gain_in_place. Lesson 26 explains the rest. */
 static void
 gain (const float *restrict in, float *restrict out, size_t n, float g)
@@ -197,8 +197,8 @@ sig[1] lives 4 bytes after sig[0]
 - **The types state the contract.** In `gain(const float *in, float *out, …)`,
   the `const` promises the input comes back untouched, and the compiler
   enforces it. `restrict` promises `in` and `out` don't overlap, which frees
-  the compiler to optimise. The caller must keep that promise: passing the same
-  buffer as both is undefined behaviour, which is why in-place work has its own
+  the compiler to optimize. The caller must keep that promise: passing the same
+  buffer as both is undefined behavior, which is why in-place work has its own
   function, `gain_in_place`. Why the promise makes code faster can wait until
   lesson 26.
 - **Pointer arithmetic counts elements, not bytes.** `p + 1` is the next
@@ -232,8 +232,8 @@ sig[1] lives 4 bytes after sig[0]
   thing it points at. Lesson 09 returns a pointer to a local variable, which is
   gone the moment the function returns.
 
-- **Uninitialised pointers.** `float *p; *p = 1;` writes to a random address.
-  Initialise every pointer, to `NULL` if to nothing else.
+- **Uninitialized pointers.** `float *p; *p = 1;` writes to a random address.
+  Initialize every pointer, to `NULL` if to nothing else.
 
 ## Exercises
 
@@ -285,7 +285,7 @@ folder to run it in.
    The loop is `for (float *p = buf; p < buf + n; p++) *p *= g;`. `buf + n`
    points one past the last sample: C lets you form that address and compare
    against it, but never read through it. Neither version is the fast one: they
-   say the same thing, an optimising compiler compiles both well, if not always
+   say the same thing, an optimizing compiler compiles both well, if not always
    identically, so pick whichever reads better.
 
    </details>

@@ -193,8 +193,8 @@ head 21, tail 18: 3 waiting, at slots 2 to 4
   use `%` (exercise 1).
 
 - **Signed counters.** An `int` head overflows after 2³¹ pushes, which is
-  undefined behaviour, and at 48 kHz takes only 12 hours. Counters that may
-  wrap should be unsigned.
+  undefined behavior, and at 48 kHz takes only 12 hours. Counters that may wrap
+  should be unsigned.
 
 - **Two threads, one ring.** One thread pushing while another pops is the
   classic use, and it needs atomic operations to be correct, which C99 does not

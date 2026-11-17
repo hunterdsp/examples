@@ -251,7 +251,7 @@ main (void)
 
 `-L .` adds this folder to where the linker looks for libraries, and `-lsig`
 links `libsig.a`: the linker adds the `lib` and the `.a` itself, as it does for
-`-lm`, the maths library, which `sig` uses.
+`-lm`, the math library, which `sig` uses.
 
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -I ../sig/include tone.c -L . -lsig -lm -o tone

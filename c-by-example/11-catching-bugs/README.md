@@ -16,13 +16,13 @@ themselves: what each checker catches, and what none of them do.
 
 C does not check what you do with memory. Read past the end of an array, use a
 block after `free`, overflow an `int`: the language calls all of these
-*undefined behaviour*, and a compiled program usually carries on, wrong. The
+*undefined behavior*, and a compiled program usually carries on, wrong. The
 four checkers in the course's build command turn many of those silent wrong
 answers into a message naming the line that caused them:
 
 | checker                                | turned on by              | catches                                                               |
 | -------------------------------------- | ------------------------- | --------------------------------------------------------------------- |
-| the compiler's warnings                | `-Wall -Wextra`           | what it can see without running: unused, uninitialised, wrong formats |
+| the compiler's warnings                | `-Wall -Wextra`           | what it can see without running: unused, uninitialized, wrong formats |
 | **AddressSanitizer** (ASan)            | `-fsanitize=address`      | out-of-bounds access, use after `free`, double `free`, leaks (Linux)  |
 | **UndefinedBehaviorSanitizer** (UBSan) | `-fsanitize=undefined`    | signed overflow, bad shifts, `NULL` access, out-of-range indexes      |
 | your own `assert`s                     | always, unless `-DNDEBUG` | whatever *you* know must be true                                      |
@@ -171,7 +171,7 @@ the course's flags and checks it fails for the reason given here.
   broken-assert: broken-assert.c:15: mean: Assertion `n > 0' failed.
   ```
 
-- **Uninitialised variables.** [`broken-uninit.c`](broken-uninit.c) adds to a
+- **Uninitialized variables.** [`broken-uninit.c`](broken-uninit.c) adds to a
   `sum` that never started at 0. Neither sanitizer here checks this, but the
   compiler does (gcc: "'sum' is used uninitialized"; clang: "variable 'sum' is
   uninitialized when used here").

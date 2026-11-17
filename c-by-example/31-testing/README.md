@@ -219,7 +219,7 @@ test_biquad: 12 of 12 checks passed
   the corner, 3 dB down (0.7071) at it, and far down an octave and more above.
   Any correct biquad passes, on any machine, and most wrong ones fail.
 - **Tolerances.** No check compares the library's output with a decimal copied
-  from one machine's run. Two compilers, or one compiler at two optimisation
+  from one machine's run. Two compilers, or one compiler at two optimization
   levels, may round differently (lesson 26), and a test that wants the last bit
   fails on a machine where the code is right. Each tolerance is much bigger
   than rounding and much smaller than any real mistake. The few exact checks

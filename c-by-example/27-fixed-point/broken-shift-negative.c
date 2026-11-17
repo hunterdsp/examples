@@ -13,7 +13,7 @@ int
 main (void)
 {
   int16_t x = -16384; /* -0.5 in Q15 */
-  int     y = x << 1; /* -1.0, maybe: undefined behaviour */
+  int     y = x << 1; /* -1.0, maybe: undefined behavior */
   printf ("%d\n", y);
   return 0;
 }

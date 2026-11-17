@@ -2,8 +2,8 @@
  *
  * osc.c's phase wraps at the end of each cycle because unsigned
  * arithmetic is defined to wrap. Signed arithmetic is not: overflowing
- * an int32_t is undefined behaviour (lesson 11). It may well wrap on
- * your machine, until an optimiser assumes it can't. UBSan reports the
+ * an int32_t is undefined behavior (lesson 11). It may well wrap on
+ * your machine, until an optimizer assumes it can't. UBSan reports the
  * first overflow, at the 55th sample.
  */
 #include <stdint.h>

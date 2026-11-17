@@ -27,7 +27,7 @@ program, and a fixed library fixes them all without relinking. The price is
 that the library must be there, and must still match.
 
 `BUILD_SHARED_LIBS=ON` makes `add_library` build a shared library, and
-`Release` makes it an optimised build, as one shipped to others usually is:
+`Release` makes it an optimized build, as one shipped to others usually is:
 
 ```bash
 cmake -S ../sig -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
@@ -136,11 +136,11 @@ PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig
 A program built against the installed `sig`, not `../sig`:
 
 ```bash
-cat analyse.c
+cat analyze.c
 ```
 
 ```c
-/* analyse.c -- a program built against an INSTALLED sig: the headers and
+/* analyze.c -- a program built against an INSTALLED sig: the headers and
  * library under staging/, found with pkg-config, not ../sig.
  *
  * It does what `sig-tone 1 750 6000 | sig-filter lowpass 1500 | sig-fft`
@@ -194,8 +194,8 @@ main (void)
 command line. `-Wl,-rpath,…` is explained below:
 
 ```bash
-cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined analyse.c $(PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig) -Wl,-rpath,"$PWD/staging/lib" -o analyse
-./analyse
+cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined analyze.c $(PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig) -Wl,-rpath,"$PWD/staging/lib" -o analyze
+./analyze
 ```
 
 ```
@@ -258,12 +258,12 @@ The same numbers as lesson 33's pipe, from one program.
   <!-- no-run -->
 
   ```bash
-  cc -std=c99 analyse.c $(PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig) -o analyse
-  ./analyse
+  cc -std=c99 analyze.c $(PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig) -o analyze
+  ./analyze
   ```
 
   ```
-  ./analyse: error while loading shared libraries: libsig.so.1: cannot open shared object file: No such file or directory
+  ./analyze: error while loading shared libraries: libsig.so.1: cannot open shared object file: No such file or directory
   ```
 
   An install into a system folder, like `/usr/local/lib`, needs no rpath.
@@ -287,7 +287,7 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Build `analyse.c` with CMake against the installed `sig`, using
+1. Build `analyze.c` with CMake against the installed `sig`, using
    `find_package`. Then ask for `sig` 2.0, and 0.9.
 
    <details><summary>Output and answer</summary>
@@ -302,14 +302,14 @@ folder to run it in.
    # A project that uses an INSTALLED sig, found by find_package: no copy
    # of sig's source, and no add_subdirectory.
    cmake_minimum_required(VERSION 3.16)
-   project(analyse LANGUAGES C)
+   project(analyze LANGUAGES C)
 
    # The version this project needs; -DSIG_WANT=... asks for another.
    set(SIG_WANT 1.0 CACHE STRING "The version of sig to ask for")
    find_package(sig ${SIG_WANT} REQUIRED)
 
-   add_executable(analyse ../../analyse.c)
-   target_link_libraries(analyse PRIVATE sig::sig)
+   add_executable(analyze ../../analyze.c)
+   target_link_libraries(analyze PRIVATE sig::sig)
    ```
 
    `CMAKE_PREFIX_PATH` adds a prefix for `find_package` to search, as
@@ -321,7 +321,7 @@ folder to run it in.
    ```
 
    ```bash
-   build/analyse
+   build/analyze
    ```
 
    ```

@@ -1,9 +1,9 @@
-/* broken-overflow.c -- signed overflow is undefined behaviour.
+/* broken-overflow.c -- signed overflow is undefined behavior.
  *
  * 48000 * 86400 is about 4.1 billion; an int32_t stops at 2.1 billion.
  * Unsigned types wrap, but for signed ones the C standard says the
- * behaviour is undefined: the compiler may assume it never happens and
- * optimise accordingly. UBSan (-fsanitize=undefined) reports it.
+ * behavior is undefined: the compiler may assume it never happens and
+ * optimize accordingly. UBSan (-fsanitize=undefined) reports it.
  */
 #include <stdint.h>
 #include <stdio.h>

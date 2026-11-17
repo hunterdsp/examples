@@ -23,7 +23,7 @@ cat numbers.c
  *   cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined \
  *       numbers.c -o numbers -lm && ./numbers
  *
- * -lm links the maths library (log10, pow); on Linux it is separate.
+ * -lm links the math library (log10, pow); on Linux it is separate.
  */
 #include <inttypes.h> /* PRId64: the printf format for int64_t */
 #include <math.h>
@@ -101,8 +101,8 @@ main (void)
 }
 ```
 
-Build and run it. `-lm` links the maths library, which on Linux is separate
-from the rest of the C library:
+Build and run it. `-lm` links the math library, which on Linux is separate from
+the rest of the C library:
 
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined numbers.c -o numbers -lm
@@ -305,11 +305,11 @@ power.**
 
 ## Pitfalls
 
-- **Signed overflow is undefined behaviour.**
+- **Signed overflow is undefined behavior.**
   [`broken-overflow.c`](broken-overflow.c) counts a day of audio at 48 kHz in
   an `int32_t`: 4.1 billion does not fit in 2.1 billion. For unsigned types
   that would wrap; for signed types the standard says *anything* may happen,
-  and an optimising compiler is allowed to assume it never does. UBSan reports
+  and an optimizing compiler is allowed to assume it never does. UBSan reports
   it, with the line:
 
   ```

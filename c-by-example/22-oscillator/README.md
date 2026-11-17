@@ -150,21 +150,21 @@ float time at  3600 s: next sample is the SAME time
   0.000005 of a cycle from where an ideal 440 Hz would be.
 - **Time as a `float` runs out.** `sin(2πft)` with `t` in seconds looks
   simpler, but a `float` holds about seven significant digits. At 600 seconds,
-  the gap between neighbouring `float`s is larger than one sample period, so
+  the gap between neighboring `float`s is larger than one sample period, so
   `t + 1/48000` rounds back to `t`: time stops, and so does the wave. Long
   before that, every step is rounded, and the pitch is wrong.
 
 ## Pitfalls
 
 - **A signed phase.** [`broken-signed-phase.c`](broken-signed-phase.c) keeps
-  the phase in an `int32_t`. Signed overflow is undefined behaviour, not a wrap
+  the phase in an `int32_t`. Signed overflow is undefined behavior, not a wrap
   (lesson 11), and UBSan reports it at the 55th sample:
 
   ```
   broken-signed-phase.c:18:11: runtime error: signed integer overflow: 2126008836 + 39370534 cannot be represented in type 'int'
   ```
 
-  It might wrap anyway on your machine, until a compiler optimises on the
+  It might wrap anyway on your machine, until a compiler optimizes on the
   assumption that it can't. For a phase, use an unsigned type.
 
 - **A phase that only grows.** Counting cycles instead of wrapping them loses
@@ -238,7 +238,7 @@ folder to run it in.
 
    The wrapped `float` is close: its phase stays below 1, where a `float` is
    fine-grained enough. The one that never wraps reaches 26,400 cycles by the
-   end of the minute, where neighbouring `float`s are 0.002 cycles apart, and
+   end of the minute, where neighboring `float`s are 0.002 cycles apart, and
    each step of 0.0092 cycles is rounded to a whole number of those. It plays
    445.9 Hz, nearly a quarter of a semitone sharp, an error most listeners can
    hear, and it gets worse the longer it runs. The `uint32_t` phase never

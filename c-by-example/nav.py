@@ -5,7 +5,7 @@ Each lesson's README opens and ends with one line:
     [← 04 Arrays and loops](...) · [Contents](...) · [06 Strings ... →](...)
 
 The order and the names come from ONE list, the Contents section of
-README.md, so a lesson added, renamed or moved there moves its neighbours'
+README.md, so a lesson added, renamed or moved there moves its neighbors'
 links with it, and no link is typed by hand.
 
     python nav.py           check: exit 1 if any lesson's links are
