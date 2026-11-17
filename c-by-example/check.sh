@@ -98,6 +98,14 @@ printf '#!/bin/sh\nexec %s %s -pedantic -Werror -fno-sanitize-recover=all "$@"\n
 chmod +x "$work/plain-bin/cc" "$work/strict-bin/cc"
 path0=$PATH
 
+# Stream order: a block's stdout and stderr are captured together, into a
+# file. There stdout is buffered until the program exits, while stderr, and
+# with it every sanitizer report, is written at once; at a terminal, stdout
+# goes out line by line. So a program that prints and THEN trips a
+# sanitizer shows the report first here, and second to a reader. The
+# shown outputs avoid that (02's broken-late prints after its overflow, so
+# both orders agree); a new one must too, or flush stdout first.
+#
 # run_blocks PASS LESSON: run the lesson's README blocks, in order, in one
 # shell, in PASS's scratch copy, keeping each one's output in K.PASS and
 # its exit status in K.PASS-status.
@@ -120,9 +128,13 @@ run_blocks() {
 	cd "$here" || exit 2
 }
 
-# What a diagnostic looks like in shown output: gcc's and clang's warnings
-# and errors, UBSan's "runtime error", and ASan's and LSan's reports.
-diagnostic='(warning|error): |runtime error|Sanitizer'
+# What a diagnostic looks like in shown output, as a whole line's start, so
+# a program's own "error: ..." is not one: gcc's and clang's warnings and
+# errors and UBSan's reports (FILE:LINE[:COL]: ...), ASan's and LSan's
+# (==PID==ERROR: ...Sanitizer), and TSan's (WARNING: ThreadSanitizer).
+diagnostic='^[^ :]+:[0-9]+(:[0-9]+)?: (warning|error|runtime error)'
+diagnostic="$diagnostic|^==[0-9]+==ERROR: [A-Za-z]+Sanitizer"
+diagnostic="$diagnostic|^WARNING: ThreadSanitizer"
 
 for lesson in "$@"; do
 	lesson=${lesson%/}
