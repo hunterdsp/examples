@@ -249,6 +249,9 @@ for lesson in "$@"; do
 					tr '`' "'" <"$work/rg/$k.strict" |
 						diff "$work/rg/$k.want" - >"$work/out"
 					bad "README" "block at line $line: output differs when built strict"
+				elif [ "$strict" != "$status" ]; then
+					cp "$work/rg/$k.strict" "$work/out"
+					bad "README" "block at line $line exited $strict when built strict, $status plain"
 				else
 					ok "README block at line $line"
 				fi
