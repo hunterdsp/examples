@@ -1,8 +1,8 @@
 /* broken-null.c -- reading through a NULL pointer.
  *
  * find_peak returns NULL for an empty buffer, as documented, and the
- * caller forgot to check. Address 0 is never valid: the program crashes,
- * and the sanitizer says exactly where.
+ * caller forgot to check. On Linux, macOS and Windows nothing is ever at
+ * address 0: the program crashes, and the sanitizer says exactly where.
  */
 #include <stddef.h>
 #include <stdio.h>

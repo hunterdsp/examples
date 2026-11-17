@@ -1,14 +1,21 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 21 IIR filters](../21-biquad/README.md) · [Contents](../README.md#contents)
+· [23 Complex numbers →](../23-complex/README.md)
+
+<!-- /nav -->
+
 # 22 · Oscillators
 
 Run this lesson's commands in `c-by-example/22-oscillator/`.
 
 An **oscillator** makes a periodic signal: a test tone, a synthesizer's voice,
 the carrier a radio mixes with. Lesson 19 made a sine from `sin()` and from a
-table. A real oscillator has one more job: to keep its pitch exactly, for as
-long as it runs, which is hours.
+table. A real oscillator has one more job: to keep its pitch for as long as it
+runs, which can be hours.
 
-Everything rests on the **phase**: how far through the current cycle the
-oscillator is. Each sample, the phase moves on by an **increment**,
+The key idea is the **phase**: how far through the current cycle the oscillator
+is. Each sample, the phase moves on by an **increment**,
 `frequency / sample rate` of a cycle, and at the end of each cycle it wraps
 back to the start. How the phase is stored decides how well the oscillator
 keeps time. This one stores it in a `uint32_t`, so that one whole cycle is the
@@ -151,14 +158,14 @@ float time at  3600 s: next sample is the SAME time
 
 - **A signed phase.** [`broken-signed-phase.c`](broken-signed-phase.c) keeps
   the phase in an `int32_t`. Signed overflow is undefined behaviour, not a wrap
-  (lesson 11), and UBSan stops it within 55 samples:
+  (lesson 11), and UBSan reports it at the 55th sample:
 
   ```
   broken-signed-phase.c:18:11: runtime error: signed integer overflow: 2126008836 + 39370534 cannot be represented in type 'int'
   ```
 
   It might wrap anyway on your machine, until a compiler optimises on the
-  assumption that it can't. Unsigned types only.
+  assumption that it can't. For a phase, use an unsigned type.
 
 - **A phase that only grows.** Counting cycles instead of wrapping them loses
   precision as the count grows, and the pitch drifts (exercise 2).
@@ -167,7 +174,8 @@ float time at  3600 s: next sample is the SAME time
   phase (exercise 1) has sharp corners, and sharp corners contain frequencies
   above half the sample rate, which fold back down as unrelated, inharmonic
   tones. For a test signal that is fine; for a synthesizer, these waves need
-  band-limiting, a subject of its own.
+  band-limiting (keeping out what is above half the sample rate), a subject of
+  its own.
 
 ## Exercises
 
@@ -209,8 +217,8 @@ folder to run it in.
    </details>
 
 2. Keep the phase in a `float` instead, as a fraction of a cycle: once wrapping
-   at 1.0, and once never wrapped, simply growing. Run each for a minute at 440
-   Hz. What frequency does each actually play?
+   at 1.0, and once never wrapped, growing without end. Run each for a minute
+   at 440 Hz. What frequency does each actually play?
 
    <details><summary>Output and answer</summary>
 
@@ -232,8 +240,9 @@ folder to run it in.
    fine-grained enough. The one that never wraps reaches 26,400 cycles by the
    end of the minute, where neighbouring `float`s are 0.002 cycles apart, and
    each step of 0.0092 cycles is rounded to a whole number of those. It plays
-   445.9 Hz, nearly a quarter of a semitone sharp, an error anyone can hear,
-   and it gets worse the longer it runs. The `uint32_t` phase never rounds.
+   445.9 Hz, nearly a quarter of a semitone sharp, an error most listeners can
+   hear, and it gets worse the longer it runs. The `uint32_t` phase never
+   rounds.
 
    </details>
 
@@ -259,10 +268,10 @@ folder to run it in.
    ```
 
    An N-bit phase can only move by whole steps of `48000 / 2^N` Hz. With 16
-   bits, the step is 0.73 Hz and the note is 0.73 cents sharp, about the limit
-   a trained ear can hear; with 32 bits it is 11 *micro*hertz. That is why 32
-   bits is the usual choice: an `int`-sized number, and as precise as anyone
-   needs.
+   bits, the step is 0.73 Hz and the note is 0.73 cents sharp (a cent is a
+   hundredth of a semitone): small, but in every note; with 32 bits it is 11
+   *micro*hertz. That is why 32 bits is the usual choice: an `int`-sized
+   number, and as precise as almost any use needs.
 
    </details>
 
@@ -284,3 +293,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`sin`](https://en.cppreference.com/c/numeric/math/sin)     | `<math.h>`   | sine of an angle in radians                                         |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 21 IIR filters](../21-biquad/README.md) · [Contents](../README.md#contents)
+· [23 Complex numbers →](../23-complex/README.md)
+
+<!-- /nav -->

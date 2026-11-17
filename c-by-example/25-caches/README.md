@@ -1,26 +1,34 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 24 The FFT](../24-fft/README.md) · [Contents](../README.md#contents) ·
+[26 Vectorisation →](../26-vectorisation/README.md)
+
+<!-- /nav -->
+
 # 25 · Caches and memory layout
 
 Run this lesson's commands in `c-by-example/25-caches/`.
 
 A modern processor can do several arithmetic operations in the time it takes
 light to cross a desk, while fetching a number from main memory takes around a
-hundred times as long. What keeps it busy is the **cache**: small, fast memory
-on the chip holding copies of what was used recently. A program that mostly
-finds its data in the cache runs at the processor's speed. One that doesn't
-spends most of its time waiting.
+hundred times as long. What closes most of that gap is the **cache**: small,
+fast memory on the chip holding copies of what was used recently. A program
+that mostly finds its data in the cache runs near the processor's speed. One
+that doesn't can spend most of its time waiting.
 
-Two facts about caches decide almost everything:
+Two facts about caches go a long way:
 
-- Memory moves in **cache lines**, 64 bytes on most machines (128 on Apple's
-  M-series chips): 16 `float`s at once. Use all 16, and the fetch was cheap per
-  number. Use one, and it cost as much as all 16.
+- Memory moves in **cache lines**, 64 bytes on most machines: 16 `float`s at
+  once (128 bytes and 32 `float`s on Apple's M-series chips, as
+  `sysctl hw.cachelinesize` reports there). Use all 16, and the fetch was cheap
+  per number. Use one, and it cost as much as all 16.
 - The processor **fetches ahead** when it can see a pattern: walking straight
   through memory, the next lines are already arriving before they are asked
   for.
 
-So the same arithmetic can be fast or slow depending only on the *order* it
-touches memory in, and on how the data is laid out. This program does the same
-work two ways, twice:
+So the same arithmetic can be fast or slow depending on the *order* it touches
+memory in, and on how the data is laid out. This program does the same work two
+ways, twice:
 
 ```bash
 cat cache.c
@@ -199,9 +207,9 @@ struct of arrays:   0.9 ms
   floats: one row. With it, `a[r][c]` works on a 2-D array that came from
   `malloc`, which is 16 MB, much too big for the stack.
 - **Lay data out for the loop that runs most.** Each `voice` is 64 bytes, but
-  the per-sample loop needs only 8 of them, `phase` and `inc`. As an *array of
-  structs*, every voice costs a whole cache line of traffic for those 8 bytes.
-  As a *struct of arrays*, the phases sit side by side, and so do the
+  the per-sample loop needs only 8 of those bytes, `phase` and `inc`. As an
+  *array of structs*, every voice costs a whole cache line of traffic for those
+  8 bytes. As a *struct of arrays*, the phases sit side by side, and so do the
   increments: every byte fetched is used. That is 10 times faster here, and
   part of the gain is lesson 26's: side-by-side floats are also what the
   processor's vector instructions need.
@@ -211,8 +219,8 @@ struct of arrays:   0.9 ms
 ## Pitfalls
 
 - **Guessing the cache.** 64-byte lines are common, not universal, and cache
-  sizes vary from machine to machine. Exercise 2's best tile size is different
-  on different processors. Measure on the machines you ship to.
+  sizes vary from machine to machine. Exercise 2's best tile size can differ
+  between processors: measure on the machines you ship to.
 
 - **Pointer-chasing structures.** Linked lists and trees put the next element's
   address inside the current one, so the processor can't fetch ahead (exercise
@@ -276,10 +284,10 @@ folder to run it in.
    ```
 
    No. From stride 4 to stride 64, the program reads 16 times fewer ints and
-   takes about the same time. Up to stride 16, every 64-byte line is still
-   fetched, whole, and beyond that the processor fetches neighbouring lines
-   ahead anyway. The cost of memory is counted in lines, not in the numbers you
-   use from them.
+   takes 1.1 ms instead of 2.0, nowhere near 16 times less. Up to stride 16,
+   every 64-byte line is still fetched, whole, and beyond that the processor
+   fetches neighbouring lines ahead anyway. The cost of memory is counted in
+   lines, not in the numbers you use from them.
 
    </details>
 
@@ -330,8 +338,8 @@ folder to run it in.
    each are written. Tiles of 32 and 64 do much less well on this machine,
    since their strips no longer fit in the fastest cache. (2048 being a power
    of two makes it worse: the lines of one column all land in the same few
-   places in the cache, and evict each other.) The right tile is found by
-   measuring, on each machine, which is what tuned libraries do when they are
+   places in the cache, and push each other out.) The best tile is found by
+   measuring on each machine, which some tuned libraries do when they are
    installed.
 
    </details>
@@ -372,12 +380,12 @@ folder to run it in.
 
    Over 500 times slower, for the same additions. Each node's `next` holds the
    only copy of the following address, so the processor can't start fetching
-   node `i + 1` until node `i` has arrived, and in shuffled order every node is
-   a fresh trip to main memory: about 130 ns each, one after another. The
-   array's addresses are known in advance, so its fetches overlap and the
-   prefetcher runs ahead. [`list.c`](exercises/ex3-linked-list/list.c) shuffles
-   with its own small generator so that every run, on every machine, builds the
-   same list.
+   node `i + 1` until node `i` has arrived. In shuffled order, every node is a
+   fresh trip to main memory: about 130 ns each, one after another. The array's
+   addresses are known in advance, so its fetches overlap, and the processor
+   fetches ahead. [`list.c`](exercises/ex3-linked-list/list.c) shuffles with
+   its own small generator so that every run, on every machine, builds the same
+   list.
 
    </details>
 
@@ -400,3 +408,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp) | `<string.h>` | compare two strings                                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 24 The FFT](../24-fft/README.md) · [Contents](../README.md#contents) ·
+[26 Vectorisation →](../26-vectorisation/README.md)
+
+<!-- /nav -->

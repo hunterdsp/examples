@@ -1,9 +1,17 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 04 Arrays and loops](../04-arrays/README.md) ·
+[Contents](../README.md#contents) ·
+[06 Strings and files →](../06-strings-files/README.md)
+
+<!-- /nav -->
+
 # 05 · Pointers
 
 Run this lesson's commands in `c-by-example/05-pointers/`.
 
 Every variable lives somewhere in memory, at an *address*. A **pointer** is a
-variable that holds an address. Two operators are all there is:
+variable that holds an address. Two operators do most of the work:
 
 |                  |                                                         |
 | ---------------- | ------------------------------------------------------- |
@@ -57,8 +65,8 @@ changes `x` itself.
 You have used addresses already: lessons 03 and 04 passed arrays to functions,
 and what arrived was the address of the first element. A pointer gives that
 address a name and a type, so you can keep it, pass it, and step it along. That
-is the whole idea. Every buffer, every object in Part III and every library API
-in Part V is built on it.
+is the whole idea. Most buffers, the objects of Part III and the library of
+Part V are built on it.
 
 Here is the program:
 
@@ -90,8 +98,8 @@ swap (float *a, float *b)
 }
 
 /* In place: read and write the same buffer. `buf` is a pointer to the
-   first sample, and `n` is how many follow (an array arrives as exactly
-   this, lesson 04). */
+   first sample, and `n` is how many follow (passing an array to a
+   function passes the address of its first element, lesson 04). */
 static void
 gain_in_place (float *buf, size_t n, float g)
 {
@@ -102,8 +110,9 @@ gain_in_place (float *buf, size_t n, float g)
 /* Out of place, with the contract in the types:
      const float *in   -- this function will not write the input
      float *out        -- it will write the output
-     restrict          -- in and out never overlap, so the compiler may
-                          keep values in registers (lesson 26) */
+     restrict          -- in and out never overlap. Breaking the promise
+                          is undefined behaviour: for in-place work, call
+                          gain_in_place. Lesson 26 explains the rest. */
 static void
 gain (const float *restrict in, float *restrict out, size_t n, float g)
 {
@@ -188,7 +197,10 @@ sig[1] lives 4 bytes after sig[0]
 - **The types state the contract.** In `gain(const float *in, float *out, …)`,
   the `const` promises the input comes back untouched, and the compiler
   enforces it. `restrict` promises `in` and `out` don't overlap, which frees
-  the compiler to optimise (lesson 26).
+  the compiler to optimise. The caller must keep that promise: passing the same
+  buffer as both is undefined behaviour, which is why in-place work has its own
+  function, `gain_in_place`. Why the promise makes code faster can wait until
+  lesson 26.
 - **Pointer arithmetic counts elements, not bytes.** `p + 1` is the next
   `float`, 4 bytes on. Subtracting two pointers into the same array gives the
   distance in elements, which is how `find_peak`'s result becomes an index.
@@ -198,8 +210,8 @@ sig[1] lives 4 bytes after sig[0]
 ## Pitfalls
 
 - **Following a NULL pointer.** [`broken-null.c`](broken-null.c) forgets the
-  check. Address 0 is never valid, so the program dies, and the sanitizer names
-  the line:
+  check. On the systems this course runs on, nothing can be read at address 0,
+  so the program dies, and the sanitizer names the line:
 
   ```
   broken-null.c:25:26: runtime error: load of null pointer of type 'const float'
@@ -208,8 +220,8 @@ sig[1] lives 4 bytes after sig[0]
   Without the sanitizers it is a plain `Segmentation fault`, with no line
   number at all.
 
-  If a function can return `NULL`, every caller checks. If it never returns
-  `NULL`, say so in its documentation, so nobody wastes a check.
+  If a function can return `NULL`, its callers must check. If it never returns
+  `NULL`, say so in its documentation, so callers can skip the check.
 
 - **Writing through `const`.** [`broken-const.c`](broken-const.c) "tidies up"
   its input. The build stops (gcc: "assignment of read-only location"; clang:
@@ -272,8 +284,9 @@ folder to run it in.
 
    The loop is `for (float *p = buf; p < buf + n; p++) *p *= g;`. `buf + n`
    points one past the last sample: C lets you form that address and compare
-   against it, but never read through it. An optimising compiler turns both
-   versions into the same machine code, so pick whichever reads better.
+   against it, but never read through it. Neither version is the fast one: they
+   say the same thing, an optimising compiler compiles both well, if not always
+   identically, so pick whichever reads better.
 
    </details>
 
@@ -315,3 +328,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 04 Arrays and loops](../04-arrays/README.md) ·
+[Contents](../README.md#contents) ·
+[06 Strings and files →](../06-strings-files/README.md)
+
+<!-- /nav -->

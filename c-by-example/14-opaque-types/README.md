@@ -1,11 +1,19 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 13 Allocation for real time](../13-realtime/README.md) ·
+[Contents](../README.md#contents) ·
+[15 Function pointers →](../15-function-pointers/README.md)
+
+<!-- /nav -->
+
 # 14 · Opaque types
 
 Run this lesson's commands in `c-by-example/14-opaque-types/`.
 
 Part III builds objects out of plain C: data, the functions that work on it,
 and a wall between the two and everyone else. C has no `class` and no
-`private`, but it has something that does the same job: a struct the compiler
-knows *exists*, without knowing what is *in* it.
+`private`, but it has something that does much of the same job: a struct the
+compiler knows *exists*, without knowing what is *in* it.
 
 ```c
 typedef struct lowpass lowpass_t; /* declared, never defined here */
@@ -14,7 +22,7 @@ typedef struct lowpass lowpass_t; /* declared, never defined here */
 A file that sees only this line may hold a `lowpass_t *`, pass it around and
 hand it back, but cannot create a `lowpass_t`, copy one, or look inside one:
 the compiler doesn't know its size or its members. That is an **opaque type**,
-and it makes the functions in the header the *only* way in.
+and it makes the functions in the header the way in.
 
 Here is a one-pole low-pass filter written that way. Each output moves the
 fraction `a` of the way from the last output toward the input, which smooths
@@ -34,7 +42,7 @@ cat lowpass.h
  * declares `struct lowpass` without defining it. A file that includes
  * this header may hold a lowpass_t * and pass it around, but cannot
  * create one, copy one, or look inside one: only lowpass.c, which has
- * the definition, can. So the functions below are the ONLY way in, and
+ * the definition, can. So the functions below are the way in, and
  * lowpass.c is free to change what the struct holds without breaking a
  * single caller.
  */
@@ -221,21 +229,21 @@ halfway after one sample, the slow one a tenth of the way.
 - **The header declares, the `.c` defines.** `struct lowpass` has its members
   listed in exactly one place, `lowpass.c`. Everywhere else it is an
   *incomplete type*: usable through a pointer, and in no other way.
-- **So it is always on the heap.** A caller can't declare a `lowpass_t`,
-  because the compiler doesn't know how many bytes to set aside. The type's own
-  code has to make it, and so the API is the create/destroy pair of lesson 10.
-  (Exercise 3 shows a way around the heap when that matters.)
+- **So the type's own code makes it.** A caller can't declare a `lowpass_t`,
+  because the compiler doesn't know how many bytes to set aside. The usual way
+  is the heap, with the create/destroy pair of lesson 10. (Exercise 3 lets the
+  caller provide the memory instead, when that matters.)
 - **Each object has its own memory.** `fast` and `slow` each remember their
   last output, `y`, between calls. That is why processing the step in two
   blocks of four gives the same eight samples as processing it in one go: the
-  state carries across. Audio arrives in blocks, so this is the property that
-  makes a filter usable at all.
-- **The wall protects the invariant.** `lowpass_create` refuses an `a` outside
-  `0 < a <= 1`, and since nothing outside `lowpass.c` can set `a`, every filter
-  that exists has a good one. With the struct in the header, any caller could
-  write `f->a = 7.0f` and the filter would blow up. The comparison is written
-  `!(a > 0.0f && a <= 1.0f)` so that a NaN, for which every comparison is
-  false, is refused too.
+  state carries across. Audio arrives in blocks, so a filter that works on
+  audio needs this property.
+- **The wall protects an invariant**, a rule that holds for every filter: here,
+  `0 < a <= 1`. `lowpass_create` refuses an `a` outside it, and since nothing
+  outside `lowpass.c` can set `a`, every filter that exists has a good one.
+  With the struct in the header, any caller could write `f->a = 7.0f` and the
+  filter would blow up. The comparison is written `!(a > 0.0f && a <= 1.0f)` so
+  that a NaN, for which every comparison is false, is refused too.
 - **The implementation is free to change.** Keep `y` in a `double`, add a
   member, reorder them: callers include the same header and compile the same
   way, because they never knew. Exercise 2 links one compiled `smooth.o` with
@@ -251,20 +259,20 @@ halfway after one sample, the slow one a tenth of the way.
   broken-reach-inside.c:16:4: error: invalid use of incomplete typedef ‘lowpass_t’ {aka ‘struct lowpass’}
   ```
 
-  That error is the point of an opaque type: it is not a wall you are meant to
-  climb. If callers need to change `a`, the header gets a `lowpass_set_a` that
-  checks the value.
+  That error is the point of an opaque type: the wall is there on purpose. If
+  callers need to change `a`, the header gets a `lowpass_set_a` that checks the
+  value.
 
 - **Defining the struct in two places.** Copying `struct lowpass { … }` into a
-  caller to get at its members compiles, and is a time bomb: the day
-  `lowpass.c` changes its struct, the copy is silently wrong, and nothing warns
-  you. One definition, in one file.
+  caller to get at its members compiles, and is a trap: the day `lowpass.c`
+  changes its struct, the copy is silently wrong, and nothing warns you. One
+  definition, in one file.
 
 - **Every call is a function call.** The compiler can't inline
-  `lowpass_process` into `smooth.c`, compiled separately (short of link-time
-  optimisation). Hide the struct, and give the functions whole blocks to work
-  on, as `lowpass_process` does, never one sample at a time: one call per 256
-  samples costs nothing.
+  `lowpass_process` into `smooth.c`, compiled separately (unless link-time
+  optimisation, which optimises across files, is on). Hide the struct, and give
+  the functions whole blocks to work on, as `lowpass_process` does, never one
+  sample at a time: one call per 256 samples costs almost nothing.
 
 ## Exercises
 
@@ -369,8 +377,8 @@ folder to run it in.
    sets a filter up in them. `lowpass_size` rounds up to a multiple of 16, as
    lesson 13's arena did, so each filter in the block starts suitably aligned.
    There is no destroy: the filter owns nothing, and freeing the block frees
-   all four. Many real-time libraries offer exactly this pair, `_size` and
-   `_init`, beside `_create`.
+   all four. A library can offer this pair, `_size` and `_init`, beside
+   `_create`, for callers that manage their own memory.
 
    </details>
 
@@ -388,3 +396,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)    | `<stdio.h>`  | formatted output to `stdout`                          |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 13 Allocation for real time](../13-realtime/README.md) ·
+[Contents](../README.md#contents) ·
+[15 Function pointers →](../15-function-pointers/README.md)
+
+<!-- /nav -->

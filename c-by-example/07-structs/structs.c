@@ -28,7 +28,7 @@ struct biquad
 typedef struct biquad biquad_t;
 
 /* By POINTER: the function updates the caller's state, and no copy of the
-   struct is made. This is how every object in Part III is passed. */
+   struct is made. This is how most objects in Part III are passed. */
 static float
 biquad_step (biquad_t *f, float x)
 {

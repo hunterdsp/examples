@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 17 Composition and "inheritance"](../17-composition/README.md) ·
+[Contents](../README.md#contents) ·
+[19 Measuring first →](../19-measuring/README.md)
+
+<!-- /nav -->
+
 # 18 · API design
 
 Run this lesson's commands in `c-by-example/18-api-design/`.
@@ -5,11 +13,11 @@ Run this lesson's commands in `c-by-example/18-api-design/`.
 A library's header is a promise. Once programs are written against it, every
 name, every argument order and every "returns `NULL` when…" is something they
 depend on, and changing it breaks them. The code behind the header can be
-rewritten at will (lesson 14); the header is much harder to take back.
+rewritten freely (lesson 14); the header is much harder to take back.
 
 So the header deserves the most thought, and this lesson is a checklist for it,
 applied to a small library called `sig`, the kind Part V builds. It has one
-filter, lesson 14's low-pass, but every decision a bigger library would make is
+filter, lesson 14's low-pass, but the main decisions a bigger library makes are
 made here, and written down at the top of the header:
 
 ```bash
@@ -244,21 +252,23 @@ built against sig 1.0.0, running sig 1.0.0
 
 ## The checklist
 
-- **One prefix for everything.** C has a single namespace: two libraries that
-  both define `filter` or `process` can't be used in one program (exercise 3).
-  Every public name here starts with `sig_`, and every macro with `SIG_`.
-  Private helpers in `sig.c` are `static`, which keeps them out of the
-  namespace altogether.
+- **One prefix for everything.** C has no namespaces for libraries: every
+  public name in a program shares one space, so two libraries that both define
+  `filter` or `process` can't be used in one program (exercise 3). Every public
+  name here starts with `sig_`, and every macro with `SIG_`. Private helpers in
+  `sig.c` are `static`, which keeps them out of the namespace altogether.
 - **Opaque types, made and freed in pairs.** `sig_lowpass` is lesson 14's
   opaque type, with lesson 10's create/destroy pair. The struct can change in
   any release without breaking a caller. The names have no `_t` ending: POSIX
-  reserves names ending in `_t` for itself, so a library shouldn't add more.
+  (lesson 03) reserves names ending in `_t` for itself, so a library shouldn't
+  add more.
 - **Say what went wrong.** Lesson 14's `lowpass_create` returned `NULL` whether
   the argument was bad or memory ran out. Here every call that can fail returns
-  a `sig_status`, and the object comes back through an out-parameter,
-  `sig_lowpass **out`. The caller can tell a bug in its own arguments from a
-  machine out of memory, and `sig_strerror` turns either into words. `*out` is
-  set to `NULL` on every failure, so it is never left holding garbage.
+  a `sig_status`, and the object comes back through an *out-parameter*,
+  `sig_lowpass **out`: the address of the caller's pointer, which the function
+  fills in. The caller can tell a bug in its own arguments from a machine out
+  of memory, and `sig_strerror` turns either into words. `*out` is set to
+  `NULL` on every failure, so it is never left holding garbage.
 - **The caller's units.** A filter's coefficient means nothing to the person
   using it; its cutoff in Hz does. `sig_lowpass_create` takes Hz and the sample
   rate, checks them (the cutoff must be below half the rate), and works out the
@@ -266,7 +276,8 @@ built against sig 1.0.0, running sig 1.0.0
 - **`const` is part of the contract.** `const float *in` promises that the
   filter won't change the input, and the compiler holds the library to it.
   `float *out` says where the result goes. Whether the two may be the same
-  buffer is said in the comment, because nothing else can say it (exercise 2).
+  buffer is said in the comment, because the declaration has no way to say it
+  (exercise 2).
 - **The processing path can't fail.** `sig_lowpass_process` returns nothing:
   every check happened at create time, and processing does no allocation, no
   printing and no locking (lesson 13). A function that can't fail is one the
@@ -338,6 +349,11 @@ folder to run it in.
 
    ```bash
    cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined -DSIG_BUILD_MAJOR=2 compat.c sig.c -o compat -lm
+   ```
+
+   <!-- expect-fail -->
+
+   ```bash
    ./compat
    ```
 
@@ -401,10 +417,10 @@ folder to run it in.
    ```
 
    Both define `filter` and declare `process`, and C has one namespace for
-   them. Neither library has a bug, but no program can use both, and only their
-   authors can fix it, by renaming everything, which breaks every program
-   already using them. A prefix from day one (`fir_filter`, `smooth_process`)
-   costs four letters per name.
+   them. Neither library has a bug, but no program can use both as they are,
+   and only their authors can fix it, by renaming everything, which breaks
+   every program already using them. A prefix from day one (`fir_filter`,
+   `smooth_process`) costs a few letters per name.
 
    </details>
 
@@ -425,3 +441,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strtol`](https://en.cppreference.com/c/string/byte/strtol) | `<stdlib.h>` | read a `long` from a string                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 17 Composition and "inheritance"](../17-composition/README.md) ·
+[Contents](../README.md#contents) ·
+[19 Measuring first →](../19-measuring/README.md)
+
+<!-- /nav -->

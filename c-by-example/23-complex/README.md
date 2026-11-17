@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 22 Oscillators](../22-oscillator/README.md) ·
+[Contents](../README.md#contents) · [24 The FFT →](../24-fft/README.md)
+
+<!-- /nav -->
+
 # 23 · Complex numbers
 
 Run this lesson's commands in `c-by-example/23-complex/`.
@@ -8,11 +15,11 @@ part and an imaginary part, written `a + bi`, where `i` is a number with
 `i·i = −1`; drawn on a plane, it is a point with a *size* (its distance from 0)
 and an *angle*.
 
-The useful complex numbers in signal processing are **phasors**: size 1, at
-some angle θ, written `e^(iθ)` (that is `cos θ + i sin θ`, by Euler's formula).
-Multiplying by a phasor rotates by its angle, and a phasor turning by the same
-angle every sample is a single, pure frequency. Filters, mixers and the FFT
-(lesson 24) are all built from them.
+The complex numbers that come up most in signal processing are **phasors**:
+size 1, at some angle θ, written `e^(iθ)` (that is `cos θ + i sin θ`, by
+Euler's formula). Multiplying by a phasor rotates by its angle, and a phasor
+turning by the same angle every sample is a single, pure frequency. Many
+filters and mixers, and the FFT (lesson 24), are built from them.
 
 C99 has complex numbers built in, in `<complex.h>`: `double complex` is a type,
 `I` is `i`, and `+`, `−`, `*` and `/` work on them.
@@ -127,40 +134,46 @@ tone at 2000 Hz:  0.0000 +0.0000i   size 0: no tone here
 - **Multiplying by `i` is a quarter turn.** `z * i` has the same size as `z`
   and an angle 90° larger, and `i * i` is a half turn, to −1. In general,
   multiplying complex numbers *multiplies their sizes and adds their angles*,
-  which is what makes them the natural language for things that rotate.
+  which is why they suit things that rotate.
 - **Measuring a tone.** `measure` multiplies the signal by a phasor turning
   backwards at the frequency asked about, and adds up the products. A tone at
   exactly that frequency stops turning and adds up to its size and starting
   angle: 0.5 and 30°, as it was made. The 3 kHz tone keeps turning, so its
   products cancel out over whole cycles, and the 2 kHz measurement finds
-  nothing at all. Each tone is found on its own, though all three are in one
-  signal.
-- **The measurement is the DFT.** Doing this for every frequency at once is the
-  *discrete Fourier transform*, and lesson 24 makes it fast.
+  nothing at all. Each tone is found on its own, though both are in one signal.
+- **The measurement is a DFT.** Doing this for every frequency at once is the
+  *discrete Fourier transform* (DFT), and lesson 24 makes it fast.
 
 ## Pitfalls
 
 - **`printf` has no complex conversion.**
   [`broken-complex-printf.c`](broken-complex-printf.c) prints a
   `double complex` with `%f`, which reads one `double` where there are two.
-  `-Wall` checks formats against arguments and refuses:
+  `-Wall` checks formats against arguments and warns (gcc's words):
 
   ```
-  broken-complex-printf.c:15:17: error: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Werror=format=]
+  broken-complex-printf.c:16:17: warning: format ‘%f’ expects argument of type ‘double’, but argument 2 has type ‘complex double’ [-Wformat=]
   ```
+
+  It is only a warning, so the program still builds, and prints `z = 3.000000`,
+  with gcc and clang alike: on x86-64 a `double complex` argument travels as
+  two `double`s, and `%f` reads the first. The 4i is lost without a word, and
+  on a machine that passes it differently the output is anything (lesson 01's
+  exercise 3). `-Werror` would make the warning an error.
 
   Print the parts, `creal (z)` and `cimag (z)`.
 
-- **Not every compiler has it.** Microsoft's C compiler has never supported
-  `<complex.h>`'s types, and C11 made them optional. Code that must build
-  everywhere brings its own complex struct (exercise 2).
+- **Not every compiler has it.** Microsoft's C compiler doesn't support C99's
+  `double complex`: its `<complex.h>` has types of its own, without `+` and
+  `*`. And C11 made complex types optional. Code that has to build everywhere
+  can bring its own complex struct (exercise 2).
 
 - **`float complex` needs the `f` functions.** `cabs` takes a `double complex`;
   for a `float complex` it is `cabsf`, as `sqrtf` is to `sqrt`. Mixing them
   converts back and forth silently.
 
-- **Rounding piles up in a rotation.** A phasor multiplied by itself sample
-  after sample slowly changes size (exercise 3).
+- **Rounding piles up in a rotation.** A phasor multiplied by the same step,
+  sample after sample, slowly drifts in size (exercise 3).
 
 ## Exercises
 
@@ -189,11 +202,10 @@ folder to run it in.
 
    The phasor moves the tone to +100 Hz and nowhere else: multiplying adds the
    angles, so 1100 − 1000 = 100, exactly. The cosine produces 100 Hz *and* 2100
-   Hz, each as a pair of phasors turning both ways, because a real cosine is
-   itself two phasors, one turning each way, and each one shifts the tone its
-   own way. That second copy has to be filtered out afterwards. Complex signals
-   carry the direction of turning, which is why software radios work with
-   complex samples.
+   Hz. A real cosine is itself two phasors, one turning each way, and each one
+   shifts the tone its own way. That second copy has to be filtered out
+   afterwards. Complex signals carry the direction of turning, which is one
+   reason software radios work with complex samples.
 
    </details>
 
@@ -218,8 +230,10 @@ folder to run it in.
    [`cplx.c`](exercises/ex2-struct/cplx.c) needs three functions: `cmul` (from
    `i·i = −1`), `cadd`, and `cpolar` (Euler's formula). The arithmetic is the
    same, only spelled out, and the results agree to 12 decimal places. It is
-   more to write, and it compiles everywhere, MSVC included, which is why many
-   portable libraries take this route.
+   more to write, and the three helpers build on compilers without C99's
+   complex types, MSVC among them, which is one reason many portable libraries
+   take this route. (The `<complex.h>` half of `cplx.c` is only there to check
+   them, so the file as a whole still needs those types.)
 
    </details>
 
@@ -244,7 +258,7 @@ folder to run it in.
 
    It doesn't: each multiply rounds, the size creeps away from 1, and nothing
    pulls it back (here it ends about 16% small; on another machine the drift
-   may differ). The fix is to measure the size now and then and scale it back.
+   may differ). One fix is to measure the size now and then and scale it back.
    [`rotator.c`](exercises/ex3-rotator/rotator.c) multiplies by
    `(3 − |z|²) / 2` every 1000 samples, a cheap stand-in for `1 / |z|` when
    `|z|` is close to 1, with no square root. A phase accumulator (lesson 22)
@@ -278,3 +292,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`sin`](https://en.cppreference.com/c/numeric/math/sin)         | `<math.h>`    | sine of an angle in radians                               |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 22 Oscillators](../22-oscillator/README.md) ·
+[Contents](../README.md#contents) · [24 The FFT →](../24-fft/README.md)
+
+<!-- /nav -->

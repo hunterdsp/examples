@@ -1,23 +1,31 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 09 Stack vs heap](../09-stack-heap/README.md) ·
+[Contents](../README.md#contents) ·
+[11 Catching bugs →](../11-catching-bugs/README.md)
+
+<!-- /nav -->
+
 # 10 · Ownership and lifecycle
 
 Run this lesson's commands in `c-by-example/10-ownership/`.
 
 Lesson 09's rule was "every `malloc` gets exactly one `free`". In a program of
 three functions that is easy to keep. In a library of three hundred, with
-buffers handed from one part to another, it is the hardest thing in C, and the
-language does not help: a pointer does not say whether you are meant to free
-what it points at.
+buffers handed from one part to another, it is a common source of trouble in C,
+and the language does not help: a pointer does not say whether you are meant to
+free what it points at.
 
-So the code says it instead. Every block of heap memory has one **owner**, the
-part of the program responsible for freeing it, and every function says, in its
-name or its comment, what it does to ownership:
+So the code says it instead. In this course, each block of heap memory has one
+**owner**, the part of the program responsible for freeing it, and each
+function says, in its name or its comment, what it does to ownership:
 
-| a function that…                       | example          | afterwards                 |
-| -------------------------------------- | ---------------- | -------------------------- |
-| **creates**: allocates and hands over  | `signal_create`  | the caller owns the result |
-| **destroys**: takes back and frees     | `signal_destroy` | nobody does; don't touch   |
-| **borrows**: uses, and leaves it alone | `signal_push`    | the caller still owns it   |
-| **releases**: hands its memory onward  | `signal_release` | the caller owns the part   |
+| a function that…                       | example          | afterwards                                      |
+| -------------------------------------- | ---------------- | ----------------------------------------------- |
+| **creates**: allocates and hands over  | `signal_create`  | the caller owns the result                      |
+| **destroys**: takes back and frees     | `signal_destroy` | the memory is gone: don't use the pointer again |
+| **borrows**: uses, and leaves it alone | `signal_push`    | the caller still owns it                        |
+| **releases**: hands its memory onward  | `signal_release` | the caller owns the part                        |
 
 Here is a buffer that grows as samples arrive, with a function for each row:
 
@@ -192,8 +200,8 @@ released 1000 samples (sum 499500); main owns them now
 
 - **`p = realloc(p, n)` leaks on failure.** If `realloc` fails it returns
   `NULL` and leaves the old block alone, but assigning straight back to `p` has
-  just overwritten the only copy of its address. Always `realloc` into a
-  temporary, as `signal_push` does.
+  just overwritten the only copy of its address. `realloc` into a temporary
+  instead, as `signal_push` does.
 
 - **Using a pointer after `realloc`.** `float *first = &s->data[0];`, then a
   push that grows the buffer: `first` may now point at freed memory. Re-read
@@ -201,7 +209,8 @@ released 1000 samples (sum 499500); main owns them now
 
 - **Every exit path.** A function that returns early has to give back what it
   owns first, which is why `main` destroys `s` before its `return 1`. Miss one
-  path and that path leaks; lesson 11's LeakSanitizer finds it.
+  path and that path leaks; lesson 11's LeakSanitizer finds it, if a run takes
+  that path.
 
 ## Exercises
 
@@ -229,10 +238,11 @@ folder to run it in.
 
    Each growth may move the whole buffer, copying every sample so far. Growing
    by 16, that is 63 moves and up to 31,500 samples copied to store 1000, and
-   it gets worse with the square of the length. Doubling copies up to 1020: on
-   average each sample is copied about once, however long the signal grows. The
-   price is wasted room, up to half the capacity. That trade is why doubling
-   (or 1.5×) is the usual choice.
+   it gets worse with the square of the length.
+
+   Doubling copies up to 1020: on average each sample is copied about once,
+   however long the signal grows. The price is wasted room, up to half the
+   capacity, which is why doubling (or 1.5×) is the usual choice.
 
    </details>
 
@@ -283,8 +293,8 @@ folder to run it in.
    Knowing the count up front, [`signal_push_n`](exercises/ex3-push-n/push_n.c)
    doubles the capacity until the block fits, calls `realloc` once, and copies
    the block in with one `memcpy`. Audio arrives in blocks, so this is the push
-   real code calls. It borrows `x`: the caller still owns the block, and may
-   reuse it as soon as the call returns.
+   most audio code wants. It borrows `x`: the caller still owns the block, and
+   may reuse it as soon as the call returns.
 
    </details>
 
@@ -304,3 +314,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`realloc`](https://en.cppreference.com/c/memory/realloc)    | `<stdlib.h>` | resize allocated memory, perhaps moving it            |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 09 Stack vs heap](../09-stack-heap/README.md) ·
+[Contents](../README.md#contents) ·
+[11 Catching bugs →](../11-catching-bugs/README.md)
+
+<!-- /nav -->

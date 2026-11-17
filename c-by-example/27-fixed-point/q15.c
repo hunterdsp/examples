@@ -7,8 +7,9 @@
  * binary point, and a sign. It covers -1 to 0.99997, in steps of
  * 1/32768. Integer arithmetic is exact and the same on every machine,
  * and on a processor without floating-point hardware (many small DSPs
- * and microcontrollers) it is the only fast arithmetic there is. The
- * price: the programmer, not the hardware, keeps track of the scale.
+ * and microcontrollers) it is often the fastest arithmetic there is.
+ * The price: the programmer, not the hardware, keeps track of the
+ * scale.
  */
 #include <math.h>
 #include <stdint.h>

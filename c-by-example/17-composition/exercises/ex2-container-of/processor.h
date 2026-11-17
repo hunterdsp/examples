@@ -1,5 +1,5 @@
 /* processor.h -- lesson 16's interface, with reset optional (lesson 16,
- * exercise 3), and three kinds more.
+ * exercise 3), and two kinds more.
  *
  * A processor is a pointer to its operations, nothing more:
  *

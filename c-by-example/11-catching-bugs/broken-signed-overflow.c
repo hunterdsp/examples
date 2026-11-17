@@ -3,8 +3,8 @@
  * 70,000 full-scale 16-bit samples add up to about 2.3 billion, more than
  * an int32_t holds (2,147,483,647). Signed overflow is undefined
  * behaviour (lesson 02): the compiler may assume it never happens, and
- * optimise as if it can't. UndefinedBehaviorSanitizer stops the program
- * at the addition that overflows.
+ * optimise as if it can't. UndefinedBehaviorSanitizer reports the
+ * addition that overflows.
  */
 #include <inttypes.h>
 #include <stdint.h>

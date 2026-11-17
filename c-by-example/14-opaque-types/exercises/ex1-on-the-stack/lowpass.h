@@ -7,7 +7,7 @@
  * declares `struct lowpass` without defining it. A file that includes
  * this header may hold a lowpass_t * and pass it around, but cannot
  * create one, copy one, or look inside one: only lowpass.c, which has
- * the definition, can. So the functions below are the ONLY way in, and
+ * the definition, can. So the functions below are the way in, and
  * lowpass.c is free to change what the struct holds without breaking a
  * single caller.
  */

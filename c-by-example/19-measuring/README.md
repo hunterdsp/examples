@@ -1,18 +1,25 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 18 API design](../18-api-design/README.md) ·
+[Contents](../README.md#contents) · [20 FIR filters →](../20-fir/README.md)
+
+<!-- /nav -->
+
 # 19 · Measuring first
 
 Run this lesson's commands in `c-by-example/19-measuring/`.
 
 Part IV is about speed: filters, oscillators and transforms that keep up with
 real time, and how the machine underneath decides what "fast" means. It starts
-with the rule that every lesson after it follows:
+with a rule the lessons after it lean on:
 
 > **Measure before you change anything, and after.**
 
-Intuition about speed is wrong surprisingly often. The compiler has already
-made some of the improvements you would make, the machine is fast at things
-that look slow and slow at things that look fast, and the part of a program
-that takes the time is rarely the part you were looking at. A measurement
-settles it, and takes a minute.
+Intuition about speed is often wrong. The compiler has already made some of the
+improvements you would make. The machine is fast at some things that look slow,
+and slow at some that look fast. And the part of a program that takes the time
+is often not the part you were looking at. A measurement settles it, and takes
+a minute.
 
 Here are two ways to make a sine wave: calling `sin()` for every sample, or
 looking it up in a table of 1024 values made once, with straight-line
@@ -167,8 +174,8 @@ table is 4.9 times as fast
 ```
 
 Your numbers will differ, from machine to machine and from run to run; the
-ratio is what to look at. (This test can't check them, so `make test` runs only
-the plain `./bench`.)
+ratio is what to compare, and even it moves from machine to machine. (This test
+can't check them, so `make test` runs only the plain `./bench`.)
 
 ## What it shows
 
@@ -176,7 +183,7 @@ the plain `./bench`.)
   anything. The table is less exact than `sin()`, by under 0.00001 here, and
   whether that is good enough is a decision for the sound, not the stopwatch.
 - **Time the build you ship.** `-O2` without sanitizers. A debug build measures
-  the debugger's convenience; a sanitized build measures the sanitizer's
+  code the compiler didn't optimise; a sanitized build measures the sanitizer's
   checks, and changes the *ratio*, not only the totals (exercise 1).
 - **`clock()` measures CPU time**, the processor time this program used, in
   units of `CLOCKS_PER_SEC`. It ignores time spent waiting, which is what you
@@ -185,8 +192,8 @@ the plain `./bench`.)
 - **Repeat, and keep the fastest.** One call of `by_sin` takes about 40
   microseconds, too short for `clock()` to see reliably, so each timing runs it
   200 times. And each timing is taken 7 times, keeping the fastest: the first
-  runs warm the caches, and anything else the machine does can only make a run
-  slower, never faster.
+  runs warm the caches, and the fastest run is the one least disturbed by
+  whatever else the machine was doing.
 - **Divide it down.** "8.42 ns per sample" compares directly with the budget:
   at 48 kHz a sample is due every 20,800 ns.
 - **Use the result.** The program prints a sample of the output after timing. A
@@ -196,7 +203,7 @@ the plain `./bench`.)
 ## Pitfalls
 
 - **Benchmarking the debug build.** At `-O0` the comparison can come out
-  backwards: exercise 2's "obvious" improvement is 3.5 times as fast there, and
+  backwards: exercise 2's tempting improvement is 3.5 times as fast there, and
   makes no difference at all at `-O2`.
 - **Timing something too short.** `clock()` counts in steps that may be as
   coarse as a millisecond. Repeat the work until a timing takes tens of
@@ -360,3 +367,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp) | `<string.h>` | compare two strings                                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 18 API design](../18-api-design/README.md) ·
+[Contents](../README.md#contents) · [20 FIR filters →](../20-fir/README.md)
+
+<!-- /nav -->

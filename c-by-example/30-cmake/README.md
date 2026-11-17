@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 29 Library layout](../29-library-layout/README.md) ·
+[Contents](../README.md#contents) · [31 Testing →](../31-testing/README.md)
+
+<!-- /nav -->
+
 # 30 · CMake
 
 Run this lesson's commands in `c-by-example/30-cmake/`.
@@ -6,13 +13,13 @@ Lesson 29 built `sig` by hand: four compiles, an `ar`, and a link, each with
 the right flags. Lesson 08's Makefile would remember those commands, but only
 for one compiler on one kind of system. `-fvisibility=hidden` is a GCC and
 clang flag, a shared library is `libsig.so` on Linux, `libsig.dylib` on macOS
-and `sig.dll` on Windows, and Visual Studio wants none of it as a Makefile.
+and `sig.dll` on Windows, and Visual Studio's own projects aren't Makefiles.
 
 **CMake** describes the build once, as *targets* (this library, built from
 these files; that program, linked with this library), and writes the real build
 files for whatever system it runs on: Makefiles, Ninja files, a Visual Studio
-solution, an Xcode project. Most C libraries you will meet are built with it,
-and anything that wants to use them expects it. `sig`'s description:
+solution, an Xcode project. Many C libraries are built with it, and many
+projects that use them expect it. `sig`'s description:
 
 ```bash
 cat ../sig/CMakeLists.txt
@@ -139,6 +146,19 @@ endif()
 
 # Installing: the library, its headers, the tools, and two ways for
 # another project to find them, a pkg-config file and a CMake package.
+#
+# Not from a SIG_SANITIZE build. BUILD_INTERFACE keeps the flags out of
+# what users inherit, but the library itself was compiled with them: it
+# needs the sanitizers' runtime, so a program built without them fails
+# to link (clang) or to start (gcc, whose runtime must load first).
+# This rule comes first, so nothing is copied before it stops the
+# install.
+if(SIG_SANITIZE)
+  install(
+    CODE "message(FATAL_ERROR \"This build has SIG_SANITIZE=ON, and its \"
+         \"library only runs in sanitized programs. Install from a build \"
+         \"configured without it.\")")
+endif()
 install(
   TARGETS sig
   EXPORT sigTargets
@@ -234,16 +254,17 @@ rebuilt: the same bookkeeping as lesson 08's `make`, done for you.
   agree. It ends up in the library's file name and its installed files (lesson
   34).
 - **`compile_commands.json`.** `CMAKE_EXPORT_COMPILE_COMMANDS` writes every
-  compile command into `build/compile_commands.json`, which is how editors and
-  `clangd` know your `-I` folders. (`../sig/compile_flags.txt` does the same
-  job more simply, for `sig`'s own folder.)
+  compile command into `build/compile_commands.json`, which is one way editors,
+  and `clangd` (the language server many of them use), learn your `-I` folders.
+  (`../sig/compile_flags.txt` does the same job more simply, for `sig`'s own
+  folder.)
 
 ## Pitfalls
 
 - **No build type, no optimisation.** With Makefiles or Ninja, a build
   configured without `-DCMAKE_BUILD_TYPE` is compiled with no `-O` at all
-  (exercise 3). It runs, slowly, and any timing taken from it measures nothing
-  that ships (lesson 19). Choose one: `Debug` (`-g`), `Release`
+  (exercise 3). It runs, slowly, and any timing taken from it says little about
+  what ships (lesson 19). Choose one: `Debug` (`-g`), `Release`
   (`-O3 -DNDEBUG`) or `RelWithDebInfo` (`-O2 -g -DNDEBUG`).
 
 - **The cache remembers.** Every `-D` is stored in `build/CMakeCache.txt`, and
@@ -253,8 +274,8 @@ rebuilt: the same bookkeeping as lesson 08's `make`, done for you.
   be made again.
 
 - **Building inside the source.** `cmake -S . -B .`, or plain `cmake .` in the
-  source folder, writes the build files among the sources, and there is no
-  clean way to get rid of them. Always give the build a folder of its own.
+  source folder, writes the build files among the sources, and they are hard to
+  get rid of cleanly. Give the build a folder of its own.
 
 - **Globbing for sources.** `file(GLOB …)` can collect every `.c` file in a
   folder, but it runs only when CMake configures, so a new file is silently
@@ -361,6 +382,8 @@ folder to run it in.
    cmake -S ../sig -B build-release -DCMAKE_BUILD_TYPE=Release
    ```
 
+   <!-- expect-fail -->
+
    ```bash
    grep -c -- '-O' build/compile_commands.json
    grep -c -- '-O3 -DNDEBUG' build-release/compile_commands.json
@@ -391,3 +414,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf) | `<stdio.h>` | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 29 Library layout](../29-library-layout/README.md) ·
+[Contents](../README.md#contents) · [31 Testing →](../31-testing/README.md)
+
+<!-- /nav -->

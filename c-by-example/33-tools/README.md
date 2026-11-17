@@ -1,11 +1,19 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 32 Documentation](../32-docs/README.md) · [Contents](../README.md#contents)
+· [34 Distribution →](../34-distribution/README.md)
+
+<!-- /nav -->
+
 # 33 · Bundled tools
 
 Run this lesson's commands in `c-by-example/33-tools/`.
 
-A library is used from C. Most libraries also ship a few small programs, so
-that the library can be tried, scripted and debugged from a shell: `zlib` has
-`gzip`, `libpng` has `pngfix`, and FFmpeg's libraries have `ffmpeg`. `sig`
-ships three, each doing one job, written to be joined by pipes (lesson 06):
+Many libraries also ship a few small programs, so that the library can be
+tried, scripted and debugged from a shell: libjpeg has `cjpeg` and `djpeg`,
+`libpng` has `pngfix`, and FFmpeg's libraries have `ffmpeg`. `sig` ships three,
+each doing one job, written to be joined by *pipes*: the shell's `|` sends one
+program's standard output into the next one's standard input.
 
 | tool                                   | reads   | writes                                            |
 | -------------------------------------- | ------- | ------------------------------------------------- |
@@ -13,9 +21,9 @@ ships three, each doing one job, written to be joined by pipes (lesson 06):
 | `sig-filter lowpass\|highpass FREQ_HZ` | samples | the samples, filtered                             |
 | `sig-fft`                              | samples | the frequencies in the last 4096 samples, as text |
 
-The samples travel as **raw `float`s**: each one's four bytes, exactly as they
-are in memory, one after another, at 48000 samples per second. No header, no
-text, nothing to parse. The middle tool:
+The samples travel as **raw `float`s**, lesson 06's format: each one's four
+bytes, exactly as they are in memory, one after another, at 48000 samples per
+second. No header, no text, nothing to parse. The middle tool:
 
 ```bash
 cat ../sig/tools/sig-filter.c
@@ -156,6 +164,8 @@ keyboard, and goes to the terminal even when standard output is piped. The
 **exit status** tells a script what happened: 0 for success, 1 for a failure,
 and 2, by convention, for a command line it didn't understand:
 
+<!-- expect-fail -->
+
 ```bash
 build/sig-tone 1 30000
 echo "exit status $?"
@@ -183,9 +193,10 @@ words, not the tool's guess.
 - **Blocks.** `fread` asks for 1024 samples and returns how many it got: fewer
   at the end of the input, and 0 when it is over, which is what ends the loop.
   The filter keeps its state between calls, so blocks join with no seam (lesson
-  13).
-- **In place.** `sig_biquad_process (f, buf, buf, n)` filters in place, which
-  the header promises is allowed (and lesson 31's exercise 3 tests).
+  14).
+- **In place.** `sig_biquad_process (f, buf, buf, n)` filters in place, writing
+  its output over its input, which the header promises is allowed (and lesson
+  31's exercise 3 tests).
 - **Read errors too.** A `while` that stops at `fread` returning 0 can't tell
   the end of the input from a failure, so `ferror (stdin)` asks afterwards.
 - **A test of all three.** The `pipeline` test in `CMakeLists.txt` runs the
@@ -338,3 +349,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strtof`](https://en.cppreference.com/c/string/byte/strtof) | `<stdlib.h>` | read a `float` from a string                      |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 32 Documentation](../32-docs/README.md) · [Contents](../README.md#contents)
+· [34 Distribution →](../34-distribution/README.md)
+
+<!-- /nav -->

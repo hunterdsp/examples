@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 33 Bundled tools](../33-tools/README.md) · [Contents](../README.md#contents)
+· [35 Epilogue: the same library, from Python →](../35-python/README.md)
+
+<!-- /nav -->
+
 # 34 · Distribution
 
 Run this lesson's commands in `c-by-example/34-distribution/`.
@@ -20,7 +27,7 @@ program, and a fixed library fixes them all without relinking. The price is
 that the library must be there, and must still match.
 
 `BUILD_SHARED_LIBS=ON` makes `add_library` build a shared library, and
-`Release` makes it an optimised build, as one meant for others should be:
+`Release` makes it an optimised build, as one shipped to others usually is:
 
 ```bash
 cmake -S ../sig -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
@@ -80,7 +87,7 @@ Only `include/sig/` was installed, not `src/`: `internal.h` stays private
 other projects to read: `pkgconfig/sig.pc` and `cmake/sig/`. Some Linux
 systems, Fedora among them, use `lib64` instead of `lib`.
 
-The installed tools work, from anywhere:
+The installed tools run, and find the installed library by themselves:
 
 ```bash
 staging/bin/sig-tone 1 750 | staging/bin/sig-fft
@@ -94,7 +101,7 @@ staging/bin/sig-tone 1 750 | staging/bin/sig-fft
 
 **pkg-config** answers one question for a build: what flags does this library
 need? It reads `.pc` files, and `PKG_CONFIG_PATH` adds folders for it to look
-in. `sig`'s, made by CMake from `../sig/sig.pc.in`:
+in. Here is `sig`'s, which CMake made from `../sig/sig.pc.in`:
 
 ```bash
 cat staging/lib/pkgconfig/sig.pc
@@ -183,8 +190,8 @@ main (void)
 }
 ```
 
-`$( … )` puts pkg-config's answer into the command line. `-Wl,-rpath,…` is
-explained below:
+`$( … )`, the shell's command substitution, puts pkg-config's answer into the
+command line. `-Wl,-rpath,…` is explained below:
 
 ```bash
 cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined analyse.c $(PKG_CONFIG_PATH=staging/lib/pkgconfig pkg-config --cflags --libs sig) -Wl,-rpath,"$PWD/staging/lib" -o analyse
@@ -206,27 +213,47 @@ The same numbers as lesson 33's pipe, from one program.
   invisible from outside it unless marked. `SIG_API` marks the public ones
   `visibility("default")`. `sig__freq_ok` is hidden: no program can come to
   depend on it, and the loader has fewer names to look up (exercise 3).
+
 - **The prefix isn't written in.** `prefix=${pcfiledir}/../..` makes the `.pc`
   file find the rest of the install relative to itself, and `INSTALL_RPATH`
   (`$ORIGIN/../lib`, `@loader_path/../lib` on macOS) does the same for the
   installed tools. The tree can be moved and keeps working (exercise 2).
+
 - **The sanitizers stay home.** `SIG_SANITIZE` adds its flags inside
   `$<BUILD_INTERFACE:…>`, so they apply in `sig`'s own build tree and are left
-  out of the installed `sigTargets.cmake`. A user of the installed library
-  doesn't inherit them.
+  out of the installed `sigTargets.cmake`: a user of the installed library
+  doesn't inherit them. The library itself can't leave them behind, though:
+  compiled with them, it needs the sanitizers' runtime, and a program built
+  without them fails to link (clang) or to start (gcc, whose runtime must load
+  first). So `sig`'s `CMakeLists.txt` refuses to install a `SIG_SANITIZE` build
+  at all, before it copies anything:
+
+  ```bash
+  cmake -S ../sig -B build-asan -DSIG_SANITIZE=ON > /dev/null
+  cmake --install build-asan --prefix staging 2>&1 | grep -o 'This build has SIG_SANITIZE=ON'
+  ```
+
+  ```
+  This build has SIG_SANITIZE=ON
+  ```
+
 - **Versions are promises.** Semantic versioning: a fix is 1.0.1; a new
   function, which breaks nothing, 1.1.0; removing or changing anything a
   program can depend on, 2.0.0, with a new soname, `libsig.so.2`. Opaque types
   (lesson 14) help: `sig_osc` can change size without breaking anyone, because
-  no program knows its size. A public struct can't.
+  no program knows its size. A public struct can't change size that way.
 
 ## Pitfalls
 
 - **The loader can't find it.** The linker found `libsig.so` because `-L` said
-  where. The loader, when the program runs, doesn't read `-L`, and looks only
-  in the system's folders and the folders recorded in the program as its
-  *rpath*. Without `-Wl,-rpath,…` (`-Wl,` passes the rest to the linker), Linux
-  says:
+  where. The loader, when the program runs, doesn't read `-L`. On Linux it
+  looks, in order, in the folders named in `LD_LIBRARY_PATH`; the folders
+  recorded in the program as its *rpath* (which `-Wl,-rpath` stores as
+  `RUNPATH`; the older `RPATH`, from `-Wl,--disable-new-dtags`, comes before
+  `LD_LIBRARY_PATH`); and the system's folders: those listed in
+  `/etc/ld.so.conf`, which `ldconfig` keeps in a cache, then `/lib` and
+  `/usr/lib`. Without `-Wl,-rpath,…` (`-Wl,` passes the rest to the linker),
+  Linux says:
 
   <!-- no-run -->
 
@@ -240,9 +267,9 @@ The same numbers as lesson 33's pipe, from one program.
   ```
 
   An install into a system folder, like `/usr/local/lib`, needs no rpath.
-  `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` on macOS) also tells the loader where
-  to look, for one command, and is fine for trying something, but a program
-  that only runs with it set is broken.
+  `LD_LIBRARY_PATH` (`DYLD_LIBRARY_PATH` on macOS) can be set for one command,
+  and is fine for trying something, but a program that only runs with it set is
+  broken.
 
 - **A prefix written in at configure time.** A `.pc` file with
   `prefix=/usr/local` in it, when `cmake --install --prefix` put the library
@@ -250,9 +277,9 @@ The same numbers as lesson 33's pipe, from one program.
   `pcfiledir`.
 
 - **Changing a public enum.** Reordering `SIG_LOWPASS` and `SIG_HIGHPASS`
-  compiles cleanly everywhere, and silently swaps the two filters in every
-  program built against the old header and run with the new library. Values in
-  a public header never change within a major version; new ones go at the end.
+  compiles cleanly, and silently swaps the two filters in every program built
+  against the old header and run with the new library. Values in a public
+  header must not change within a major version; new ones go at the end.
 
 ## Exercises
 
@@ -324,8 +351,9 @@ folder to run it in.
    ```
 
    `sigConfigVersion.cmake` was written with `COMPATIBILITY SameMajorVersion`:
-   1.0.0 satisfies a request for 1.0 or any 1.x below it, and nothing from
-   another major version, in either direction. The same rule as the soname.
+   1.0.0 satisfies a request for 1.0, as any later 1.x would, and nothing from
+   another major version satisfies it, in either direction. The same rule as
+   the soname.
 
    </details>
 
@@ -352,7 +380,7 @@ folder to run it in.
    Both work, because neither has a path written in. The tools find `libsig` at
    `$ORIGIN/../lib`, where `$ORIGIN` is the folder the program is in, and
    `sig.pc` finds the headers relative to itself. A relocatable install can be
-   packaged as an archive and unpacked anywhere, which is how most binary
+   packaged as an archive and unpacked anywhere, which is how many binary
    packages, Python wheels included (lesson 35), carry a C library.
 
    </details>
@@ -368,7 +396,8 @@ folder to run it in.
 
    ```bash
    for lib in staging/lib/libsig.so staging/lib/libsig.dylib; do
-     [ -e "$lib" ] && python3 -c "import ctypes, sys; lib = ctypes.CDLL(sys.argv[1]); print('sig_version:', hasattr(lib, 'sig_version')); print('sig__freq_ok:', hasattr(lib, 'sig__freq_ok'))" "$lib"
+     [ -e "$lib" ] || continue
+     python3 -c "import ctypes, sys; lib = ctypes.CDLL(sys.argv[1]); print('sig_version:', hasattr(lib, 'sig_version')); print('sig__freq_ok:', hasattr(lib, 'sig__freq_ok'))" "$lib"
    done
    ```
 
@@ -378,8 +407,8 @@ folder to run it in.
    ```
 
    `sig__freq_ok` is in the library, and `osc.c` and `biquad.c` call it, but
-   hidden: inside the library it is an ordinary function, and outside it
-   doesn't exist. In lesson 29's static `libsig.a` it was visible to every
+   hidden: inside the library it is an ordinary function, and outside it can't
+   be found by name. In lesson 29's static `libsig.a` it was visible to every
    program, because an archive is just object files, and visibility is a
    property of shared libraries. With GNU binutils, `nm -D` lists what a shared
    library exports: the 13 `SIG_API` functions, and nothing else.
@@ -398,3 +427,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf) | `<stdio.h>` | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 33 Bundled tools](../33-tools/README.md) · [Contents](../README.md#contents)
+· [35 Epilogue: the same library, from Python →](../35-python/README.md)
+
+<!-- /nav -->

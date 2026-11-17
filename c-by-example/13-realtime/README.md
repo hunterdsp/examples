@@ -1,23 +1,31 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 12 Ring buffers](../12-ring-buffers/README.md) ·
+[Contents](../README.md#contents) ·
+[14 Opaque types →](../14-opaque-types/README.md)
+
+<!-- /nav -->
+
 # 13 · Allocation for real time
 
 Run this lesson's commands in `c-by-example/13-realtime/`.
 
 An audio interface asks for 256 samples at 48 kHz: the program has 5.3 ms to
 deliver them, every time, for as long as it runs. Late once, and the listener
-hears a click. A program like that is **real time**: what matters is not that
-it is fast on average, but that it is *never* slow.
+may hear a click. A program like that is **real time**: what matters is not
+that it is fast on average, but that it is *never* late.
 
 `malloc` makes no such promise. It may search its free lists, wait for a lock
 another thread holds, or ask the operating system for more memory, and any of
 those can take far longer than 5.3 ms, once in a while, which is all it takes.
-So real-time code follows one rule:
+So real-time code usually follows one rule:
 
 > Allocate at **setup**. Process with what setup gave you. Free at
 > **teardown**.
 
 Here is a gain stage that changes level without clicking, written that way. Its
 memory comes from an **arena**: one `malloc`, carved into pieces. The program
-counts every `malloc` it makes, to prove processing makes none:
+counts every `malloc` it makes, to show that processing makes none:
 
 ```bash
 cat realtime.c
@@ -218,10 +226,11 @@ a block of 512: refused (max 256)
 - **Alignment.** Each piece starts at a multiple of 16 bytes, rounded up with
   lesson 12's power-of-two trick: add 15, clear the low 4 bits. A `float` read
   from a misaligned address is slow on some machines and a crash on others, and
-  lesson 26's vector instructions want 16 or more.
+  vector instructions (lesson 26), which handle 16 bytes or more at once, can
+  be slower, or refuse, at an address that isn't a multiple of their size.
 - **The ramp is the point.** Jumping from gain 0.5 to 1.0 between two samples
-  is a step, which is heard as a click. Spreading it over a block, from 0.5078
-  up to exactly 1.0000, is not.
+  is a step, which can be heard as a click. Spreading it over a block, from
+  0.5078 up to exactly 1.0000, is not.
 
 ## Pitfalls
 
@@ -234,19 +243,19 @@ a block of 512: refused (max 256)
   ERROR: AddressSanitizer: heap-use-after-free on address 0x75a8dade0100 at pc 0x5f25750dd4f5 bp 0x7ffdc9831f30 sp 0x7ffdc9831f20
   ```
 
-- **An arena hides overflows from AddressSanitizer.** ASan guards each
+- **An arena can hide overflows from AddressSanitizer.** ASan guards each
   `malloc`ed block, but the pieces of an arena sit side by side *inside* one
   block, so writing past the end of one piece lands in the next, and ASan sees
   nothing wrong. Check sizes when carving, as `arena_alloc` does, and test with
   plain `malloc` too when in doubt.
 
-- **It isn't only `malloc`.** `printf`, file access, and waiting on a lock all
-  take unbounded time too. The processing function here does none of them:
+- **It isn't only `malloc`.** `printf`, file access, and waiting on a lock can
+  all take unbounded time too. The processing function here does none of them:
   `main` prints, after the blocks are done.
 
 - **Hidden allocations.** Some library calls allocate internally: the first
-  `printf` sets up a buffer, for one. A function called from the processing
-  path must be known not to allocate, not assumed.
+  `printf` sets up a buffer, for one. Check that each function on the
+  processing path doesn't allocate, rather than assume it.
 
 ## Exercises
 
@@ -254,7 +263,7 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Write the obvious version: `gain_process` `malloc`s a ramp the size of the
+1. Write the simplest version: `gain_process` `malloc`s a ramp the size of the
    block, and frees it at the end. Count the allocations.
 
    <details><summary>Output and answer</summary>
@@ -302,8 +311,8 @@ folder to run it in.
    allocated. Processing can now allocate as if with `malloc`, in constant time
    and with no `free` to forget, as long as nothing outlives the block. The
    arena is sized for the largest block, and the peak shows the 256-sample
-   blocks used all of it. Games use the same trick for each video frame, which
-   is where the name *frame arena* comes from.
+   blocks used all of it. Many games use the same trick for each video frame,
+   which is where the name *frame arena* comes from.
 
    </details>
 
@@ -349,3 +358,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)    | `<stdio.h>`  | formatted output to `stdout`                          |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 12 Ring buffers](../12-ring-buffers/README.md) ·
+[Contents](../README.md#contents) ·
+[14 Opaque types →](../14-opaque-types/README.md)
+
+<!-- /nav -->

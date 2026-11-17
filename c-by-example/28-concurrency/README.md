@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 27 Fixed point](../27-fixed-point/README.md) ·
+[Contents](../README.md#contents) ·
+[29 Library layout →](../29-library-layout/README.md)
+
+<!-- /nav -->
+
 # 28 · Concurrency
 
 Run this lesson's commands in `c-by-example/28-concurrency/`.
@@ -9,10 +17,10 @@ another core at the same time. Threads come from POSIX, not from C99:
 `<pthread.h>`, with `-pthread` when building. (C11 added `<threads.h>`, with
 the same ideas under other names.)
 
-Sharing all memory is both the point and the danger. The safest, and usually
+Sharing all memory is both the point and the danger. The safest, and often
 fastest, use of threads is work that splits into pieces that share nothing at
-all. A multichannel recording is exactly that: each channel can be filtered on
-its own, by its own thread, and no thread ever touches another's samples.
+all. A multichannel recording is one: each channel can be filtered on its own,
+by its own thread, and no thread ever touches another's samples.
 
 ```bash
 cat threads.c
@@ -164,7 +172,7 @@ cc -std=c99 -Wall -Wextra -O2 -pthread threads.c -o threads -lm
 ./threads time
 ```
 
-On the machine from lesson 19, which has 12 cores:
+On a machine with 12 cores:
 
 ```
 4 channels: threaded results identical: yes
@@ -184,7 +192,7 @@ four threads:  17.1 ms
   bit.
 - **2.5 times, not 4.** Starting threads costs time, and four cores reading 64
   MB of samples compete for the same memory (lesson 25). A speed-up below the
-  number of threads is normal; measure, rather than assume.
+  number of threads is common; measure, rather than assume.
 - **Wall-clock time.** `clock()` adds up the CPU time of every thread, which
   would hide exactly the speed-up being measured, so `now()` uses POSIX's
   `clock_gettime` with `CLOCK_MONOTONIC`, a clock that only moves forward. The
@@ -199,8 +207,9 @@ four threads:  17.1 ms
 - **Freeing what a thread still uses.**
   [`broken-free-before-join.c`](broken-free-before-join.c) frees a buffer
   before joining the thread that reads it. Whether the thread had finished is a
-  matter of timing, so this bug can pass many runs; here a mutex makes the bad
-  timing certain, and AddressSanitizer catches the read:
+  matter of timing, so this bug can pass many runs. Here a *mutex*, a lock that
+  only one thread can hold at a time (exercise 1), makes the bad timing
+  certain, and AddressSanitizer catches the read:
 
   ```
   ERROR: AddressSanitizer: heap-use-after-free on address 0x6cf059de0010 at pc 0x5c2cb20dd431 bp 0x6cd0577fed30 sp 0x6cd0577fed20
@@ -211,17 +220,22 @@ four threads:  17.1 ms
 
 - **Data races.** Two threads touching the same memory, at least one of them
   writing, with nothing ordering them, is a *data race*, and undefined
-  behaviour (exercise 1). ThreadSanitizer, `-fsanitize=thread`, finds them. It
-  can't be combined with AddressSanitizer, so it is a separate build.
+  behaviour (exercise 1). ThreadSanitizer, `-fsanitize=thread`, finds the ones
+  that happen while it watches. It can't be combined with AddressSanitizer, so
+  it is a separate build.
 
 - **False sharing.** Threads writing *different* variables that share a cache
   line slow each other down badly (exercise 2).
 
-- **The real-time thread.** A thread that must meet an audio deadline (lesson
-  13\) must never wait for a lock that another thread might hold for long.
-  Real-time audio code passes data between threads with lock-free queues, built
-  on C11's `<stdatomic.h>`, which is beyond C99. Exercise 3's locked queue is
-  the right tool everywhere else.
+- **The real-time thread.** A thread that must meet an audio deadline, as in
+  lesson 13, should never wait for a lock that another thread might hold for
+  long. Real-time audio code usually passes data between threads with a queue
+  that has one writer and one reader, built on atomic operations (C11's
+  `<stdatomic.h>`, which is beyond C99): each push or pop takes a bounded
+  number of steps and never blocks. Being *lock-free* alone doesn't promise
+  that: in a lock-free structure, one thread's operation can keep retrying
+  while the others make progress. Exercise 3's locked queue is a good tool
+  everywhere else.
 
 ## Exercises
 
@@ -265,11 +279,11 @@ folder to run it in.
    ```
 
    `count++` is three steps: read, add, write. Two threads can both read 41 and
-   both write 42, and one count is lost; here, over half of them. Built with
-   `-O2`, the racing version happened to print 4000000: the compiler, allowed
-   to assume no other thread touches `count`, added the whole million at once.
-   A race can pass every test and still be wrong. ThreadSanitizer reports it
-   whatever the timing (trimmed):
+   both write 42, and one count is lost; here, from a third to over half of
+   them. Built with `-O2`, the racing version happened to print 4000000: the
+   compiler, allowed to assume no other thread touches `count`, added the whole
+   million at once. A race can pass every test and still be wrong.
+   ThreadSanitizer reports it whatever the timing (trimmed):
 
    <!-- no-run -->
 
@@ -354,7 +368,7 @@ folder to run it in.
    sleeps until another thread signals, then takes the mutex back before
    returning. The consumer waits on `not_empty`, the producer on `not_full`.
    The waits sit in `while` loops, not `if`s, because a thread may wake up
-   before its condition holds, and must check again. ThreadSanitizer finds no
+   before its condition holds, and must check again. ThreadSanitizer reports no
    race in it.
 
    </details>
@@ -383,3 +397,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)                                                   | `<string.h>`  | compare two strings                                         |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 27 Fixed point](../27-fixed-point/README.md) ·
+[Contents](../README.md#contents) ·
+[29 Library layout →](../29-library-layout/README.md)
+
+<!-- /nav -->

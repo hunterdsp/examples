@@ -3,7 +3,7 @@
  * Building a 32-bit mask with `1 << bit` works for bits 0 to 30. At bit
  * 31 the result, 2,147,483,648, does not fit in an int, and in C99 that
  * shift is undefined behaviour, like any signed overflow.
- * UndefinedBehaviorSanitizer stops the program at it.
+ * UndefinedBehaviorSanitizer reports it.
  */
 #include <stdio.h>
 

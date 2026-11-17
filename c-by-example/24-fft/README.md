@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 23 Complex numbers](../23-complex/README.md) ·
+[Contents](../README.md#contents) ·
+[25 Caches and memory layout →](../25-caches/README.md)
+
+<!-- /nav -->
+
 # 24 · The FFT
 
 Run this lesson's commands in `c-by-example/24-fft/`.
@@ -7,14 +15,15 @@ adding up. Doing that for every frequency at once is the **discrete Fourier
 transform** (DFT): `n` samples in, `n` complex numbers out, one per frequency
 *bin*. Bin `k` says how much of the frequency `k` cycles per `n` samples is
 present, and at what angle. It is how a spectrum analyser draws its picture,
-how a filter's response is measured, and the first step of most audio
+how a filter's response is measured, and often a first step in audio
 compression.
 
 Done directly, the DFT costs `n × n` complex multiplies: a million for 1024
-samples. The **fast Fourier transform** (FFT) finds exactly the same numbers in
-about `n/2 × log₂ n`: 5120. It splits the transform into two half-size ones
-(the even samples and the odd), splits those again, all the way down to pairs,
-and combines the halves on the way back up with a step called a **butterfly**.
+samples. The **fast Fourier transform** (FFT) finds the same numbers, to within
+rounding, in about `n/2 × log₂ n`: 5120. It splits the transform into two
+half-size ones (the even samples and the odd), splits those again, all the way
+down to pairs, and combines the halves on the way back up with a step called a
+**butterfly**.
 
 The interface follows lesson 13: a *plan* does everything that depends only on
 `n`, once, and the transform itself never allocates.
@@ -149,7 +158,7 @@ fft_forward (const fft_plan *p, double complex *x)
 }
 ```
 
-A program that transforms two tones, and checks the FFT against the DFT done
+This program transforms two tones, then checks the FFT against a DFT done
 straight from its definition:
 
 ```bash
@@ -248,21 +257,22 @@ complex multiplies: DFT 1048576, FFT 5120
 - **Bins are evenly spaced.** With 1024 samples at 48 kHz, bin `k` is
   `k × 48000 / 1024` Hz: 46.875 Hz apart. The two tones were chosen to land
   exactly on bins 20 and 64, so each shows up in one bin, at its full size, and
-  every other bin is empty.
+  every other bin is empty, to within rounding.
 - **Only half the bins are new.** For a real signal, bins above `n/2` mirror
   the ones below (the negative frequencies of lesson 23's cosine), so the
   spectrum stops at bin 512, half the sample rate.
 - **The two passes.** First the samples are reordered by *bit reversal*: sample
   1 (`0000000001`) moves to 512 (`1000000000`), and so on. That puts every pair
-  the first stage combines side by side, and every quad the second combines,
-  and so on. Then ten stages of 512 butterflies each: take `a` and `b`, turn
-  `b` by a twiddle factor, and write `a + b` and `a − b`.
+  the first stage combines side by side, and every group of four the second
+  combines, and so on. Then ten stages of 512 butterflies each. A butterfly
+  takes `a` and `b`, turns `b` by a *twiddle factor* (a phasor, below), and
+  writes `a + b` and `a − b`.
 - **Twiddles from the plan.** Every twiddle factor is one of the `n/2` phasors
   `e^(−2πik/n)`, computed once in `fft_plan_create`, each straight from `cexp`
   so none of them drifts (lesson 23, exercise 3). A stage of length `len` uses
   every `n/len`-th one.
-- **Check against the definition.** The FFT is easy to get subtly wrong, and
-  the DFT is easy to get right. They agree to within 10⁻⁹, which is
+- **Check against the definition.** The FFT has more places to slip, and the
+  DFT is short enough to check by eye. They agree to within 10⁻⁹, which is
   floating-point rounding: the same answer, by a different route.
 
 ## Pitfalls
@@ -270,26 +280,26 @@ complex multiplies: DFT 1048576, FFT 5120
 - **The plan and the buffer disagree.**
   [`broken-size-mismatch.c`](broken-size-mismatch.c) runs a 1024-point
   reordering over a buffer of 1000 samples. It swaps samples anywhere up to
-  index 1023, and the sanitizers stop it at the first one past the end:
+  index 1023, and the sanitizers report the first one past the end:
 
   ```
   broken-size-mismatch.c:26:31: runtime error: load of address 0x6e8f405e4000 with insufficient space for an object of type 'complex double'
   ```
 
   The size comes from the plan, so every buffer handed to `fft_forward` must
-  have exactly that many samples. A block of 1000 gets padded with zeros to
-  1024\.
+  have exactly that many samples. A block of 1000 is padded with zeros to make
+  1024 samples.
 
 - **Only powers of two.** This FFT halves the problem at every stage, so `n`
   must be 2, 4, 8, …, and `fft_plan_create` returns `NULL` otherwise. FFTs for
-  other sizes exist, and libraries like FFTW provide them; a radix-2 one is the
-  place to start.
+  other sizes exist, and libraries like FFTW provide them; a radix-2 one,
+  halving at every stage as this one does, is the place to start.
 
 - **Leakage.** A tone that isn't exactly on a bin spreads into all of them
-  (exercise 3). Real signals are never exactly on a bin.
+  (exercise 3). Real signals rarely are.
 
 - **Scaling conventions.** This FFT doesn't divide by anything, so a cosine of
-  size `A` shows up as `n·A/2`. Other libraries divide by `n` or `√n`. Check
+  size `A` shows up as `n·A/2`. Some libraries divide by `n` or `√n`. Check
   which one you have before comparing numbers.
 
 ## Exercises
@@ -315,11 +325,11 @@ folder to run it in.
    forward then inverse: back within 1e-12: yes
    ```
 
-   Turning the other way is what the conjugate does, so
+   Turning the other way is what the conjugate (`conj`, lesson 23) does, so
    [`fft_inverse`](exercises/ex1-inverse/inverse.c) conjugates the input, runs
    the forward FFT, conjugates the result and divides by `n`. One transform,
-   two directions: filtering in the frequency domain is a forward FFT, a
-   multiply per bin, and an inverse.
+   two directions: filtering in the frequency domain (changing the spectrum bin
+   by bin) is a forward FFT, a multiply per bin, and an inverse.
 
    </details>
 
@@ -338,7 +348,7 @@ folder to run it in.
    n =  256: FFT matches DFT: yes
    ```
 
-   Built for timing:
+   Built with optimisation on, for timing:
 
    ```bash
    cc -std=c99 -Wall -Wextra -O2 -I ../.. speed.c ../../fft.c -o speed -lm
@@ -358,11 +368,11 @@ folder to run it in.
    n = 4096: FFT matches DFT: yes; DFT  260.829 ms, FFT  0.032 ms
    ```
 
-   Each time `n` goes up 4 times, the DFT takes about 16 times longer, as `n²`
-   says, while the FFT takes only about 5 times longer. At 4096 points, the FFT
-   is 8000 times as fast, and the gap keeps widening. This is what made
-   real-time spectrum analysis possible, and a lesson 19 of its own: the best
-   optimisation is usually a better algorithm, not a faster loop.
+   Each time `n` quadruples, the DFT takes about 16 times longer, as `n²` says,
+   while the FFT takes only about 5 times longer. At 4096 points, the FFT is
+   8000 times as fast, and the gap keeps widening. That gap is what made
+   real-time spectrum analysis practical, and it adds a lesson to lesson 19's:
+   a better algorithm often gains more than a faster loop.
 
    </details>
 
@@ -392,11 +402,11 @@ folder to run it in.
 
    The FFT treats its block as one cycle of a signal that repeats forever.
    21.33 cycles of 1000 Hz don't end where they started, so the repeats jump at
-   every join, and a jump contains every frequency: without a window, bins far
-   from 1000 Hz still show −31 to −33 dB. The Hann window brings both ends of
-   the block smoothly to 0, so there is no jump: 40 dB less leakage 500 Hz
-   away. The price is a wider peak, since bins 20 and 22 now hold more of the
-   tone. Every spectrum analyser windows its blocks for this reason.
+   every join. A jump contains every frequency: without a window, bins far from
+   1000 Hz still show −31 to −33 dB. The Hann window brings both ends of the
+   block smoothly to 0, so there is no jump: 40 dB less leakage 500 Hz away.
+   The price is a wider peak, since bins 20 and 22 now hold more of the tone.
+   Spectrum analysers window their blocks for this reason.
 
    </details>
 
@@ -427,3 +437,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)   | `<string.h>`  | compare two strings                                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 23 Complex numbers](../23-complex/README.md) ·
+[Contents](../README.md#contents) ·
+[25 Caches and memory layout →](../25-caches/README.md)
+
+<!-- /nav -->

@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 01 Hello](../01-hello/README.md) · [Contents](../README.md#contents) ·
+[03 Functions →](../03-functions/README.md)
+
+<!-- /nav -->
+
 # 02 · Numbers
 
 Run this lesson's commands in `c-by-example/02-numbers/`.
@@ -58,7 +65,8 @@ main (void)
   printf ("\nWrapping and overflow\n---------------------\n");
   printf ("uint8_t 255 + 1 = %d\n", counter);
   /* ...signed arithmetic does NOT: see broken-overflow.c. A day of audio
-     at 48 kHz needs 64 bits. */
+     at 48 kHz, 4.1 billion samples, overflows an int32_t; it just fits
+     a uint32_t, and any count that grows with time gets 64 bits. */
   int64_t per_day = (int64_t)48000 * (int64_t)86400;
   printf ("samples in a day at 48 kHz: %" PRId64 "\n", per_day);
 
@@ -191,7 +199,8 @@ Integer division
 ```
 
 Integer division throws the remainder away, rounding toward zero. Make one side
-a floating-point number (`2.0`) and you get the real quotient.
+a floating-point number (`2.0`) and you get the full quotient, fraction and
+all.
 
 ```
 Integer promotion
@@ -221,8 +230,7 @@ Widen *before* the operation, not after. For two `int32_t`s,
 `(int64_t)a * (int64_t)b` multiplies in 64 bits, but `(int64_t)(a * b)`
 multiplies in 32, overflows, and then widens the wrong answer. Cast both
 operands, every time, even where C would convert or promote them for you: the
-casts cost nothing (they compile to the same instructions), and nobody has to
-remember which types convert.
+code then says what it does, and nobody has to remember which types convert.
 
 > [!TIP]
 > **Unsigned overflow is a free modulus.** An N-bit unsigned result is always
@@ -269,11 +277,11 @@ Floating point
 ```
 
 Floats are binary fractions, and 0.1 has no exact binary form, just as ⅓ has no
-exact decimal one. So never compare floating-point results with `==`; compare
-against a tolerance. A `float` carries about 7 significant digits (24 bits):
-past 2²⁴ = 16,777,216 it cannot even count by one. That is why a long-running
-phase accumulator is kept in an integer (lesson 22) and a long sum in `double`
-(lesson 26).
+exact decimal one. So don't compare floating-point results with `==` unless you
+know they are exact; compare against a tolerance. A `float` carries about 7
+significant digits (24 bits): past 2²⁴ = 16,777,216 it cannot even count by
+one. That is why a long-running phase accumulator is kept in an integer (lesson
+22\) and a long sum in `double` (lesson 26).
 
 The last line is the suffix at work: without the `f`, `1.0` is a `double`, so
 the whole sum is done in `double`, which can still count by one there. Code
@@ -292,7 +300,8 @@ double the power = 3.0103 dB
 
 Ears and radios both work on ratios, so signal levels are measured in decibels:
 20·log₁₀ of an amplitude ratio, or 10·log₁₀ of a power ratio. Two numbers worth
-remembering: **−6 dB is half the amplitude, +3 dB is double the power.**
+remembering: **−6 dB is about half the amplitude, +3 dB about double the
+power.**
 
 ## Pitfalls
 
@@ -300,8 +309,8 @@ remembering: **−6 dB is half the amplitude, +3 dB is double the power.**
   [`broken-overflow.c`](broken-overflow.c) counts a day of audio at 48 kHz in
   an `int32_t`: 4.1 billion does not fit in 2.1 billion. For unsigned types
   that would wrap; for signed types the standard says *anything* may happen,
-  and an optimising compiler is allowed to assume it never does. UBSan stops it
-  on the spot:
+  and an optimising compiler is allowed to assume it never does. UBSan reports
+  it, with the line:
 
   ```
   broken-overflow.c:14:15: runtime error: signed integer overflow:
@@ -326,8 +335,8 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Print `INT32_MAX` and `INT64_MAX`. How many days of 48 kHz audio fit in
-   each?
+1. Print `INT32_MAX` and `INT64_MAX`. How long does a count of 48 kHz samples
+   last in each?
 
    <details><summary>Output and answer</summary>
 
@@ -348,8 +357,7 @@ folder to run it in.
    Half a day for `int32_t`: a sample counter in one overflows after 12.4
    hours, so a program that passes every test can still fail on the first long
    run. `int64_t` lasts about 6 million years. Use 64 bits for any count that
-   grows with time. (The answer prints hours and years because 0.5 days and 2
-   billion days are hard to picture.)
+   grows with time.
 
    </details>
 
@@ -395,13 +403,13 @@ folder to run it in.
    double sum of 0.1 : 1000.000000
    ```
 
-   Neither, at first. The `float` sum is off by a tenth: each addition rounds
-   to about 7 digits, and ten thousand roundings pile up. The `double` sum of
-   the same `0.1f` is off too, but by much less, and only because `0.1f` itself
-   is not 0.1: it is the nearest `float`, slightly above it, and the `double`
-   adds that up faithfully. Sum the `double` `0.1` and the error drops below
-   the sixth decimal place. Accumulate in `double`, from `double` inputs,
-   whenever a sum runs long.
+   Neither of the first two. The `float` sum is off by a tenth: each addition
+   rounds to about 7 digits, and ten thousand roundings pile up. The `double`
+   sum of the same `0.1f` is off too, but by much less, and only because `0.1f`
+   itself is not 0.1: it is the nearest `float`, slightly above it, and the
+   `double` adds that up faithfully. Sum the `double` `0.1` and the error drops
+   below the sixth decimal place. When a sum runs long, accumulate in `double`,
+   from `double` inputs where you can.
 
    </details>
 
@@ -433,7 +441,8 @@ folder to run it in.
    widened first. The phase is back at 0: eight eighths of a cycle is one whole
    cycle, and the wrap did the modulo.
 
-   Widening after the multiply instead:
+   Widening after the multiply instead (gcc's message; clang's names the type
+   `int32_t`):
 
    <!-- no-run -->
 
@@ -443,15 +452,14 @@ folder to run it in.
    ```
 
    ```
-   broken-late.c:17:27: runtime error: signed integer overflow: 100000 * 100000 cannot be represented in type 'int'
+   broken-late.c:18:27: runtime error: signed integer overflow: 100000 * 100000 cannot be represented in type 'int'
    1410065408
    ```
 
    The multiply happened in 32 bits and overflowed before the cast was reached,
    so the `int64_t` holds a wrong answer: 10¹⁰ modulo 2³², read as a signed
    number. UBSan reports it and, under this build command, lets the program
-   carry on; `check.sh` builds with `-fno-sanitize-recover`, which stops it
-   there instead.
+   carry on, so the wrong answer is printed too.
 
    </details>
 
@@ -470,3 +478,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`puts`](https://en.cppreference.com/c/io/puts)             | `<stdio.h>` | write a string and a newline to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 01 Hello](../01-hello/README.md) · [Contents](../README.md#contents) ·
+[03 Functions →](../03-functions/README.md)
+
+<!-- /nav -->

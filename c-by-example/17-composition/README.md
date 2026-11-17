@@ -1,9 +1,18 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 16 Interfaces (vtables)](../16-interfaces/README.md) ·
+[Contents](../README.md#contents) ·
+[18 API design →](../18-api-design/README.md)
+
+<!-- /nav -->
+
 # 17 · Composition and "inheritance"
 
 Run this lesson's commands in `c-by-example/17-composition/`.
 
 Lesson 16's interface lets one loop run many kinds of processor. This lesson
-builds new kinds out of old ones, the two ways object-oriented languages do:
+builds new kinds out of old ones, the two main ways object-oriented languages
+do:
 
 - **Composition**: a new kind that *has* processors inside it. A chain is a
   processor whose job is to run other processors.
@@ -11,98 +20,55 @@ builds new kinds out of old ones, the two ways object-oriented languages do:
   gain whose level glides to a new value instead of jumping: the way lesson
   13's gain stage changed level without a click.
 
-C has keywords for neither. Both are structs, embedded the right way round.
+C has keywords for neither, but plain structs can do both.
 
 The interface is lesson 16's, with `reset` optional (lesson 16's exercise 3)
-and three new kinds declared at the end:
+and two new kinds declared at the end. `diff` shows what changed, line by line:
+`<` is lesson 16's, `>` this lesson's, and `c` and `a` mark lines changed and
+added:
+
+<!-- expect-fail -->
 
 ```bash
-cat processor.h
+diff ../16-interfaces/processor.h processor.h
 ```
 
-```c
-/* processor.h -- lesson 16's interface, with reset optional (lesson 16,
- * exercise 3), and three kinds more.
- *
- * A processor is a pointer to its operations, nothing more:
- *
- *   struct processor { const processor_ops *ops; };
- *
- * Each kind of processor (a gain, a low-pass, ...) puts a processor_t as
- * the FIRST member of its own struct and fills in one processor_ops: its
- * VTABLE, the table of functions that do the work for that kind. Code
- * that holds a processor_t * calls through the table, and never needs to
- * know which kind it has.
- */
-#ifndef PROCESSOR_H
-#define PROCESSOR_H
-
-#include <stddef.h>
-
-typedef struct processor     processor_t;
-typedef struct processor_ops processor_ops;
-
-/* What every processor can do. Each function takes the processor itself
-   first, as `self`: the data the function works on. */
-struct processor_ops
-{
-  const char *name;
-  void (*process) (processor_t *self, float *buf, size_t n);
-  void (*reset) (processor_t *self); /* may be NULL: nothing to reset */
-  void (*destroy) (processor_t *self);
-};
-
-struct processor
-{
-  const processor_ops *ops; /* one shared table per kind */
-};
-
-/* Calls through the table, so callers needn't spell out p->ops->... */
-static inline void
-processor_process (processor_t *p, float *buf, size_t n)
-{
-  p->ops->process (p, buf, n);
-}
-
-static inline void
-processor_reset (processor_t *p)
-{
-  if (p->ops->reset != NULL)
-    p->ops->reset (p);
-}
-
-static inline void
-processor_destroy (processor_t *p)
-{
-  if (p != NULL)
-    p->ops->destroy (p);
-}
-
-static inline const char *
-processor_name (const processor_t *p)
-{
-  return p->ops->name;
-}
-
-/* The kinds this lesson has. Each returns a new processor, owned by the
-   caller and freed with processor_destroy, or NULL. */
-processor_t *gain_create (float g);
-processor_t *lowpass_create (float a);
-
-/* A gain that glides from 0 to g over `samples` samples: a fade-in. */
-processor_t *ramp_create (float g, size_t samples);
-
-/* Glide p, which must be a ramp, to g over `samples` samples. Returns 0,
-   or -1 (and does nothing) if p is some other kind. */
-int ramp_set (processor_t *p, float g, size_t samples);
-
-/* A processor made of n others, run in order. The chain takes ownership
-   of the stages: destroying it destroys them. If it can't be created, it
-   destroys them anyway, so the caller never has to. */
-processor_t *chain_create (processor_t *const *stages, size_t n);
-
-#endif /* PROCESSOR_H */
 ```
+1c1,2
+< /* processor.h -- an INTERFACE: anything that processes a block of audio.
+---
+> /* processor.h -- lesson 16's interface, with reset optional (lesson 16,
+>  * exercise 3), and two kinds more.
+27c28
+<   void (*reset) (processor_t *self);
+---
+>   void (*reset) (processor_t *self); /* may be NULL: nothing to reset */
+46c47,48
+<   p->ops->reset (p);
+---
+>   if (p->ops->reset != NULL)
+>     p->ops->reset (p);
+62,63c64,65
+< /* The two kinds this lesson has. Each returns a new processor, owned by
+<    the caller and freed with processor_destroy, or NULL. */
+---
+> /* The kinds this lesson has. Each returns a new processor, owned by the
+>    caller and freed with processor_destroy, or NULL. */
+66a69,79
+> /* A gain that glides from 0 to g over `samples` samples: a fade-in. */
+> processor_t *ramp_create (float g, size_t samples);
+> 
+> /* Glide p, which must be a ramp, to g over `samples` samples. Returns 0,
+>    or -1 (and does nothing) if p is some other kind. */
+> int ramp_set (processor_t *p, float g, size_t samples);
+> 
+> /* A processor made of n others, run in order. The chain takes ownership
+>    of the stages: destroying it destroys them. If it can't be created, it
+>    destroys them anyway, so the caller never has to. */
+> processor_t *chain_create (processor_t *const *stages, size_t n);
+```
+
+The whole header is [`processor.h`](processor.h).
 
 ## Inheritance: a ramp is a gain
 
@@ -485,7 +451,7 @@ master gain doubles it, so the output climbs toward 2.0 without a jump.
 - **Treating a parent as a child.**
   [`broken-wrong-kind.c`](broken-wrong-kind.c) casts a plain gain to a ramp and
   sets its target. A ramp is a gain with more after it, and a gain has nothing
-  after it: the write lands past the end of its block.
+  after it: the write lands past the end of the gain's memory.
 
   ```
   broken-wrong-kind.c:49:25: runtime error: store to address 0x74bc597e0020 with insufficient space for an object of type 'float'
@@ -496,13 +462,14 @@ master gain doubles it, so the output climbs toward 2.0 without a jump.
 
 - **Deep hierarchies.** A ramp is a gain; a "stereo ramp" could be a ramp; and
   three levels down, a change at the top recompiles and can break everything
-  below it. Composition doesn't have that problem: prefer it, and inherit only
-  to reuse a parent's code, as the ramp reuses `gain_process`.
+  below it. Composition avoids most of that: prefer it, and inherit only to
+  reuse a parent's code, as the ramp reuses `gain_process`.
 
 - **Ownership that isn't written down.** `chain_create` *takes* its stages.
   Destroy one of them yourself afterwards, and the chain frees it a second
-  time. The comment in `processor.h` is the only thing that says so: read it,
-  and write it for every function that takes or gives away ownership.
+  time. Only comments say so, in `processor.h` and `chain.c`, because the
+  compiler can't check it: read them, and write one for every function that
+  takes or gives away ownership.
 
 ## Exercises
 
@@ -527,13 +494,15 @@ folder to run it in.
    mix: 0.6000 0.6900 0.7710 0.8439 0.9095 0.9686 1.0217 1.0695
    ```
 
-   The dry half contributes 0.5 throughout; the low-pass climbs from 0.1. Both
-   processors work in place, so [`mix.c`](exercises/ex1-mix/mix.c) gives the
-   second a copy of the input in a scratch buffer. The buffer is part of the
-   `mix_t`, allocated once by `mix_create` (lesson 13), and a block longer than
-   it is processed in pieces that fit. Like a chain, a mix owns what it holds,
-   and like a chain it is just another processor: a mix can go in a chain, and
-   a chain in a mix.
+   The dry half contributes 0.5 throughout; the low-pass climbs from 0.1.
+
+   Both processors work in place, so [`mix.c`](exercises/ex1-mix/mix.c) gives
+   the second one a copy of the input, in a scratch buffer. The buffer is part
+   of the `mix_t`, allocated once by `mix_create` (lesson 13). A block longer
+   than the buffer is processed in pieces that fit.
+
+   Like a chain, a mix owns what it holds. And like a chain, it is just another
+   processor: a mix can go in a chain, and a chain in a mix.
 
    </details>
 
@@ -576,9 +545,9 @@ folder to run it in.
    ```
 
    So the ramp needs a `destroy` of its own. With `container_of`, a struct can
-   embed a base anywhere, even several, which is how the Linux kernel builds
-   its objects. Putting it first is still the simplest choice, and where it
-   fits, the cast is enough.
+   embed a base anywhere, even several, a pattern the Linux kernel uses widely.
+   Putting it first is still the simplest choice, and where it fits, the cast
+   is enough.
 
    </details>
 
@@ -602,8 +571,8 @@ folder to run it in.
    A [`fade`](exercises/ex3-fade/fade.c) *has* a processor rather than *being*
    one: it runs whatever it holds, then scales the output from 1/4 up to 1 over
    the first four samples. It includes only `processor.h` and works on a gain,
-   a chain, or another fade. That is composition's advantage, and why it is the
-   usual first choice: the ramp reuses a gain's code, but the fade works with
+   a chain, or another fade. That is composition's advantage, and why it is a
+   good first choice: the ramp reuses a gain's code, but the fade works with
    kinds that haven't been written yet.
 
    </details>
@@ -624,3 +593,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                               |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 16 Interfaces (vtables)](../16-interfaces/README.md) ·
+[Contents](../README.md#contents) ·
+[18 API design →](../18-api-design/README.md)
+
+<!-- /nav -->

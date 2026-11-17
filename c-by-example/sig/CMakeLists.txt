@@ -118,6 +118,19 @@ endif()
 
 # Installing: the library, its headers, the tools, and two ways for
 # another project to find them, a pkg-config file and a CMake package.
+#
+# Not from a SIG_SANITIZE build. BUILD_INTERFACE keeps the flags out of
+# what users inherit, but the library itself was compiled with them: it
+# needs the sanitizers' runtime, so a program built without them fails
+# to link (clang) or to start (gcc, whose runtime must load first).
+# This rule comes first, so nothing is copied before it stops the
+# install.
+if(SIG_SANITIZE)
+  install(
+    CODE "message(FATAL_ERROR \"This build has SIG_SANITIZE=ON, and its \"
+         \"library only runs in sanitized programs. Install from a build \"
+         \"configured without it.\")")
+endif()
 install(
   TARGETS sig
   EXPORT sigTargets

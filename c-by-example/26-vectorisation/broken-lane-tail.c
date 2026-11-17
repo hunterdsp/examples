@@ -3,7 +3,7 @@
  * Processing in lanes of 8 means the loop's last step must not go past
  * n. Written `i < n` instead of `i + 8 <= n`, the last step reads up to
  * 7 floats past the end whenever n isn't a multiple of 8: here n is
- * 1003, and the sanitizers stop the read at index 1003.
+ * 1003, and the sanitizers catch the read at index 1003.
  */
 #include <stdio.h>
 #include <stdlib.h>

@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 08 Multi-file builds](../08-multi-file/README.md) ·
+[Contents](../README.md#contents) ·
+[10 Ownership and lifecycle →](../10-ownership/README.md)
+
+<!-- /nav -->
+
 # 09 · Stack vs heap
 
 Run this lesson's commands in `c-by-example/09-stack-heap/`.
@@ -10,13 +18,13 @@ and the memory has to come from somewhere that can be asked for it then: the
 
 There are two places a C program's data can live:
 
-|          | the **stack**                | the **heap**                      |
-| -------- | ---------------------------- | --------------------------------- |
-| what     | local variables              | memory from `malloc` and `calloc` |
-| size     | fixed when compiled          | chosen while the program runs     |
-| lifetime | until its function returns   | until you `free` it               |
-| capacity | small: megabytes, often 8 MB | most of the machine's memory      |
-| cost     | free: moving one register    | a function call, and a bookkeeper |
+|          | the **stack**                    | the **heap**                      |
+| -------- | -------------------------------- | --------------------------------- |
+| what     | local variables                  | memory from `malloc` and `calloc` |
+| size     | fixed when compiled              | chosen while the program runs     |
+| lifetime | until its function returns       | until you `free` it               |
+| capacity | small: megabytes, often 8 MB     | most of the machine's memory      |
+| cost     | nearly free: moving one register | a function call, and a bookkeeper |
 
 Here is the program. `tone_new` makes a tone as long as the command line asks,
 and hands it back:
@@ -163,7 +171,7 @@ calloc'd buffer: 0 nonzero samples
   way out.
 
 - **Forgetting to `free`.** The memory stays taken until the program exits: a
-  *leak*. Once is harmless; once per audio block, a long-running program grows
+  *leak*. One leak is small; one per audio block, a long-running program grows
   until the machine runs out. Lesson 11 shows the tool that finds them.
 
 - **Variable-length arrays.** C99 allows `float buf[n]` with `n` known only at
@@ -196,6 +204,8 @@ folder to run it in.
    calloc'd buffer: 0 nonzero samples
    ```
 
+   <!-- expect-fail -->
+
    ```bash
    ./heap 0
    ```
@@ -208,7 +218,8 @@ folder to run it in.
    heap gave each run what it asked for. The local `float[64]` is 256 bytes
    either way, because its size is part of the program. `./heap 0` is turned
    away before anything is allocated: a length of 0 has no rms, and a negative
-   one would turn into an enormous `size_t`. Check a size where it comes in.
+   one would turn into an enormous `size_t`. Check a size as soon as it comes
+   in.
 
    </details>
 
@@ -257,10 +268,10 @@ folder to run it in.
    ```
 
    Sample `i` of channel `ch` lives at `ch * len + i`, and `&buf[ch * len]` is
-   where a channel starts: one row, `len` long, which any function from lesson
-   05 can take as a buffer and a length. One allocation means one `free` and
+   where a channel starts: one row, `len` long, which a function like lesson
+   05's can take as a buffer and a length. One allocation means one `free` and
    one `NULL` check, and the rows sit next to each other in memory, which
-   lesson 25 shows is what the cache wants. Try `./channels 2 5`: both sizes
+   lesson 25 shows the cache handles well. Try `./channels 2 5`: both sizes
    come from the command line.
 
    </details>
@@ -286,3 +297,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strtoul`](https://en.cppreference.com/c/string/byte/strtoul) | `<stdlib.h>` | read an `unsigned long` from a string                 |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 08 Multi-file builds](../08-multi-file/README.md) ·
+[Contents](../README.md#contents) ·
+[10 Ownership and lifecycle →](../10-ownership/README.md)
+
+<!-- /nav -->

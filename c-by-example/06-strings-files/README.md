@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 05 Pointers](../05-pointers/README.md) · [Contents](../README.md#contents) ·
+[07 Structs →](../07-structs/README.md)
+
+<!-- /nav -->
+
 # 06 · Strings and files
 
 Run this lesson's commands in `c-by-example/06-strings-files/`.
@@ -35,10 +42,11 @@ main (int argc, char *argv[])
 
   /* main's own arguments are strings too. argv is an array of them, argc
      long: argv[0] is the program's name, argv[1] the first word typed
-     after it, and so on. Each string is itself an array of char, so argv
-     is an array of arrays, which is why it is written char *argv[]: an
-     array ([]) of strings (char *). A name from the command line, like
-     any real file name, has a length known only when the program runs. */
+     after it, and so on. Each string is an array of char, reached by the
+     address of its first char, so argv is an array of addresses, written
+     char *argv[]: an array ([]) of pointers to char (char *). A name from the
+     command line, like any real file name, has a length known only when the
+     program runs. */
   const char *name = argc > 1 ? argv[1] : tone;
 
   /* Build a file name safely. snprintf never writes more than the size it
@@ -55,7 +63,8 @@ main (int argc, char *argv[])
           need >= (int)sizeof tiny ? "yes" : "no");
 
   /* Write raw samples: no text, just the bytes of each float. "wb" opens
-     for writing in binary mode. Every call that can fail is checked.
+     for writing in binary mode. Every call that could lose data is
+     checked.
 
      fopen returns a FILE *: a pointer to a FILE, the struct <stdio.h>
      uses to track an open file (where it is up to, its buffer, whether
@@ -127,11 +136,12 @@ round trip exact: yes
   counts up to the `'\0'`, `sizeof` counts the whole array. Every buffer you
   build a string in needs that extra byte.
 - **`argv` is an array of strings.** `main (int argc, char *argv[])` receives
-  the command line as `argc` strings: `argv[0]` is the program's name,
-  `argv[1]` the first word after it. Each string is an array of `char`, so
-  `argv` is an array of arrays, and the declaration says so: `[]`, an array, of
-  `char *`, strings. `./files sine` makes `argv[1]` the string `"sine"`.
-- **`snprintf` is the safe way to build one.** It never writes past the size it
+  the command line as `argc` strings: `argv[0]` is the name the program was run
+  by, `argv[1]` the first word after it. Each string is an array of `char`, and
+  `argv` holds the address of each one's first `char`: an array of pointers, as
+  the declaration says. `[]`, an array, of `char *`, pointers to `char`.
+  `./files sine` makes `argv[1]` the string `"sine"`.
+- **`snprintf` is a safe way to build one.** It never writes past the size it
   is given, always terminates, and returns the length the *whole* result
   needed. If that is ≥ the buffer size, the result was cut short, and you can
   tell. The `tiny` line shows it happen: `tone-440.f32` is 12 characters, and
@@ -150,10 +160,12 @@ round trip exact: yes
   binary. Raw samples are written as their bytes, with no text conversion: 4
   bytes per `float`, read back bit-for-bit (`round trip exact: yes`). This is
   the format the tools in lesson 33 pipe between each other.
-- **Every call that can fail is checked.** `fopen` returns `NULL` (and `perror`
-  prints why), `fwrite` and `fread` return how many items they managed, and
-  `fclose` can fail too, since it flushes the last bytes. A disk-full error
-  goes unnoticed if nobody looks.
+- **Every call that could lose data is checked.** `fopen` returns `NULL` (and
+  `perror` prints why), `fwrite` and `fread` return how many items they
+  managed, and `fclose` can fail too, since it flushes the last bytes. A
+  disk-full error goes unnoticed if nobody looks. The second `fclose`, of a
+  file only read, and the `remove` that tidies up aren't checked: neither can
+  lose data, and a failed `remove` only leaves a file behind.
 
 ## Bytes
 
@@ -171,14 +183,14 @@ from those needs its bytes swapped.
   `'\0'`, however far away it is, so it writes past the end of the array: the
   buffer overflow behind decades of security holes. Two layers can catch it:
   AddressSanitizer (`stack-buffer-overflow`), and, on distributions that build
-  with `_FORTIFY_SOURCE` such as Ubuntu, the C library itself
-  (`*** buffer overflow detected ***`). Don't rely on either in production: use
-  `snprintf`, which is told the size.
+  with `_FORTIFY_SOURCE` (extra checks in the C library's copying functions),
+  such as Ubuntu, the C library itself (`*** buffer overflow detected ***`).
+  Don't rely on either in production: use `snprintf`, which is told the size.
 - **Forgetting the `'\0'`.** A `char[4]` holding `"tone"` has no room for it,
   and every string function will read past the end looking for one.
 - **Text mode vs binary mode.** On Windows, `"w"` translates `\n` to `\r\n`,
-  corrupting binary data. Always open sample files with `"wb"` and `"rb"`, even
-  on systems where it makes no difference.
+  corrupting binary data. Open sample files with `"wb"` and `"rb"`, even on
+  systems where it makes no difference, so the same code works on Windows.
 
 ## Exercises
 
@@ -300,3 +312,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strlen`](https://en.cppreference.com/c/string/byte/strlen) | `<string.h>` | a string's length, not counting its `'\0'`    |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 05 Pointers](../05-pointers/README.md) · [Contents](../README.md#contents) ·
+[07 Structs →](../07-structs/README.md)
+
+<!-- /nav -->

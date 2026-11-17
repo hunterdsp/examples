@@ -21,8 +21,8 @@ swap (float *a, float *b)
 }
 
 /* In place: read and write the same buffer. `buf` is a pointer to the
-   first sample, and `n` is how many follow (an array arrives as exactly
-   this, lesson 04). */
+   first sample, and `n` is how many follow (passing an array to a
+   function passes the address of its first element, lesson 04). */
 static void
 gain_in_place (float *buf, size_t n, float g)
 {
@@ -33,8 +33,9 @@ gain_in_place (float *buf, size_t n, float g)
 /* Out of place, with the contract in the types:
      const float *in   -- this function will not write the input
      float *out        -- it will write the output
-     restrict          -- in and out never overlap, so the compiler may
-                          keep values in registers (lesson 26) */
+     restrict          -- in and out never overlap. Breaking the promise
+                          is undefined behaviour: for in-place work, call
+                          gain_in_place. Lesson 26 explains the rest. */
 static void
 gain (const float *restrict in, float *restrict out, size_t n, float g)
 {

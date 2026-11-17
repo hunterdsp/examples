@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 10 Ownership and lifecycle](../10-ownership/README.md) ·
+[Contents](../README.md#contents) ·
+[12 Ring buffers →](../12-ring-buffers/README.md)
+
+<!-- /nav -->
+
 # 11 · Catching bugs
 
 Run this lesson's commands in `c-by-example/11-catching-bugs/`.
@@ -9,8 +17,8 @@ themselves: what each checker catches, and what none of them do.
 C does not check what you do with memory. Read past the end of an array, use a
 block after `free`, overflow an `int`: the language calls all of these
 *undefined behaviour*, and a compiled program usually carries on, wrong. The
-four checkers in the course's build command turn those silent wrong answers
-into a stop at the line that caused them:
+four checkers in the course's build command turn many of those silent wrong
+answers into a message naming the line that caused them:
 
 | checker                                | turned on by              | catches                                                               |
 | -------------------------------------- | ------------------------- | --------------------------------------------------------------------- |
@@ -92,7 +100,7 @@ no checker complained
 ```
 
 A *release* build turns the asserts off with `-DNDEBUG`, and drops the
-sanitizers, which make a program two to three times slower:
+sanitizers, which make a program slower and bigger:
 
 ```bash
 cc -std=c99 -Wall -Wextra -O2 -DNDEBUG checked.c -o checked
@@ -147,7 +155,7 @@ the course's flags and checks it fails for the reason given here.
 
 - **Signed overflow.** [`broken-signed-overflow.c`](broken-signed-overflow.c)
   sums 70,000 full-scale `int16_t` samples into an `int32_t`, which needs 33
-  bits (lesson 02's table):
+  bits (lesson 02's table). clang's report (gcc's names the type `'int'`):
 
   ```
   broken-signed-overflow.c:26:24: runtime error: signed integer overflow: 2147483646 + 32767 cannot be represented in type 'int32_t' (aka 'int')
@@ -168,14 +176,15 @@ the course's flags and checks it fails for the reason given here.
   compiler does (gcc: "'sum' is used uninitialized"; clang: "variable 'sum' is
   uninitialized when used here").
 
-- **The checkers see only what runs.** A bug on a path no run takes stays
-  hidden, sanitizers or not. And none of them work on code built without them:
-  a library compiled elsewhere is not checked inside.
+- **The sanitizers see only what runs.** A bug on a path no run takes stays
+  hidden. And they can't check inside code built without them: a library
+  compiled elsewhere is not checked inside.
 
 - **Not every platform has every check.** LeakSanitizer runs by default on
   Linux, not with Apple's compiler on macOS; there, `leaks --atExit -- ./prog`
   does the job. Valgrind (`valgrind ./prog`, Linux) finds many of the same bugs
-  in a program built *without* sanitizers, at fifty times the run time.
+  in a program built *without* sanitizers, at many times the run time (10 to 50
+  times, says its manual).
 
 ## Exercises
 
@@ -254,7 +263,7 @@ folder to run it in.
    ```
 
    [`shift.c`](exercises/ex2-shift/shift.c) writes `(uint32_t)1 << bit`. Masks
-   and bit fields are unsigned, always. Shifting by 32 or more is still
+   and bit fields should be unsigned. Shifting by 32 or more is still
    undefined, for every type: the count must be less than the width.
 
    </details>
@@ -300,3 +309,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)    | `<stdio.h>`  | formatted output to `stdout`                                    |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 10 Ownership and lifecycle](../10-ownership/README.md) ·
+[Contents](../README.md#contents) ·
+[12 Ring buffers →](../12-ring-buffers/README.md)
+
+<!-- /nav -->

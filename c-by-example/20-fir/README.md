@@ -1,12 +1,20 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 19 Measuring first](../19-measuring/README.md) ·
+[Contents](../README.md#contents) · [21 IIR filters →](../21-biquad/README.md)
+
+<!-- /nav -->
+
 # 20 · FIR filters
 
 Run this lesson's commands in `c-by-example/20-fir/`.
 
 A **filter** changes how much of each frequency gets through. A low-pass filter
 lets the low ones pass and holds back the high ones: it takes the hiss off a
-recording, or keeps a signal below half the sample rate before it is resampled.
+recording, or keeps a signal below half the sample rate before it is resampled
+(converted to another sample rate).
 
-The simplest filter to build is the **finite impulse response** (FIR) filter.
+A simple filter to start with is the **finite impulse response** (FIR) filter.
 Each output is a weighted sum of the latest input and the ones just before it:
 
 ```
@@ -147,9 +155,10 @@ cat lowpass.c
  *
  * The taps are a WINDOWED SINC: the ideal low-pass filter's impulse
  * response (a sinc), cut to 31 taps and tapered at the ends by a Hamming
- * window so the cut doesn't ring. The program then checks the filter the
- * way an engineer would: feed it an impulse, a step, and sine waves, and
- * look at what comes out.
+ * window, a raised cosine from 0.08 at the ends to 1 in the middle, so the
+ * cut doesn't ring. The program then checks the filter the way an
+ * engineer would: feed it an impulse, a step, and sine waves, and look at
+ * what comes out.
  */
 #include "fir.h"
 
@@ -217,7 +226,8 @@ main (void)
     same = same && y[k] == h[k];
   printf ("impulse response is the taps: %s\n", same ? "yes" : "no");
 
-  /* A step in: the output settles at the sum of the taps, the DC gain. */
+  /* A step in: the output settles at the sum of the taps, the DC gain
+     (the gain at 0 Hz, for a constant input). */
   float step[2 * TAPS];
   for (size_t i = 0; i < 2 * TAPS; i++)
     step[i] = 1.0f;
@@ -259,7 +269,7 @@ seven-hundredth of its size.
 - **The impulse response *is* the taps.** Feed in a single 1 followed by zeros,
   and out come `h[0]`, `h[1]`, … in turn. That is where the name comes from:
   the response to an impulse is finite, `n` samples long, and then exactly
-  zero. It is also the first test any FIR filter should pass.
+  zero. It is also a good first test for any FIR filter.
 - **The step response settles at the sum of the taps**, the filter's gain at 0
   Hz. `design` divides by that sum, so a constant comes through unchanged.
 - **Measure the frequency response by playing tones.** A sine through a filter
@@ -268,8 +278,9 @@ seven-hundredth of its size.
   silence before the tone.
 - **A windowed sinc.** The ideal low-pass filter's impulse response is the
   *sinc* function, `sin(x)/x`, which never ends. `design` keeps the middle 31
-  values and tapers them toward the ends with a Hamming window; cutting them
-  off abruptly instead would let through ripples of the frequencies it should
+  values and tapers them toward the ends with a *Hamming window*, a raised
+  cosine that is 1 in the middle and 0.08 at the ends; cutting them off
+  abruptly instead would let through ripples of the frequencies it should
   block.
 - **A flexible array member.** `float taps[];` as the last member of a struct
   has no size of its own: `malloc (sizeof *f + 2 * n * sizeof f->taps[0])`
@@ -277,8 +288,9 @@ seven-hundredth of its size.
   allocation, one `free`, and the samples sit right next to the struct that
   uses them.
 - **The cost is `n` multiply-adds per sample.** 31 taps at 48 kHz is 1.5
-  million a second, which is nothing; but a sharper filter needs more taps
-  (exercise 3), and a smarter inner loop starts to matter (exercise 2).
+  million a second, little for a modern processor; but a sharper filter needs
+  more taps (exercise 3), and a smarter inner loop starts to matter (exercise
+  2).
 
 ## Pitfalls
 
@@ -286,7 +298,7 @@ seven-hundredth of its size.
   [`broken-short-history.c`](broken-short-history.c) keeps the `n - 1`
   *previous* inputs and forgets that the current one needs a slot too. The
   first time the ring reaches its last slot, it is past the end of the block,
-  and UBSan, which knows how big the block is, stops it:
+  and UBSan, which knows how big the block is, reports it:
 
   ```
   broken-short-history.c:34:32: runtime error: load of address 0x771cf4de001c with insufficient space for an object of type 'float'
@@ -335,8 +347,10 @@ folder to run it in.
    one cycle, which averages to zero; at 12 kHz, exactly two. But 9 kHz, in
    between, gets through at a fifth of its size. A moving average is good at
    smoothing and bad at separating frequencies, which is what designed taps are
-   for. `-I ../..` tells the compiler to look for `fir.h` two folders up, so
-   the exercise uses the lesson's own filter.
+   for.
+
+   `-I ../..` tells the compiler to look for `fir.h` two folders up, so the
+   exercise uses the lesson's own filter.
 
    </details>
 
@@ -440,3 +454,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp) | `<string.h>` | compare two strings                                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 19 Measuring first](../19-measuring/README.md) ·
+[Contents](../README.md#contents) · [21 IIR filters →](../21-biquad/README.md)
+
+<!-- /nav -->

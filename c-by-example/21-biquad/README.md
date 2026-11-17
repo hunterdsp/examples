@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 20 FIR filters](../20-fir/README.md) · [Contents](../README.md#contents) ·
+[22 Oscillators →](../22-oscillator/README.md)
+
+<!-- /nav -->
+
 # 21 · IIR filters: the biquad
 
 Run this lesson's commands in `c-by-example/21-biquad/`.
@@ -28,7 +35,7 @@ cat biquad.h
  *
  *   y[i] = b0 x[i] + b1 x[i-1] + b2 x[i-2] - a1 y[i-1] - a2 y[i-2]
  *
- * Five coefficients do what an FIR filter needs dozens of taps for.
+ * Five coefficients can do what an FIR filter needs dozens of taps for.
  * The struct is public, as in lesson 07: it is small, holds no pointers,
  * and a caller can keep one on the stack or in an array, with no malloc.
  */
@@ -146,7 +153,7 @@ holding the part of a *future* output that is already known:
 
 Expand `z1` and `z2` and the original equation comes back, term for term. This
 is **transposed direct form II**: two numbers of state instead of four, and it
-behaves well in floating point, which is why it is the usual choice.
+behaves well in floating point, which is why it is a common choice.
 
 ## A low-pass, measured
 
@@ -263,7 +270,7 @@ direct form I agrees within 1e-6: yes
 
 - **Infinite really means it.** An FIR filter's impulse response ends after its
   last tap. A biquad's rings on: a thousand samples later it is below 10⁻³⁰,
-  and still not zero. Each output feeds the next, forever.
+  and still not zero. Each output feeds the ones after it.
 - **Five numbers, a steep filter.** Past the 1 kHz corner, each octave is 12 dB
   down (−12.4 at 2 kHz, −24.6 at 4 kHz), with five multiplies per sample.
   Lesson 20 needed 31 taps for a gentler slope than that.
@@ -282,14 +289,20 @@ direct form I agrees within 1e-6: yes
 ## Pitfalls
 
 - **Feedback can blow up.** If `a1` and `a2` are out of range, each echo comes
-  back larger, and the output grows until it is `inf` (exercise 2). The design
-  functions here always produce a stable filter; coefficients typed in by hand,
-  or changed while the filter runs, may not. A biquad is stable when `|a2| < 1`
-  and `|a1| < 1 + a2`.
+  back larger, and the output grows until it is `inf` (exercise 2). A biquad is
+  stable when `|a2| < 1` and `|a1| < 1 + a2`. In exact arithmetic, the design
+  functions here meet that for any corner between 0 and half the rate and any
+  `q` above 0. Stored as `float`, they may not at the extremes. At 48 kHz, for
+  `q` from 0.1 to 100, every corner from 2.3 Hz to 23,998 Hz stays stable, but
+  below that, or within 2 Hz of half the rate, rounding can put the filter on
+  or past the edge: with `q` = 0.7071, a 1 Hz corner rounds to `|a1|` exactly
+  `1 + a2` (next pitfall). Coefficients typed in by hand, or changed while the
+  filter runs, may not be stable either.
 - **Low corners in `float`.** A corner at 20 Hz with 48 kHz sampling puts `a1`
-  within 0.003 of −2. A `float` has about seven significant digits, so its
-  rounding moves the filter noticeably. Compute coefficients in `double` and
-  run very low-frequency filters in `double` too.
+  within 0.004 of −2. A `float` has about seven significant digits, so its
+  rounding moves the filter noticeably. `biquad_lowpass` already computes in
+  `double` and only stores the result as `float`; a very low-frequency filter
+  should keep its coefficients and its state in `double` too.
 - **Very small numbers can be slow.** As a filter rings down, its state passes
   into *subnormal* floats, below about 10⁻³⁸, which some processors handle far
   more slowly than ordinary ones (exercise 3).
@@ -326,10 +339,10 @@ folder to run it in.
    Twice as steep: 24 dB per octave instead of 12, and flatter below the
    corner. Those two `q` values are the ones that make a pair of biquads into a
    *fourth-order* Butterworth filter: still exactly −3 dB at 1 kHz.
-   Higher-order IIR filters are almost always built this way, as a chain of
-   biquads, because one big high-order equation is far more sensitive to
-   rounding. [`cascade.c`](exercises/ex1-cascade/cascade.c) runs each stage in
-   place on the output of the last.
+   Higher-order IIR filters are usually built this way, as a chain of biquads,
+   because one big high-order equation is far more sensitive to rounding.
+   [`cascade.c`](exercises/ex1-cascade/cascade.c) runs each stage in place on
+   the output of the last.
 
    </details>
 
@@ -351,11 +364,12 @@ folder to run it in.
    ```
 
    With `a2` = 0.99 the ringing dies away, 100 times smaller every thousand
-   samples. With 1.01 it grows 100 times larger instead, and keeps going: a few
-   more seconds and it is `inf`, and after that every output is `inf` or `nan`.
-   `a2` is the square of how much each cycle of the ringing is scaled by, so
-   above 1, each cycle comes back bigger. A difference of 0.02 in one
-   coefficient is the difference between a filter and an alarm.
+   samples. With 1.01 it grows 100 times larger instead, and keeps going: about
+   12,500 samples later, under a third of a second at 48 kHz, it is `inf`, and
+   after that every output is `inf` or `nan`. `a2` is the square of how much
+   each cycle of the ringing is scaled by, so above 1, each cycle comes back
+   bigger. A difference of 0.02 in one coefficient is the difference between a
+   filter and an alarm.
 
    </details>
 
@@ -400,12 +414,12 @@ folder to run it in.
    ```
 
    About 10% slower on this recent AMD processor, which handles subnormals
-   mostly in hardware. Many processors, older Intel ones in particular, take
-   tens of times longer per subnormal operation, and an effects chain gone
-   quiet could miss its deadline in exactly the moment it seemed to have
-   nothing to do. That is why audio code often sets the processor to flush
-   subnormals to zero, or adds a tiny offset to keep the state normal. Measure
-   on the processors you ship to.
+   mostly in hardware. Other processors, older x86 ones among them, have been
+   many times slower per subnormal operation, and an effects chain gone quiet
+   could miss its deadline in exactly the moment it seemed to have nothing to
+   do. That is why audio code often sets the processor to flush subnormals to
+   zero, or adds a tiny offset to keep the state normal. Measure on the
+   processors you ship to.
 
    </details>
 
@@ -430,3 +444,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)          | `<string.h>` | compare two strings                                                     |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 20 FIR filters](../20-fir/README.md) · [Contents](../README.md#contents) ·
+[22 Oscillators →](../22-oscillator/README.md)
+
+<!-- /nav -->
