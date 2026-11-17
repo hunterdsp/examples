@@ -29,16 +29,29 @@ END = "<!-- /nav -->"
 ITEM = re.compile(r"^- \[(\d\d) ([^\]]+)\]\((\d\d-[a-z0-9-]+)/\)")
 
 
-def lessons():
-    """[(folder, "NN Title")] in the Contents' order."""
+PART = re.compile(r"^\*\*(Part [^*]+)\*\*\s*$")
+
+
+def parts():
+    """[("Part N · Name", [(folder, "NN Title")])] in the Contents' order.
+    site.py makes the website's sidebar from the same list."""
     text = (ROOT / "README.md").read_text()
     contents = text.split("\n## Contents\n", 1)[1].split("\n## ", 1)[0]
     found = []
     for line in contents.splitlines():
-        m = ITEM.match(line)
+        m = PART.match(line)
         if m:
-            found.append((m.group(3), f"{m.group(1)} {m.group(2)}"))
+            found.append((m.group(1), []))
+            continue
+        m = ITEM.match(line)
+        if m and found:
+            found[-1][1].append((m.group(3), f"{m.group(1)} {m.group(2)}"))
     return found
+
+
+def lessons():
+    """[(folder, "NN Title")] in the Contents' order."""
+    return [lesson for _, items in parts() for lesson in items]
 
 
 def block(order, i):

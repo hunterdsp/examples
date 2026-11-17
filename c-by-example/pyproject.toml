@@ -16,5 +16,11 @@ lint = [
   "clang-format==22.1.8",        # the C style, as ~/doppler pins it
 ]
 
+# The website (make docs): zensical reads the config site.py writes, as
+# ~/doppler's does. Python 3.11 or newer, as zensical requires.
+docs = [
+  "zensical==0.1.1; python_version >= '3.11'",
+]
+
 [tool.uv]
 package = false

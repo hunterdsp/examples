@@ -9,11 +9,13 @@
 #                         and every lesson links back, to the contents,
 #                         and on
 #   make format           format them, and rewrite those links
+#   make docs             build the website into build/site/html
+#   make docs-serve       build it, and serve it at localhost:8000
 
 LESSONS ?= $(sort $(wildcard [0-9][0-9]-*))
 
 .PHONY: test lint lint-mdformat lint-clang-format lint-libfuncs lint-nav \
-        format help
+        format docs docs-serve help
 
 # Every README in the course, formatted by mdformat (settings in
 # .mdformat.toml). `make lint` fails if formatting would change any of
@@ -41,6 +43,11 @@ LIBFUNCS := uv run --frozen --only-group lint python libfuncs.py
 # README.md's Contents list (nav.py).
 NAV := uv run --frozen --only-group lint python nav.py
 
+# The website: site.py turns the READMEs into pages, in build/site/, and
+# zensical builds them (--strict: a warning fails the build).
+SITE     := uv run --frozen --only-group docs python site.py
+ZENSICAL := uv run --frozen --only-group docs zensical
+
 test: ## Build, run and check every example in LESSONS
 	@CC="$(CC)" ./check.sh $(LESSONS)
 
@@ -63,6 +70,14 @@ format: ## Format every README (mdformat) and C file (clang-format)
 	@$(NAV) --write
 	@$(MDFORMAT) $(MD_FILES)
 	@$(CLANG_FORMAT) -i $(C_ONLY)
+
+docs: ## Build the website into build/site/html
+	@$(SITE)
+	@$(ZENSICAL) build --strict --clean -f build/site/mkdocs.yml
+
+docs-serve: ## Build the website and serve it at localhost:8000
+	@$(SITE)
+	@$(ZENSICAL) serve -f build/site/mkdocs.yml
 
 help: ## Show this message
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | \
