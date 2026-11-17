@@ -213,7 +213,7 @@ class FFT(_Object):
 
 ## Using it
 
-A shared, optimised build (lesson 34), without the sanitizers, for a reason the
+A shared, optimized build (lesson 34), without the sanitizers, for a reason the
 pitfalls explain:
 
 ```bash
@@ -221,14 +221,14 @@ cmake -S ../sig -B build -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-Lesson 34's `analyse.c`, in Python:
+Lesson 34's `analyze.c`, in Python:
 
 ```bash
 cat spectrum.py
 ```
 
 ```python
-"""spectrum.py -- lesson 34's analyse.c, in Python, with the same library.
+"""spectrum.py -- lesson 34's analyze.c, in Python, with the same library.
 
 Two tones, a low-pass filter, and the amplitude spectrum of the last 4096
 samples: the same calls to the same compiled code, so the same numbers.

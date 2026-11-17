@@ -23,7 +23,7 @@ a minute.
 
 Here are two ways to make a sine wave: calling `sin()` for every sample, or
 looking it up in a table of 1024 values made once, with straight-line
-interpolation between neighbours. The program checks that they agree, and times
+interpolation between neighbors. The program checks that they agree, and times
 them when asked:
 
 ```bash
@@ -38,10 +38,10 @@ cat bench.c
  *   cc -std=c99 -Wall -Wextra -O2 bench.c -o bench -lm && ./bench time
  *
  * One way calls sin() for every sample. The other looks the sine up in a
- * table of 1024 values, made once, and interpolates between neighbours
+ * table of 1024 values, made once, and interpolates between neighbors
  * (lesson 03's table, put to work). Run plainly, the program checks that
  * the two agree. Run with `time`, it also measures each one, which is
- * only meaningful in an optimised build without sanitizers.
+ * only meaningful in an optimized build without sanitizers.
  */
 #include <math.h>
 #include <stdio.h>
@@ -150,7 +150,7 @@ cc -std=c99 -Wall -Wextra -g -fsanitize=address,undefined bench.c -o bench -lm
 4800 samples, largest difference below 1e-5: yes
 ```
 
-To time it, build it the way it would ship: optimised (`-O2`), without the
+To time it, build it the way it would ship: optimized (`-O2`), without the
 sanitizers, which slow everything down, and not evenly:
 
 ```bash
@@ -183,7 +183,7 @@ can't check them, so `make test` runs only the plain `./bench`.)
   anything. The table is less exact than `sin()`, by under 0.00001 here, and
   whether that is good enough is a decision for the sound, not the stopwatch.
 - **Time the build you ship.** `-O2` without sanitizers. A debug build measures
-  code the compiler didn't optimise; a sanitized build measures the sanitizer's
+  code the compiler didn't optimize; a sanitized build measures the sanitizer's
   checks, and changes the *ratio*, not only the totals (exercise 1).
 - **`clock()` measures CPU time**, the processor time this program used, in
   units of `CLOCKS_PER_SEC`. It ignores time spent waiting, which is what you
@@ -211,7 +211,7 @@ can't check them, so `make test` runs only the plain `./bench`.)
 - **A benchmark unlike the real program.** These loops run on 4800 samples that
   fit in the cache (lesson 25), over and over. A real program's data may not,
   and a lookup table competes with everything else for that cache.
-- **Optimising what doesn't matter.** A program that spends 1% of its time
+- **Optimizing what doesn't matter.** A program that spends 1% of its time
   making sine waves gains at most 1% from a faster one. Measure the whole
   program to find where the time goes, before measuring the part you suspect;
   `perf` on Linux and Instruments on macOS do that for you.
@@ -341,7 +341,7 @@ folder to run it in.
    ```
 
    Zero: the compiler saw that nothing uses the unused sums, and removed the
-   loop. That is correct, and exactly what an optimiser should do, but it makes
+   loop. That is correct, and exactly what an optimizer should do, but it makes
    a benchmark measure nothing and report an impossible speed. Storing the
    result in a `volatile` variable tells the compiler that the store itself
    matters, so the work must be done. A result that seems too good to be true

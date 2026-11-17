@@ -10,7 +10,7 @@
 
 Run this lesson's commands in `c-by-example/07-structs/`.
 
-A **biquad** filter, the workhorse of audio equalisers and lesson 21, needs
+A **biquad** filter, the workhorse of audio equalizers and lesson 21, needs
 five *coefficients*, the numbers that set its response, and two numbers of
 memory. Seven loose `float`s passed to every call is seven chances to swap two.
 A `struct` bundles them, by name.
@@ -173,7 +173,7 @@ the gaps disappear: `struct packed` is 16. When you have a million of them
 - **Writing a struct to a file with `fwrite`** writes its padding and its byte
   order (lesson 06). Fine for a scratch file read back by the same program;
   wrong for a file format. Write the fields one at a time.
-- **Forgetting to initialise.** `biquad_t f;` inside a function holds garbage.
+- **Forgetting to initialize.** `biquad_t f;` inside a function holds garbage.
   `biquad_t f = { 0 };` clears every field.
 
 ## Exercises

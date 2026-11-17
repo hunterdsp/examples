@@ -111,7 +111,7 @@ cmake --build build
 
 ## Pipes
 
-Two tones, analysed:
+Two tones, analyzed:
 
 ```bash
 build/sig-tone 1 750 6000 | build/sig-fft

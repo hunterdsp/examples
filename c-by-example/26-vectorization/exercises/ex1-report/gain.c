@@ -1,9 +1,9 @@
-/* gain.c -- a loop for the compiler to vectorise, twice.
+/* gain.c -- a loop for the compiler to vectorize, twice.
  *
  *   cc -std=c99 -Wall -Wextra -O2 -c gain.c
  *
- * Built with a vectoriser report turned on (see the README), the
- * compiler says which loops it vectorised, and how.
+ * Built with a vectorizer report turned on (see the README), the
+ * compiler says which loops it vectorized, and how.
  */
 #include <stddef.h>
 

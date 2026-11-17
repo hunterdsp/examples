@@ -5,10 +5,10 @@
  *   cc -std=c99 -Wall -Wextra -O2 bench.c -o bench -lm && ./bench time
  *
  * One way calls sin() for every sample. The other looks the sine up in a
- * table of 1024 values, made once, and interpolates between neighbours
+ * table of 1024 values, made once, and interpolates between neighbors
  * (lesson 03's table, put to work). Run plainly, the program checks that
  * the two agree. Run with `time`, it also measures each one, which is
- * only meaningful in an optimised build without sanitizers.
+ * only meaningful in an optimized build without sanitizers.
  */
 #include <math.h>
 #include <stdio.h>

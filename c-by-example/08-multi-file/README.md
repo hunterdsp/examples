@@ -200,7 +200,7 @@ do. Recipe lines must start with a **tab**, not spaces.
   `dsp.c`.
 
 - **Macro arguments evaluated twice.** `DSP_SQUARE(i++)` expands to
-  `((i++) * (i++))`, which increments `i` twice and is undefined behaviour.
+  `((i++) * (i++))`, which increments `i` twice and is undefined behavior.
   Prefer a `static inline` function when you can: it has none of these
   problems, and usually costs little (Part III uses them).
 
@@ -324,7 +324,7 @@ folder to run it in.
    The same numbers, and `dsp_square(1 + 2)` is 9 with no parentheses needed: a
    function's argument is a value, evaluated once, not text pasted in. It is
    `static inline` *in the header*, so each `.c` that includes it gets its own
-   copy, which the compiler, when optimising, usually folds into the caller, as
+   copy, which the compiler, when optimizing, usually folds into the caller, as
    fast as the macro, and the linker sees no duplicates. One thing did change:
    the macro squared a `double` in `dsp_rms`, and `dsp_square` takes a `float`.
    The output is the same here, but a type is a decision a macro never made for

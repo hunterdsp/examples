@@ -5,7 +5,7 @@
  * shaper_fn it would be handed a float where it reads a double, and its
  * double result read back as a float. The compiler refuses the
  * assignment; a cast would silence it, and the call would then be
- * undefined behaviour.
+ * undefined behavior.
  */
 #include <stdio.h>
 

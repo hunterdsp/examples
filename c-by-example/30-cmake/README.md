@@ -89,7 +89,7 @@ target_include_directories(
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE src)
 if(UNIX)
-  target_link_libraries(sig PRIVATE m) # sin, cos, cexp: the maths library
+  target_link_libraries(sig PRIVATE m) # sin, cos, cexp: the math library
 endif()
 # A sanitized library needs sanitized programs (lesson 29), so the flags
 # are PUBLIC: whatever links sig gets them too. Only in this build tree,
@@ -261,7 +261,7 @@ rebuilt: the same bookkeeping as lesson 08's `make`, done for you.
 
 ## Pitfalls
 
-- **No build type, no optimisation.** With Makefiles or Ninja, a build
+- **No build type, no optimization.** With Makefiles or Ninja, a build
   configured without `-DCMAKE_BUILD_TYPE` is compiled with no `-O` at all
   (exercise 3). It runs, slowly, and any timing taken from it says little about
   what ships (lesson 19). Choose one: `Debug` (`-g`), `Release`
@@ -371,7 +371,7 @@ folder to run it in.
    </details>
 
 3. Configure `sig` with `-DCMAKE_BUILD_TYPE=Release` in `build-release`. How
-   many of the compile commands in each build optimise?
+   many of the compile commands in each build optimize?
 
    <details><summary>Output and answer</summary>
 
@@ -394,9 +394,9 @@ folder to run it in.
    11
    ```
 
-   The first build set no type, and not one of its 11 compiles optimises. A
+   The first build set no type, and not one of its 11 compiles optimizes. A
    build type is a set of flags, and `Release` adds `-O3 -DNDEBUG` to every
-   compile: optimisation, and `NDEBUG`, which deletes every `assert` (lesson 31
+   compile: optimization, and `NDEBUG`, which deletes every `assert` (lesson 31
    has something to say about that). Configuring is enough to write
    `compile_commands.json`: nothing had to be built to read it.
 

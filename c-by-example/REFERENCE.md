@@ -246,7 +246,7 @@ lesson's README ends with the ones its own code uses, taken from this table by
 | [`pow`](https://en.cppreference.com/c/numeric/math/pow)                                                        | `<math.h>`    | x raised to the power y                                                 |
 | [`printf`](https://en.cppreference.com/c/io/fprintf)                                                           | `<stdio.h>`   | formatted output to `stdout`                                            |
 | [`pthread_cond_signal`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_signal.html)   | `<pthread.h>` | wake one thread sleeping on a condition variable (POSIX)                |
-| [`pthread_cond_wait`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_wait.html)       | `<pthread.h>` | release a mutex and sleep until signalled (POSIX)                       |
+| [`pthread_cond_wait`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_cond_wait.html)       | `<pthread.h>` | release a mutex and sleep until signaled (POSIX)                        |
 | [`pthread_create`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_create.html)             | `<pthread.h>` | start a thread running a function (POSIX)                               |
 | [`pthread_join`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_join.html)                 | `<pthread.h>` | wait for a thread to finish (POSIX)                                     |
 | [`pthread_mutex_lock`](https://pubs.opengroup.org/onlinepubs/9799919799/functions/pthread_mutex_lock.html)     | `<pthread.h>` | take a mutex, waiting while another thread holds it (POSIX)             |

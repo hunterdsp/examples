@@ -10,7 +10,7 @@
 
 Run this lesson's commands in `c-by-example/16-interfaces/`.
 
-Lesson 14 hid one kind of object behind a header. Lesson 15 chose behaviour at
+Lesson 14 hid one kind of object behind a header. Lesson 15 chose behavior at
 run time with function pointers. Together they give an **interface**: many
 kinds of object, each doing the same jobs in its own way, all used through one
 type.
@@ -321,11 +321,11 @@ After the reset, the second run matches the first.
 
 ## What it shows
 
-- **One call, many behaviours.** `processor_process (chain[s], buf, N)`
-  compiles to the same instructions for every stage: load the object's `ops`,
-  load `process` from it, call. Which code that is was decided when the object
-  was created, by the table its `create` put in it. This is what other
-  languages call *dynamic dispatch*.
+- **One call, many behaviors.** `processor_process (chain[s], buf, N)` compiles
+  to the same instructions for every stage: load the object's `ops`, load
+  `process` from it, call. Which code that is was decided when the object was
+  created, by the table its `create` put in it. This is what other languages
+  call *dynamic dispatch*.
 - **The base goes first.** C guarantees that a pointer to a struct, converted,
   points at its first member, and back again. So `&gain->base` and `gain` are
   the same address, and `gain_process` can turn the `processor_t *self` it is

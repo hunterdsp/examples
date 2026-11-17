@@ -253,7 +253,7 @@ folder to run it in.
    ```
    after 10000000 steps:
    left alone:   size off 1 by more than 0.001: yes
-   renormalised: size off 1 by less than 1e-5:  yes
+   renormalized: size off 1 by less than 1e-5:  yes
    ```
 
    It doesn't: each multiply rounds, the size creeps away from 1, and nothing

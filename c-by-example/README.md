@@ -125,7 +125,7 @@ and which header holds what.
 - [24 The FFT](24-fft/): radix 2, plans, windows and leakage
 - [25 Caches and memory layout](25-caches/): rows before columns, structs of
   arrays
-- [26 Vectorisation](26-vectorisation/): why a float sum won't vectorise, and
+- [26 Vectorization](26-vectorization/): why a float sum won't vectorize, and
   how to let it
 - [27 Fixed point](27-fixed-point/): Q15, rounding, saturation, headroom
 - [28 Concurrency](28-concurrency/): threads, races, false sharing, a blocking

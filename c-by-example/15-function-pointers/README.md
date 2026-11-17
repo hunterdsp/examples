@@ -297,7 +297,7 @@ caller's pointer is a `peak_log` and the other's a `clip_count`.
 - **`void *user` carries the callback's state.** The code that calls back
   passes the pointer along and never looks at it. The callback knows what it
   really is, and converts it back: `peak_log *log = user;`.
-- **This is half of an object.** A function pointer is behaviour chosen at run
+- **This is half of an object.** A function pointer is behavior chosen at run
   time; the `void *` is the data it works on. Put the two together in one
   struct and you have lesson 16.
 
@@ -313,12 +313,12 @@ caller's pointer is a `peak_log` and the other's a `clip_count`.
   ```
 
   A cast, `(shaper_fn)half`, makes the error go away and the bug stay: calling
-  a function through a pointer of the wrong type is undefined behaviour. Write
-  a small function with the right signature that calls `half` instead.
+  a function through a pointer of the wrong type is undefined behavior. Write a
+  small function with the right signature that calls `half` instead.
 
 - **Calling `NULL`.** A function pointer that was never set, or a lookup that
-  found nothing, is `NULL`, and calling it is undefined behaviour, which
-  usually crashes. Check before calling, as exercise 3 does.
+  found nothing, is `NULL`, and calling it is undefined behavior, which usually
+  crashes. Check before calling, as exercise 3 does.
 
 - **The `void *` lies if you let it.** Pass a `clip_count *` to `log_peak` and
   the compiler can't object: both go through `void *`. The callback reads the

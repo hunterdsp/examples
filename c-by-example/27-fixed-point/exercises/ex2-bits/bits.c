@@ -11,7 +11,7 @@
 
 /* x rounded to the nearest multiple of 2^-b. */
 static double
-quantise (double x, int b)
+quantize (double x, int b)
 {
   double scale = ldexp (1.0, b); /* 2^b */
   return round (x * scale) / scale;
@@ -31,7 +31,7 @@ main (void)
           double x
               = 0.9 * sin (6.283185307179586 * 440.0 * (double)i / 48000.0);
           double exact = 0.3 * x;
-          double fixed = quantise (quantise (x, b) * quantise (0.3, b), b);
+          double fixed = quantize (quantize (x, b) * quantize (0.3, b), b);
           sig += exact * exact;
           err += (fixed - exact) * (fixed - exact);
         }

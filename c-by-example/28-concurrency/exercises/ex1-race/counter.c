@@ -39,7 +39,7 @@ count_racing (void *arg)
 {
   (void)arg;
   for (int i = 0; i < EACH; i++)
-    count++; /* a DATA RACE: undefined behaviour */
+    count++; /* a DATA RACE: undefined behavior */
   return NULL;
 }
 

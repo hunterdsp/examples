@@ -1,7 +1,7 @@
 /* broken-late.c (exercise 4) -- widening AFTER the multiply is too late.
  *
  * (int64_t)(a * b) multiplies two int32_t in 32 bits, overflows, and only
- * then widens the wrong answer. Signed overflow is undefined behaviour,
+ * then widens the wrong answer. Signed overflow is undefined behavior,
  * and UBSan reports it. The fix is (int64_t)a * (int64_t)b:
  * see sizes.c.
  */

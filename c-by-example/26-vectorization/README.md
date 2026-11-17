@@ -6,9 +6,9 @@
 
 <!-- /nav -->
 
-# 26 · Vectorisation
+# 26 · Vectorization
 
-Run this lesson's commands in `c-by-example/26-vectorisation/`.
+Run this lesson's commands in `c-by-example/26-vectorization/`.
 
 Every x86-64 and 64-bit ARM processor has **vector** instructions, which do the
 same operation on several numbers at once: SSE and AVX on x86, NEON on ARM. One
@@ -17,7 +17,7 @@ several times faster, and in signal processing, where the same arithmetic is
 done to every sample, that describes many loops.
 
 You rarely write those instructions yourself. At `-O2` the compiler
-**vectorises** a loop on its own, when it can prove that doing 4 or 8
+**vectorizes** a loop on its own, when it can prove that doing 4 or 8
 iterations at once gives exactly the result the loop as written would give. The
 job is mostly to write loops it can prove that about. One loop it can't is
 among the most common in DSP: a sum.
@@ -166,14 +166,14 @@ in lanes:  0.068 ms
   rounds to a `float`'s 24 bits of precision, and how much it loses depends on
   how big the running total already is: one total of 100,000 loses more on each
   `+ 0.1` than eight totals of 13,000.
-- **So the compiler keeps your order.** Vectorising `sum_in_order` would mean
+- **So the compiler keeps your order.** Vectorizing `sum_in_order` would mean
   adding in lanes, which changes the answer, so the compiler doesn't, and every
   addition waits for the one before it.
 - **Write the order you want.** `sum_in_lanes` *says* it adds in eight lanes.
   That is now the order as written, so the compiler can put the lanes in vector
   registers and add eight at a time: 8 times faster. You chose the rounding,
   explicitly, instead of the compiler choosing it for you.
-- **Side by side, every iteration independent.** Loops that vectorise read and
+- **Side by side, every iteration independent.** Loops that vectorize read and
   write consecutive elements (lesson 25's struct of arrays) and don't depend on
   the previous iteration's result. The eight lanes are independent of each
   other; one running total is not.
@@ -191,7 +191,7 @@ in lanes:  0.068 ms
   ```
 
 - **`-ffast-math`.** This flag lets the compiler reorder floating-point
-  arithmetic as if it were exact, which vectorises sums, and changes their
+  arithmetic as if it were exact, which vectorizes sums, and changes their
   answers in ways that differ from compiler to compiler (exercise 2). It also
   assumes there are no NaNs (not-a-number, what `0.0 / 0.0` gives) or
   infinities, so checks for them may be removed. Use it knowingly, on code
@@ -203,7 +203,7 @@ in lanes:  0.068 ms
   more, and produces a program that may crash with an illegal instruction on an
   older machine. For code you ship, choose the target on purpose.
 
-- **Vectorised doesn't mean fast.** A vectorised loop over data that isn't in
+- **Vectorized doesn't mean fast.** A vectorized loop over data that isn't in
   the cache still waits on memory (lesson 25). Measure.
 
 ## Exercises
@@ -212,7 +212,7 @@ Try each one before opening its answer. Its code is in
 [`exercises/`](exercises/), one folder per exercise, and the answer says which
 folder to run it in.
 
-1. Compilers can report what they vectorised. Ask gcc (`-fopt-info-vec`) and
+1. Compilers can report what they vectorized. Ask gcc (`-fopt-info-vec`) and
    clang (`-Rpass=loop-vectorize`) about
    [`gain.c`](exercises/ex1-report/gain.c), whose two functions differ only in
    `restrict`.
@@ -273,9 +273,9 @@ folder to run it in.
          |   ^
    ```
 
-   At `-O2`, gcc vectorises only `gain_restrict` (line 24). For `gain`, `out`
+   At `-O2`, gcc vectorizes only `gain_restrict` (line 24). For `gain`, `out`
    might overlap `in`, and writing eight outputs at once could overwrite inputs
-   not yet read. At `-O3` gcc vectorises it too, by *versioning*: a check at
+   not yet read. At `-O3` gcc vectorizes it too, by *versioning*: a check at
    run time whether the two overlap, with the vector loop for when they don't
    and the plain loop for when they do. clang does that already at `-O2`.
    `restrict` (lesson 18) is the caller's promise that makes the check
@@ -323,10 +323,10 @@ folder to run it in.
    ```
 
    The in-order sum changed with both compilers, and differently; clang changed
-   the lanes' sum too. clang vectorised `sum_in_order`, so it is now as fast as
-   the lanes were, and gives the lanes' old answer. It also reorganised
+   the lanes' sum too. clang vectorized `sum_in_order`, so it is now as fast as
+   the lanes were, and gives the lanes' old answer. It also reorganized
    `sum_in_lanes`, which now gives a third answer, more accurately and more
-   slowly. gcc vectorised the copy of `sum_in_order` it built into `main`,
+   slowly. gcc vectorized the copy of `sum_in_order` it built into `main`,
    which printed the new sum. But the timing calls the function through a
    pointer, which reaches its separate copy, and that one still adds one number
    at a time (`objdump -d` shows it): a new answer, at the old speed. With

@@ -51,7 +51,7 @@ main (int argc, char **argv)
 
   /* 1. One 2-D array, summed along its rows and down its columns. C
         stores a 2-D array row after row, so a[r][c] and a[r][c + 1] are
-        neighbours in memory, and a[r][c] and a[r + 1][c] are 8 KB apart. */
+        neighbors in memory, and a[r][c] and a[r + 1][c] are 8 KB apart. */
   float (*a)[COLS] = malloc (sizeof (float[ROWS][COLS]));
   if (a == NULL)
     return 1;

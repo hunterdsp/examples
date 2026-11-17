@@ -1,4 +1,4 @@
-/* analyse.c -- a program built against an INSTALLED sig: the headers and
+/* analyze.c -- a program built against an INSTALLED sig: the headers and
  * library under staging/, found with pkg-config, not ../sig.
  *
  * It does what `sig-tone 1 750 6000 | sig-filter lowpass 1500 | sig-fft`

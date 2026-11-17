@@ -1,7 +1,7 @@
 <!-- nav: made by `make format` from README.md's Contents -->
 
 [← 24 The FFT](../24-fft/README.md) · [Contents](../README.md#contents) ·
-[26 Vectorisation →](../26-vectorisation/README.md)
+[26 Vectorization →](../26-vectorization/README.md)
 
 <!-- /nav -->
 
@@ -88,7 +88,7 @@ main (int argc, char **argv)
 
   /* 1. One 2-D array, summed along its rows and down its columns. C
         stores a 2-D array row after row, so a[r][c] and a[r][c + 1] are
-        neighbours in memory, and a[r][c] and a[r + 1][c] are 8 KB apart. */
+        neighbors in memory, and a[r][c] and a[r + 1][c] are 8 KB apart. */
   float (*a)[COLS] = malloc (sizeof (float[ROWS][COLS]));
   if (a == NULL)
     return 1;
@@ -199,7 +199,7 @@ struct of arrays:   0.9 ms
 ## What it shows
 
 - **Rows, not columns.** C stores a 2-D array one row after another, so
-  `a[r][c]` and `a[r][c + 1]` are neighbours, and `a[r + 1][c]` is a whole row,
+  `a[r][c]` and `a[r][c + 1]` are neighbors, and `a[r + 1][c]` is a whole row,
   8 KB, further on. Summing along rows uses every float of every line fetched;
   summing down columns uses one float per line and moves on. Same additions,
   same answer, 14 times slower.
@@ -286,7 +286,7 @@ folder to run it in.
    No. From stride 4 to stride 64, the program reads 16 times fewer ints and
    takes 1.1 ms instead of 2.0, nowhere near 16 times less. Up to stride 16,
    every 64-byte line is still fetched, whole, and beyond that the processor
-   fetches neighbouring lines ahead anyway. The cost of memory is counted in
+   fetches neighboring lines ahead anyway. The cost of memory is counted in
    lines, not in the numbers you use from them.
 
    </details>
@@ -412,6 +412,6 @@ Every library function this lesson's code calls, linked to its definition. The
 <!-- nav: made by `make format` from README.md's Contents -->
 
 [← 24 The FFT](../24-fft/README.md) · [Contents](../README.md#contents) ·
-[26 Vectorisation →](../26-vectorisation/README.md)
+[26 Vectorization →](../26-vectorization/README.md)
 
 <!-- /nav -->

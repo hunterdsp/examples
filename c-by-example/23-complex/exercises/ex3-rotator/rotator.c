@@ -34,7 +34,7 @@ main (void)
   printf ("after %ld steps:\n", steps);
   printf ("left alone:   size off 1 by more than 0.001: %s\n",
           fabsf (cabsf (plain) - 1.0f) > 0.001f ? "yes" : "no");
-  printf ("renormalised: size off 1 by less than 1e-5:  %s\n",
+  printf ("renormalized: size off 1 by less than 1e-5:  %s\n",
           fabsf (cabsf (fixed) - 1.0f) < 1e-5f ? "yes" : "no");
   return 0;
 }

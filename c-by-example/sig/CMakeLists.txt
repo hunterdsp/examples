@@ -61,7 +61,7 @@ target_include_directories(
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   PRIVATE src)
 if(UNIX)
-  target_link_libraries(sig PRIVATE m) # sin, cos, cexp: the maths library
+  target_link_libraries(sig PRIVATE m) # sin, cos, cexp: the math library
 endif()
 # A sanitized library needs sanitized programs (lesson 29), so the flags
 # are PUBLIC: whatever links sig gets them too. Only in this build tree,

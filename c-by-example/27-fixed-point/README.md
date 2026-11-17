@@ -1,6 +1,6 @@
 <!-- nav: made by `make format` from README.md's Contents -->
 
-[← 26 Vectorisation](../26-vectorisation/README.md) ·
+[← 26 Vectorization](../26-vectorization/README.md) ·
 [Contents](../README.md#contents) ·
 [28 Concurrency →](../28-concurrency/README.md)
 
@@ -164,7 +164,7 @@ gain in Q15: error 84 dB below the signal
 
 - **Shifting a negative number left.**
   [`broken-shift-negative.c`](broken-shift-negative.c) doubles −0.5 with
-  `x << 1`. Shifting a negative value left is undefined behaviour in C:
+  `x << 1`. Shifting a negative value left is undefined behavior in C:
 
   ```
   broken-shift-negative.c:16:17: runtime error: left shift of negative value -16384
@@ -301,7 +301,7 @@ Every library function this lesson's code calls, linked to its definition. The
 
 <!-- nav: made by `make format` from README.md's Contents -->
 
-[← 26 Vectorisation](../26-vectorisation/README.md) ·
+[← 26 Vectorization](../26-vectorization/README.md) ·
 [Contents](../README.md#contents) ·
 [28 Concurrency →](../28-concurrency/README.md)
 

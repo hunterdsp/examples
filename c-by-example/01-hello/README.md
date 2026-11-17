@@ -70,12 +70,12 @@ called with 2 argument(s)
 That build command is the one used for the rest of Parts I–II. Every flag is
 there on purpose:
 
-| Flag                           | Why                                                                                                                 |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------- |
-| `-std=c99`                     | The language this course teaches, and nothing the compiler adds on top                                              |
-| `-Wall -Wextra`                | Warnings are the compiler pointing at likely bugs, for free. Read every one                                         |
-| `-g`                           | Debug info, so errors point at line numbers instead of addresses                                                    |
-| `-fsanitize=address,undefined` | Catch out-of-bounds accesses, use-after-free and undefined behaviour as they happen, with the line each happened on |
+| Flag                           | Why                                                                                                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `-std=c99`                     | The language this course teaches, and nothing the compiler adds on top                                             |
+| `-Wall -Wextra`                | Warnings are the compiler pointing at likely bugs, for free. Read every one                                        |
+| `-g`                           | Debug info, so errors point at line numbers instead of addresses                                                   |
+| `-fsanitize=address,undefined` | Catch out-of-bounds accesses, use-after-free and undefined behavior as they happen, with the line each happened on |
 
 The two sanitizers react differently. AddressSanitizer stops the program at the
 first bad memory access. UBSan reports each problem and lets the program carry
