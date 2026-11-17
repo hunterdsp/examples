@@ -87,7 +87,7 @@ Only `include/sig/` was installed, not `src/`: `internal.h` stays private
 other projects to read: `pkgconfig/sig.pc` and `cmake/sig/`. Some Linux
 systems, Fedora among them, use `lib64` instead of `lib`.
 
-The installed tools work from any folder:
+The installed tools run, and find the installed library by themselves:
 
 ```bash
 staging/bin/sig-tone 1 750 | staging/bin/sig-fft
@@ -351,8 +351,9 @@ folder to run it in.
    ```
 
    `sigConfigVersion.cmake` was written with `COMPATIBILITY SameMajorVersion`:
-   1.0.0 satisfies a request for 1.0, and nothing from another major version,
-   in either direction. The same rule as the soname.
+   1.0.0 satisfies a request for 1.0, as any later 1.x would, and nothing from
+   another major version satisfies it, in either direction. The same rule as
+   the soname.
 
    </details>
 

@@ -177,8 +177,8 @@ the course's flags and checks it fails for the reason given here.
   uninitialized when used here").
 
 - **The sanitizers see only what runs.** A bug on a path no run takes stays
-  hidden, asserts included. And they can't check inside code built without
-  them: a library compiled elsewhere is not checked inside.
+  hidden. And they can't check inside code built without them: a library
+  compiled elsewhere is not checked inside.
 
 - **Not every platform has every check.** LeakSanitizer runs by default on
   Linux, not with Apple's compiler on macOS; there, `leaks --atExit -- ./prog`

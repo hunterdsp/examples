@@ -10,7 +10,7 @@
 
 Run this lesson's commands in `c-by-example/26-vectorisation/`.
 
-Every processor this course runs on has **vector** instructions, which do the
+Every x86-64 and 64-bit ARM processor has **vector** instructions, which do the
 same operation on several numbers at once: SSE and AVX on x86, NEON on ARM. One
 instruction adds 4 pairs of floats, or 8, or 16. A loop that uses them can run
 several times faster, and in signal processing, where the same arithmetic is

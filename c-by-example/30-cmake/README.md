@@ -13,8 +13,7 @@ Lesson 29 built `sig` by hand: four compiles, an `ar`, and a link, each with
 the right flags. Lesson 08's Makefile would remember those commands, but only
 for one compiler on one kind of system. `-fvisibility=hidden` is a GCC and
 clang flag, a shared library is `libsig.so` on Linux, `libsig.dylib` on macOS
-and `sig.dll` on Windows, and Visual Studio doesn't build from Makefiles at
-all.
+and `sig.dll` on Windows, and Visual Studio's own projects aren't Makefiles.
 
 **CMake** describes the build once, as *targets* (this library, built from
 these files; that program, linked with this library), and writes the real build

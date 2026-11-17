@@ -292,9 +292,11 @@ direct form I agrees within 1e-6: yes
   back larger, and the output grows until it is `inf` (exercise 2). A biquad is
   stable when `|a2| < 1` and `|a1| < 1 + a2`. In exact arithmetic, the design
   functions here meet that for any corner between 0 and half the rate and any
-  `q` above 0. Stored as `float`, they may not: at 48 kHz with `q` = 0.7071, a
-  1 Hz corner rounds to `|a1|` exactly `1 + a2`, on the edge, and 0.1 Hz just
-  past it (next pitfall). Coefficients typed in by hand, or changed while the
+  `q` above 0. Stored as `float`, they may not at the extremes. At 48 kHz, for
+  `q` from 0.1 to 100, every corner from 2.3 Hz to 23,998 Hz stays stable, but
+  below that, or within 2 Hz of half the rate, rounding can put the filter on
+  or past the edge: with `q` = 0.7071, a 1 Hz corner rounds to `|a1|` exactly
+  `1 + a2` (next pitfall). Coefficients typed in by hand, or changed while the
   filter runs, may not be stable either.
 - **Low corners in `float`.** A corner at 20 Hz with 48 kHz sampling puts `a1`
   within 0.004 of −2. A `float` has about seven significant digits, so its

@@ -189,8 +189,8 @@ from those needs its bytes swapped.
 - **Forgetting the `'\0'`.** A `char[4]` holding `"tone"` has no room for it,
   and every string function will read past the end looking for one.
 - **Text mode vs binary mode.** On Windows, `"w"` translates `\n` to `\r\n`,
-  corrupting binary data. Always open sample files with `"wb"` and `"rb"`, even
-  on systems where it makes no difference.
+  corrupting binary data. Open sample files with `"wb"` and `"rb"`, even on
+  systems where it makes no difference, so the same code works on Windows.
 
 ## Exercises
 
