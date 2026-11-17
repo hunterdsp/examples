@@ -55,3 +55,12 @@ repos:
         language: system
         pass_filenames: false
         files: ^c-by-example/(.*\.[ch]|.*\.md|libfuncs\.py)$
+
+      # A lesson added, renamed or moved in README.md's Contents moves its
+      # neighbours' back/next links (nav.py writes them).
+      - id: nav
+        name: back/next links (c-by-example)
+        entry: make -s lint-nav
+        language: system
+        pass_filenames: false
+        files: ^c-by-example/(.*\.md|nav\.py)$

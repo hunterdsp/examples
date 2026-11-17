@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 29 Library layout](../29-library-layout/README.md) ·
+[Contents](../README.md#contents) · [31 Testing →](../31-testing/README.md)
+
+<!-- /nav -->
+
 # 30 · CMake
 
 Run this lesson's commands in `c-by-example/30-cmake/`.
@@ -406,3 +413,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf) | `<stdio.h>` | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 29 Library layout](../29-library-layout/README.md) ·
+[Contents](../README.md#contents) · [31 Testing →](../31-testing/README.md)
+
+<!-- /nav -->

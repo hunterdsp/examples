@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 01 Hello](../01-hello/README.md) · [Contents](../README.md#contents) ·
+[03 Functions →](../03-functions/README.md)
+
+<!-- /nav -->
+
 # 02 · Numbers
 
 Run this lesson's commands in `c-by-example/02-numbers/`.
@@ -471,3 +478,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`puts`](https://en.cppreference.com/c/io/puts)             | `<stdio.h>` | write a string and a newline to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 01 Hello](../01-hello/README.md) · [Contents](../README.md#contents) ·
+[03 Functions →](../03-functions/README.md)
+
+<!-- /nav -->

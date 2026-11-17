@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 31 Testing](../31-testing/README.md) · [Contents](../README.md#contents) ·
+[33 Bundled tools →](../33-tools/README.md)
+
+<!-- /nav -->
+
 # 32 · Documentation
 
 Run this lesson's commands in `c-by-example/32-docs/`.
@@ -315,3 +322,10 @@ and its build.
    `#define`s. One place to change it, and nothing that can disagree.
 
    </details>
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 31 Testing](../31-testing/README.md) · [Contents](../README.md#contents) ·
+[33 Bundled tools →](../33-tools/README.md)
+
+<!-- /nav -->

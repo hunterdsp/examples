@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 20 FIR filters](../20-fir/README.md) · [Contents](../README.md#contents) ·
+[22 Oscillators →](../22-oscillator/README.md)
+
+<!-- /nav -->
+
 # 21 · IIR filters: the biquad
 
 Run this lesson's commands in `c-by-example/21-biquad/`.
@@ -435,3 +442,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)          | `<string.h>` | compare two strings                                                     |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 20 FIR filters](../20-fir/README.md) · [Contents](../README.md#contents) ·
+[22 Oscillators →](../22-oscillator/README.md)
+
+<!-- /nav -->

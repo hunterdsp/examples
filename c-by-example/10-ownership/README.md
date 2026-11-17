@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 09 Stack vs heap](../09-stack-heap/README.md) ·
+[Contents](../README.md#contents) ·
+[11 Catching bugs →](../11-catching-bugs/README.md)
+
+<!-- /nav -->
+
 # 10 · Ownership and lifecycle
 
 Run this lesson's commands in `c-by-example/10-ownership/`.
@@ -306,3 +314,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`realloc`](https://en.cppreference.com/c/memory/realloc)    | `<stdlib.h>` | resize allocated memory, perhaps moving it            |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 09 Stack vs heap](../09-stack-heap/README.md) ·
+[Contents](../README.md#contents) ·
+[11 Catching bugs →](../11-catching-bugs/README.md)
+
+<!-- /nav -->

@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 00 Tools](../00-tools/README.md) · [Contents](../README.md#contents) ·
+[02 Numbers →](../02-numbers/README.md)
+
+<!-- /nav -->
+
 # 01 · Hello
 
 Run this lesson's commands in `c-by-example/01-hello/`.
@@ -269,3 +276,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf) | `<stdio.h>` | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 00 Tools](../00-tools/README.md) · [Contents](../README.md#contents) ·
+[02 Numbers →](../02-numbers/README.md)
+
+<!-- /nav -->

@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 10 Ownership and lifecycle](../10-ownership/README.md) ·
+[Contents](../README.md#contents) ·
+[12 Ring buffers →](../12-ring-buffers/README.md)
+
+<!-- /nav -->
+
 # 11 · Catching bugs
 
 Run this lesson's commands in `c-by-example/11-catching-bugs/`.
@@ -301,3 +309,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)    | `<stdio.h>`  | formatted output to `stdout`                                    |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 10 Ownership and lifecycle](../10-ownership/README.md) ·
+[Contents](../README.md#contents) ·
+[12 Ring buffers →](../12-ring-buffers/README.md)
+
+<!-- /nav -->

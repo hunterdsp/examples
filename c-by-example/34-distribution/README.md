@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 33 Bundled tools](../33-tools/README.md) · [Contents](../README.md#contents)
+· [35 Epilogue: the same library, from Python →](../35-python/README.md)
+
+<!-- /nav -->
+
 # 34 · Distribution
 
 Run this lesson's commands in `c-by-example/34-distribution/`.
@@ -415,3 +422,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf) | `<stdio.h>` | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 33 Bundled tools](../33-tools/README.md) · [Contents](../README.md#contents)
+· [35 Epilogue: the same library, from Python →](../35-python/README.md)
+
+<!-- /nav -->

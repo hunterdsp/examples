@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 22 Oscillators](../22-oscillator/README.md) ·
+[Contents](../README.md#contents) · [24 The FFT →](../24-fft/README.md)
+
+<!-- /nav -->
+
 # 23 · Complex numbers
 
 Run this lesson's commands in `c-by-example/23-complex/`.
@@ -285,3 +292,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`sin`](https://en.cppreference.com/c/numeric/math/sin)         | `<math.h>`    | sine of an angle in radians                               |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 22 Oscillators](../22-oscillator/README.md) ·
+[Contents](../README.md#contents) · [24 The FFT →](../24-fft/README.md)
+
+<!-- /nav -->

@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 23 Complex numbers](../23-complex/README.md) ·
+[Contents](../README.md#contents) ·
+[25 Caches and memory layout →](../25-caches/README.md)
+
+<!-- /nav -->
+
 # 24 · The FFT
 
 Run this lesson's commands in `c-by-example/24-fft/`.
@@ -429,3 +437,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)   | `<string.h>`  | compare two strings                                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 23 Complex numbers](../23-complex/README.md) ·
+[Contents](../README.md#contents) ·
+[25 Caches and memory layout →](../25-caches/README.md)
+
+<!-- /nav -->

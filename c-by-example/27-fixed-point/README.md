@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 26 Vectorisation](../26-vectorisation/README.md) ·
+[Contents](../README.md#contents) ·
+[28 Concurrency →](../28-concurrency/README.md)
+
+<!-- /nav -->
+
 # 27 · Fixed point
 
 Run this lesson's commands in `c-by-example/27-fixed-point/`.
@@ -290,3 +298,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`sin`](https://en.cppreference.com/c/numeric/math/sin)      | `<math.h>`  | sine of an angle in radians                                        |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 26 Vectorisation](../26-vectorisation/README.md) ·
+[Contents](../README.md#contents) ·
+[28 Concurrency →](../28-concurrency/README.md)
+
+<!-- /nav -->

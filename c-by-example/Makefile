@@ -4,13 +4,16 @@
 #   make test CC=clang    the same, with clang
 #   make test LESSONS=05-pointers
 #   make lint             check every README (mdformat) and C file
-#                         (clang-format) is formatted, and every README
-#                         links the library functions its lesson calls
+#                         (clang-format) is formatted, every README
+#                         links the library functions its lesson calls,
+#                         and every lesson links back, to the contents,
+#                         and on
 #   make format           format them, and rewrite those links
 
 LESSONS ?= $(sort $(wildcard [0-9][0-9]-*))
 
-.PHONY: test lint lint-mdformat lint-clang-format lint-libfuncs format help
+.PHONY: test lint lint-mdformat lint-clang-format lint-libfuncs lint-nav \
+        format help
 
 # Every README in the course, formatted by mdformat (settings in
 # .mdformat.toml). `make lint` fails if formatting would change any of
@@ -34,10 +37,14 @@ CLANG_FORMAT := uv run --frozen --only-group lint clang-format --style=file
 # calls, made from REFERENCE.md's one table of links (libfuncs.py).
 LIBFUNCS := uv run --frozen --only-group lint python libfuncs.py
 
+# Each lesson opens and ends with back, contents and next links, made from
+# README.md's Contents list (nav.py).
+NAV := uv run --frozen --only-group lint python nav.py
+
 test: ## Build, run and check every example in LESSONS
 	@CC="$(CC)" ./check.sh $(LESSONS)
 
-lint: lint-mdformat lint-clang-format lint-libfuncs ## Every README and C file is formatted, and links its library functions
+lint: lint-mdformat lint-clang-format lint-libfuncs lint-nav ## Every README and C file is formatted, and links its library functions
 
 lint-mdformat: ## Fail if any README is not as mdformat would write it
 	@$(MDFORMAT) --check $(MD_FILES)
@@ -48,8 +55,12 @@ lint-clang-format: ## Fail if any C file is not as clang-format would write it
 lint-libfuncs: ## Fail if a README's library function table is missing or stale
 	@$(LIBFUNCS)
 
+lint-nav: ## Fail if a lesson's back/next links are missing or stale
+	@$(NAV)
+
 format: ## Format every README (mdformat) and C file (clang-format)
 	@$(LIBFUNCS) --write
+	@$(NAV) --write
 	@$(MDFORMAT) $(MD_FILES)
 	@$(CLANG_FORMAT) -i $(C_ONLY)
 

@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 32 Documentation](../32-docs/README.md) · [Contents](../README.md#contents)
+· [34 Distribution →](../34-distribution/README.md)
+
+<!-- /nav -->
+
 # 33 · Bundled tools
 
 Run this lesson's commands in `c-by-example/33-tools/`.
@@ -340,3 +347,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strtof`](https://en.cppreference.com/c/string/byte/strtof) | `<stdlib.h>` | read a `float` from a string                      |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 32 Documentation](../32-docs/README.md) · [Contents](../README.md#contents)
+· [34 Distribution →](../34-distribution/README.md)
+
+<!-- /nav -->

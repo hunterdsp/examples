@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 05 Pointers](../05-pointers/README.md) · [Contents](../README.md#contents) ·
+[07 Structs →](../07-structs/README.md)
+
+<!-- /nav -->
+
 # 06 · Strings and files
 
 Run this lesson's commands in `c-by-example/06-strings-files/`.
@@ -305,3 +312,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strlen`](https://en.cppreference.com/c/string/byte/strlen) | `<string.h>` | a string's length, not counting its `'\0'`    |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 05 Pointers](../05-pointers/README.md) · [Contents](../README.md#contents) ·
+[07 Structs →](../07-structs/README.md)
+
+<!-- /nav -->

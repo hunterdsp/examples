@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 07 Structs](../07-structs/README.md) · [Contents](../README.md#contents) ·
+[09 Stack vs heap →](../09-stack-heap/README.md)
+
+<!-- /nav -->
+
 # 08 · The preprocessor and multi-file builds
 
 Run this lesson's commands in `c-by-example/08-multi-file/`.
@@ -341,3 +348,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`sqrt`](https://en.cppreference.com/c/numeric/math/sqrt)    | `<math.h>`  | square root                    |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 07 Structs](../07-structs/README.md) · [Contents](../README.md#contents) ·
+[09 Stack vs heap →](../09-stack-heap/README.md)
+
+<!-- /nav -->

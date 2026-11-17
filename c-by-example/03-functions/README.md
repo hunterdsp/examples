@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 02 Numbers](../02-numbers/README.md) · [Contents](../README.md#contents) ·
+[04 Arrays and loops →](../04-arrays/README.md)
+
+<!-- /nav -->
+
 # 03 · Functions
 
 Run this lesson's commands in `c-by-example/03-functions/`.
@@ -316,3 +323,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`sin`](https://en.cppreference.com/c/numeric/math/sin) | `<math.h>`  | sine of an angle in radians  |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 02 Numbers](../02-numbers/README.md) · [Contents](../README.md#contents) ·
+[04 Arrays and loops →](../04-arrays/README.md)
+
+<!-- /nav -->

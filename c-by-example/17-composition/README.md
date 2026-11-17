@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 16 Interfaces (vtables)](../16-interfaces/README.md) ·
+[Contents](../README.md#contents) ·
+[18 API design →](../18-api-design/README.md)
+
+<!-- /nav -->
+
 # 17 · Composition and "inheritance"
 
 Run this lesson's commands in `c-by-example/17-composition/`.
@@ -583,3 +591,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                               |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 16 Interfaces (vtables)](../16-interfaces/README.md) ·
+[Contents](../README.md#contents) ·
+[18 API design →](../18-api-design/README.md)
+
+<!-- /nav -->

@@ -2,8 +2,8 @@
 #
 #   make lint      every gate CI runs: the shell scripts (shellcheck,
 #                  shfmt), the script hash table, and c-by-example's
-#                  formatting (mdformat, clang-format) and library
-#                  function links
+#                  formatting (mdformat, clang-format), library
+#                  function links, and back/next links
 #   make test      build and check every c-by-example lesson
 #   make format    the fixers the lint gates call
 #   make hooks     install the pre-commit hooks, once per clone: every
@@ -16,7 +16,7 @@
 # Makefile; run it there (see README.md).
 
 .PHONY: lint lint-shellcheck lint-shfmt lint-hashes lint-mdformat \
-        lint-clang-format lint-libfuncs test format hooks help
+        lint-clang-format lint-libfuncs lint-nav test format hooks help
 
 # Every shell script in the repo, tracked or new. shellcheck and shfmt are
 # pinned in pyproject.toml (uv.lock), at the versions just-bashit uses.
@@ -26,7 +26,7 @@ UV_LINT  := uv run --frozen --only-group lint
 SHFMT_FLAGS := -s
 
 GATES := lint-shellcheck lint-shfmt lint-hashes lint-mdformat \
-         lint-clang-format lint-libfuncs
+         lint-clang-format lint-libfuncs lint-nav
 
 lint: $(GATES) ## Every gate CI runs
 
@@ -47,6 +47,9 @@ lint-clang-format: ## Every c-by-example C file is as clang-format writes it
 
 lint-libfuncs: ## Every lesson's README links the library functions it calls
 	@$(MAKE) --no-print-directory -C c-by-example lint-libfuncs
+
+lint-nav: ## Every lesson links back, to the contents, and on
+	@$(MAKE) --no-print-directory -C c-by-example lint-nav
 
 test: ## Build, run and check every c-by-example lesson
 	@$(MAKE) --no-print-directory -C c-by-example test

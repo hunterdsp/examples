@@ -1,3 +1,9 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[Contents](../README.md#contents) · [01 Hello →](../01-hello/README.md)
+
+<!-- /nav -->
+
 # 00 · Tools
 
 ## One time set up
@@ -299,3 +305,9 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`puts`](https://en.cppreference.com/c/io/puts) | `<stdio.h>` | write a string and a newline to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[Contents](../README.md#contents) · [01 Hello →](../01-hello/README.md)
+
+<!-- /nav -->

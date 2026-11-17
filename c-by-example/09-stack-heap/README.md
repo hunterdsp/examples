@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 08 Multi-file builds](../08-multi-file/README.md) ·
+[Contents](../README.md#contents) ·
+[10 Ownership and lifecycle →](../10-ownership/README.md)
+
+<!-- /nav -->
+
 # 09 · Stack vs heap
 
 Run this lesson's commands in `c-by-example/09-stack-heap/`.
@@ -287,3 +295,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strtoul`](https://en.cppreference.com/c/string/byte/strtoul) | `<stdlib.h>` | read an `unsigned long` from a string                 |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 08 Multi-file builds](../08-multi-file/README.md) ·
+[Contents](../README.md#contents) ·
+[10 Ownership and lifecycle →](../10-ownership/README.md)
+
+<!-- /nav -->

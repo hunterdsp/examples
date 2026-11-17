@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 06 Strings and files](../06-strings-files/README.md) ·
+[Contents](../README.md#contents) ·
+[08 Multi-file builds →](../08-multi-file/README.md)
+
+<!-- /nav -->
+
 # 07 · Structs
 
 Run this lesson's commands in `c-by-example/07-structs/`.
@@ -274,3 +282,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout`                               |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 06 Strings and files](../06-strings-files/README.md) ·
+[Contents](../README.md#contents) ·
+[08 Multi-file builds →](../08-multi-file/README.md)
+
+<!-- /nav -->

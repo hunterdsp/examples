@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 34 Distribution](../34-distribution/README.md) ·
+[Contents](../README.md#contents)
+
+<!-- /nav -->
+
 # 35 · Epilogue: the same library, from Python
 
 Run this lesson's commands in `c-by-example/35-python/`.
@@ -395,3 +402,10 @@ measured against, with its plans (lesson 24) taken much further.
 library for software radio, built of `create`/`execute`/`destroy` objects much
 like `sig`'s. The [C reference](../REFERENCE.md) collects every function and
 flag the course used, with links to the standard.
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 34 Distribution](../34-distribution/README.md) ·
+[Contents](../README.md#contents)
+
+<!-- /nav -->

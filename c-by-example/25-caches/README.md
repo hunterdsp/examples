@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 24 The FFT](../24-fft/README.md) · [Contents](../README.md#contents) ·
+[26 Vectorisation →](../26-vectorisation/README.md)
+
+<!-- /nav -->
+
 # 25 · Caches and memory layout
 
 Run this lesson's commands in `c-by-example/25-caches/`.
@@ -401,3 +408,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp) | `<string.h>` | compare two strings                                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 24 The FFT](../24-fft/README.md) · [Contents](../README.md#contents) ·
+[26 Vectorisation →](../26-vectorisation/README.md)
+
+<!-- /nav -->

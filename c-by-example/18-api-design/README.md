@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 17 Composition and "inheritance"](../17-composition/README.md) ·
+[Contents](../README.md#contents) ·
+[19 Measuring first →](../19-measuring/README.md)
+
+<!-- /nav -->
+
 # 18 · API design
 
 Run this lesson's commands in `c-by-example/18-api-design/`.
@@ -428,3 +436,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strtol`](https://en.cppreference.com/c/string/byte/strtol) | `<stdlib.h>` | read a `long` from a string                           |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 17 Composition and "inheritance"](../17-composition/README.md) ·
+[Contents](../README.md#contents) ·
+[19 Measuring first →](../19-measuring/README.md)
+
+<!-- /nav -->

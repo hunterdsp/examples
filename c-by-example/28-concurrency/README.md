@@ -1,3 +1,11 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 27 Fixed point](../27-fixed-point/README.md) ·
+[Contents](../README.md#contents) ·
+[29 Library layout →](../29-library-layout/README.md)
+
+<!-- /nav -->
+
 # 28 · Concurrency
 
 Run this lesson's commands in `c-by-example/28-concurrency/`.
@@ -389,3 +397,11 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`strcmp`](https://en.cppreference.com/c/string/byte/strcmp)                                                   | `<string.h>`  | compare two strings                                         |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 27 Fixed point](../27-fixed-point/README.md) ·
+[Contents](../README.md#contents) ·
+[29 Library layout →](../29-library-layout/README.md)
+
+<!-- /nav -->

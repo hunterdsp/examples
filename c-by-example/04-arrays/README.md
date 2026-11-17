@@ -1,3 +1,10 @@
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 03 Functions](../03-functions/README.md) · [Contents](../README.md#contents)
+· [05 Pointers →](../05-pointers/README.md)
+
+<!-- /nav -->
+
 # 04 · Arrays and loops
 
 Run this lesson's commands in `c-by-example/04-arrays/`.
@@ -232,3 +239,10 @@ Every library function this lesson's code calls, linked to its definition. The
 | [`printf`](https://en.cppreference.com/c/io/fprintf)         | `<stdio.h>`  | formatted output to `stdout` |
 
 <!-- /libfuncs -->
+
+<!-- nav: made by `make format` from README.md's Contents -->
+
+[← 03 Functions](../03-functions/README.md) · [Contents](../README.md#contents)
+· [05 Pointers →](../05-pointers/README.md)
+
+<!-- /nav -->

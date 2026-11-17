@@ -1,6 +1,7 @@
 """libfuncs.py -- every library function a lesson calls, linked in its README.
 
-Each lesson's README ends with a "Library functions" table: one row for
+Each lesson's README ends with a "Library functions" table (followed only
+by its back and next links, nav.py's, which this leaves alone): one row for
 every function its code (programs, broken examples and exercises) calls
 from the C standard library, linked to its definition. The rows come from
 ONE table, the "Library functions" section of REFERENCE.md, which says
@@ -173,13 +174,20 @@ def main(write):
         text = readme.read_text()
         want = table(names, ref, lesson == SIG) if names else ""
         start = text.find("## Library functions\n")
-        have = text[start:] if start >= 0 else ""
+        end = text.find(END, start) if start >= 0 else -1
+        stop = end + len(END) if end >= 0 else len(text)
+        have = text[start:stop] if start >= 0 else ""
+        # What follows the table (nav.py's links) is kept as it is.
+        rest = text[stop:].strip("\n") if start >= 0 else ""
         stale = normal(have) != normal(want)
         if not stale:
             continue  # already right: leave mdformat's padding alone
         if write:
             body = text[:start].rstrip("\n") if start >= 0 else text.rstrip("\n")
-            readme.write_text(body + ("\n\n" + want if want else "\n"))
+            new = body + ("\n\n" + want if want else "\n")
+            if rest:
+                new = new.rstrip("\n") + "\n\n" + rest + "\n"
+            readme.write_text(new)
         else:
             errors.append(
                 f"{lesson.name}/README.md: its Library functions table is"
