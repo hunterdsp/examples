@@ -121,12 +121,7 @@ which you can open and read. Knowing which stage is complaining goes a long way
 toward fixing a build error.
 
 ```mermaid
----
-config:
-  flowchart:
-    diagramPadding: 48
----
-flowchart LR
+flowchart TB
     c[/stages.c/] --> E["<b>preprocess</b>#160;(#8209;E)<br>stages.i"]
     E --> S["<b>compile</b>#160;(#8209;S)<br>stages.s"]
     S --> A["<b>assemble</b>#160;(#8209;c)<br>stages.o"]
