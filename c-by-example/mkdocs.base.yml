@@ -70,4 +70,10 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.details      # the folded answers: site.py writes ??? blocks
   - pymdownx.inlinehilite
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      # ```mermaid blocks become diagrams, drawn in the browser, as GitHub
+      # draws them; any other fence stays code.
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
