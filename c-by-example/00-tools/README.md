@@ -120,10 +120,20 @@ before it wrote. Run them one at a time and you get every file in between,
 which you can open and read. Knowing which stage is complaining goes a long way
 toward fixing a build error.
 
+```mermaid
+flowchart TB
+    C[/"stages.c"/] -->
+    P["<b>PREPROCESS</b>#160;(#8209;E)"] -->
+    I[/"stages.i"/] -->
+    CC["<b>COMPILE</b>#160;(#8209;S)"] -->
+    S[/"stages.s"/] -->
+    A["<b>ASSEMBLE</b>#160;(#8209;c)"] -->
+    O[/"stages.o"/] -->
+    L["<b>LINK</b>*"] --> APP[/"<b>stages</b><br/>binary#160;executable"/]
 ```
-stages.c  --preprocess-->  stages.i  --compile-->  stages.s
-          --assemble---->  stages.o  --link----->  stages
-```
+
+\* Linking has no flag of its own: it is what `cc` does when no flag tells it
+to stop sooner. `-o`, at any stage, only names the file that stage writes.
 
 **1. Preprocess** (`-E`): C in, C out.
 

@@ -27,6 +27,10 @@ out of plain structs and function pointers.
 The examples lean toward performance algorithms and signal processing, but you
 need not be an expert in either to follow along.
 
+The course is on GitHub and on its own website,
+[hunterdsp.github.io/examples](https://hunterdsp.github.io/examples/), made
+from the same pages, with a sidebar and search.
+
 ## How it works
 
 The course is five *Parts*, each a series of *lessons*. Each lesson is a
