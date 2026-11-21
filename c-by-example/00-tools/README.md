@@ -122,11 +122,19 @@ toward fixing a build error.
 
 ```mermaid
 flowchart TB
-    E["<b>preprocess</b>#160;(#8209;E)<br>stages.c#160;→#160;stages.i"]
-    E --> S["<b>compile</b>#160;(#8209;S)<br>stages.i#160;→#160;stages.s"]
-    S --> A["<b>assemble</b>#160;(#8209;c)<br>stages.s#160;→#160;stages.o"]
-    A --> L["<b>link</b><br>stages.o#160;→#160;stages"]
+    C[/"stages.c"/] -->
+    P["<b>PREPROCESS</b>#160;(#8209;E)"] -->
+    I[/"stages.i"/] -->
+    CC["<b>COMPILE</b>#160;(#8209;S)"] -->
+    S[/"stages.s"/] -->
+    A["<b>ASSEMBLE</b>#160;(#8209;c)"] -->
+    O[/"stages.o"/] -->
+    L["<b>LINK</b>*"] --> APP[/"<b>stages</b><br/>binary#160;executable"/]
 ```
+
+\* Linking has no flag of its own: it is what `cc` does when no flag tells it
+to stop sooner. `-o`, used at every stage, only names the file that stage
+writes.
 
 **1. Preprocess** (`-E`): C in, C out.
 
