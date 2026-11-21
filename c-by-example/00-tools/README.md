@@ -122,10 +122,10 @@ toward fixing a build error.
 
 ```mermaid
 flowchart TB
-    c[/stages.c/] --> E["<b>preprocess</b>#160;(#8209;E)<br>stages.i"]
-    E --> S["<b>compile</b>#160;(#8209;S)<br>stages.s"]
-    S --> A["<b>assemble</b>#160;(#8209;c)<br>stages.o"]
-    A --> L["<b>link</b><br>stages"]
+    E["<b>preprocess</b>#160;(#8209;E)<br>stages.c#160;→#160;stages.i"]
+    E --> S["<b>compile</b>#160;(#8209;S)<br>stages.i#160;→#160;stages.s"]
+    S --> A["<b>assemble</b>#160;(#8209;c)<br>stages.s#160;→#160;stages.o"]
+    A --> L["<b>link</b><br>stages.o#160;→#160;stages"]
 ```
 
 **1. Preprocess** (`-E`): C in, C out.
