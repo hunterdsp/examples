@@ -133,8 +133,7 @@ flowchart TB
 ```
 
 \* Linking has no flag of its own: it is what `cc` does when no flag tells it
-to stop sooner. `-o`, used at every stage, only names the file that stage
-writes.
+to stop sooner. `-o`, at any stage, only names the file that stage writes.
 
 **1. Preprocess** (`-E`): C in, C out.
 
