@@ -120,9 +120,12 @@ before it wrote. Run them one at a time and you get every file in between,
 which you can open and read. Knowing which stage is complaining goes a long way
 toward fixing a build error.
 
-```
-stages.c  --preprocess-->  stages.i  --compile-->  stages.s
-          --assemble---->  stages.o  --link----->  stages
+```mermaid
+flowchart LR
+    c[/stages.c/] --> E["<b>preprocess</b>#160;(#8209;E)<br>stages.i"]
+    E --> S["<b>compile</b>#160;(#8209;S)<br>stages.s"]
+    S --> A["<b>assemble</b>#160;(#8209;c)<br>stages.o"]
+    A --> L["<b>link</b><br>stages"]
 ```
 
 **1. Preprocess** (`-E`): C in, C out.
